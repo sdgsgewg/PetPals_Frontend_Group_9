@@ -31,6 +31,16 @@ const pets = [
     description: "lorem ipsum dolor",
     status: "available" as PetStatus,
   },
+  {
+    petId: 4,
+    owner_id: 3,
+    name: "Lorem",
+    species: "Cat",
+    breed: "Unknown Breed",
+    age: 3,
+    description: "Orange fur Cat",
+    status: "available" as PetStatus,
+  }
 ];
 
 export default pets;
