@@ -1,46 +1,48 @@
-import { PetStatus } from "../interface/IPet"; // Import PetStatus
+import { PetStatus } from "../interface/IPet";
 
-const pets = [
+export const pets = [
   {
     petId: 1,
     owner_id: 1,
+    species_id: 1,
     name: "Bella",
-    species: "Dog",
     breed: "Golden Retriever",
     age: 3,
     description: "lorem ipsum dolor",
+    image: "/img/breed/golden-retriever.jpg",
     status: "adopted" as PetStatus,
   },
   {
     petId: 2,
     owner_id: 2,
+    species_id: 1,
     name: "Axel",
-    species: "Dog",
     breed: "Pitbull",
     age: 2,
     description: "lorem ipsum dolor",
+    image: "/img/breed/pitbull.jpg",
     status: "available" as PetStatus,
   },
   {
     petId: 3,
     owner_id: 1,
+    species_id: 1,
     name: "Xavier",
-    species: "Dog",
     breed: "Chihuahua",
     age: 1,
     description: "lorem ipsum dolor",
+    image: "/img/breed/chihuahua.jpg",
     status: "available" as PetStatus,
   },
   {
     petId: 4,
     owner_id: 3,
-    name: "Lorem",
-    species: "Cat",
-    breed: "Unknown Breed",
+    species_id: 2,
+    name: "Stella",
+    breed: "British Shorthair",
     age: 3,
-    description: "Orange fur Cat",
+    description: "Gray fur Cat",
+    image: "/img/breed/british-shorthair.jpg",
     status: "available" as PetStatus,
-  }
+  },
 ];
-
-export default pets;

@@ -1,4 +1,5 @@
-'use client'
+"use client";
+import Image from "next/image";
 import React, { useState, useEffect } from "react";
 
 const sliderImages = [
@@ -31,10 +32,12 @@ const Slider = () => {
   return (
     <div className="relative w-full max-w-4xl mx-auto h-[250px] sm:h-[350px] md:h-[450px] overflow-hidden">
       {sliderImages.map((image, index) => (
-        <img
+        <Image
           key={index}
           src={image}
           alt={`Slide ${index + 1}`}
+          width={100}
+          height={100}
           className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
             index === currentImage ? "opacity-100" : "opacity-0"
           }`}
