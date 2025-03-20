@@ -10,12 +10,9 @@ import React, { useEffect, useState } from "react";
 import { useDebounce } from "react-use";
 
 const Adoptions = () => {
-  const { pets, filters, setFilters, fetchPets } = useGlobal();
+  const { pets, filters, fetchPets, loading, error } = useGlobal();
 
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
-
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<boolean>(false);
 
   // Debounce the searchValue so that it updates after 500ms of inactivity
   useDebounce(
@@ -30,9 +27,9 @@ const Adoptions = () => {
     fetchPets();
   }, []);
 
-  // useEffect(() => {
-  //   fetchPets();
-  // }, [debouncedSearchTerm]);
+  useEffect(() => {
+    fetchPets();
+  }, [debouncedSearchTerm]);
 
   return (
     <>
@@ -42,10 +39,7 @@ const Adoptions = () => {
         </NormalContent>
       ) : error ? (
         <NormalContent>
-          <PageNotFound
-            image_url="/img/page-not-found.png"
-            message=""
-          />
+          <PageNotFound image_url="/img/page-not-found.png" message="" />
         </NormalContent>
       ) : (
         <BigHeroContent>

@@ -25,6 +25,8 @@ interface GlobalContextType {
   filters: IPetFilterParams;
   setFilters: (filters: IPetFilterParams) => void;
   fetchPets: () => Promise<void>;
+  loading: boolean;
+  error: boolean;
 }
 
 const GlobalContext = createContext<GlobalContextType | undefined>(undefined);
@@ -45,9 +47,15 @@ export function GlobalProvider({ children }: { children: ReactNode }) {
     maxPrice: "",
   });
 
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<boolean>(false);
+
   // Function untuk mengambil data pets dari API
   const fetchPets = async () => {
     try {
+      setLoading(true);
+      setError(false);
+
       const response = await api.get("/adoption-list", {
         params: {
           name: filters.searchValue,
@@ -66,20 +74,23 @@ export function GlobalProvider({ children }: { children: ReactNode }) {
         });
       } else {
         console.error("Invalid API response format:", response.data);
+        setError(true);
       }
     } catch (error) {
       console.error("Error fetching pets:", error);
+      setError(true);
+    } finally {
+      setLoading(false);
     }
   };
 
-  // Fetch pets setiap kali filters berubah
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       fetchPets();
-    }, 300); // Debounce API calls to avoid excessive requests
+    }, 500); // Debounce API calls to avoid excessive requests
 
     return () => clearTimeout(timeoutId); // Cleanup function
-  }, [filters]);
+  }, []);
 
   return (
     <GlobalContext.Provider
@@ -90,6 +101,8 @@ export function GlobalProvider({ children }: { children: ReactNode }) {
         filters,
         setFilters,
         fetchPets,
+        loading,
+        error,
       }}
     >
       {children}
