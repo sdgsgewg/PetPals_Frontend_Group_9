@@ -7,11 +7,15 @@ interface PetCardProps {
 }
 
 const PetCard: React.FC<PetCardProps> = ({ pet }) => {
+  const splitBreed = pet.breed.split(" ");
+  const modifiedBreed = splitBreed.map((word) => word.toLowerCase()).join("-");
+  console.log(modifiedBreed);
+
   return (
     <div className="w-full h-full flex flex-col items-center mb-4">
       <div className="w-full h-full overflow-hidden">
         <Image
-          src={pet.image}
+          src={`/img/breed/${modifiedBreed}.jpg`}
           alt={pet.name}
           width={100}
           height={100}

@@ -1,5 +1,5 @@
 interface ISpecies {
-  speciesId: number;
+  species_id: number;
   name: string;
   slug: string;
   description: string;

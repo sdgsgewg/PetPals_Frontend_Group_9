@@ -1,17 +1,11 @@
-export enum UserRole {
-  Adopter = "adopter",
-  Owner = "owner",
-  Provider = "provider",
-}
-
 interface IUser {
-  userId: number;
+  user_id: number;
   name: string;
   email: string;
   password: string;
   phone: string;
   address: string;
-  role: UserRole;
+  role: string;
 }
 
 export default IUser;

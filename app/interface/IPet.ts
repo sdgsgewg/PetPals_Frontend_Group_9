@@ -4,10 +4,10 @@ export enum PetStatus {
 }
 
 interface IPet {
-  petId: number;
+  pet_id: number;
   owner_id: number;
-  species_id: number;
   name: string;
+  species: string;
   breed: string;
   age: number;
   description: string;

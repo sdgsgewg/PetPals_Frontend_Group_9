@@ -1,14 +1,8 @@
-export enum ServiceCategory {
-  Grooming = "grooming",
-  Penitipan = "penitipan",
-  Pelatihan = "pelatihan",
-}
-
 interface IService {
-  serviceId: number;
+  service_id: number;
   provider_id: number;
   name: string;
-  category: ServiceCategory;
+  category: string;
   description: string;
   price: number;
 }

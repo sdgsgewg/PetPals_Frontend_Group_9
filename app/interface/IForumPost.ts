@@ -1,5 +1,5 @@
 interface IForumPost {
-  forumPostId: number;
+  forum_post_id: number;
   user_id: number;
   title: string;
   content: string;

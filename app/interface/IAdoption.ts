@@ -5,7 +5,7 @@ export enum AdoptionStatus {
 }
 
 interface IAdoption {
-  adoptionId: number;
+  adoption_id: number;
   adopter_id: number;
   pet_id: number;
   adoption_date: string;

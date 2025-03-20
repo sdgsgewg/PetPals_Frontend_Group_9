@@ -10,7 +10,7 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="fixed w-full px-4 sm:px-6 md:px-8 lg:px-12 py-4 bg-blue-100 shadow-md z-50">
+    <div className="fixed w-full px-4 sm:px-6 md:px-8 lg:px-12 py-4 bg-blue-100 shadow-md z-10">
       <nav className="flex justify-between items-center">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2">

@@ -1,20 +1,15 @@
 import Image from "next/image";
 import React from "react";
 
-interface ItemNotFoundProps {
+interface PageNotFoundProps {
   image_url: string;
-  size: number;
   message: string;
 }
 
-const ItemNotFound: React.FC<ItemNotFoundProps> = ({
-  image_url,
-  size,
-  message,
-}) => {
+const PageNotFound: React.FC<PageNotFoundProps> = ({ image_url, message }) => {
   return (
     <div className="flex flex-col items-center justify-center h-[50dvh]">
-      <Image src={image_url} alt={message} width={size} height={size} />
+      <Image src={image_url} alt={message} width={350} height={350} />
       <p className="text-2xl text-slate-400 font-semibold text-center">
         {message}
       </p>
@@ -22,4 +17,4 @@ const ItemNotFound: React.FC<ItemNotFoundProps> = ({
   );
 };
 
-export default ItemNotFound;
+export default PageNotFound;

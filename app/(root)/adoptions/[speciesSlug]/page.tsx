@@ -3,7 +3,7 @@ import PetHero from "@/app/components/Adoptions/PetHero";
 import PetList from "@/app/components/Adoptions/PetList";
 import BigHeroContent from "@/app/components/ContentTemplate/BigHeroContent";
 import NormalContent from "@/app/components/ContentTemplate/NormalContent";
-import ItemNotFound from "@/app/components/ItemNotFound";
+import ItemNotFound from "@/app/components/PageNotFound";
 import { useGlobal } from "@/app/context/GlobalContext";
 import IPet from "@/app/interface/IPet";
 import Loading from "@/app/loading";
