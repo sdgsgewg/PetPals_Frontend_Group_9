@@ -1,34 +1,48 @@
-import { useGlobal } from "@/app/context/GlobalContext";
+import { usePets } from "@/app/context/PetsContext";
+import { useServices } from "@/app/context/ServicesContext";
 import React from "react";
+import PetFilterField from "./PetFilterField";
+import ServiceFilterField from "./ServiceFilterField";
 
 interface FilterModalProps {
   isOpen: boolean;
   onClose: () => void;
+  filterType: string;
 }
 
-const FilterModal: React.FC<FilterModalProps> = ({ isOpen, onClose }) => {
-  const { species, filters, setFilters, fetchPets } = useGlobal();
+const FilterModal: React.FC<FilterModalProps> = ({
+  isOpen,
+  onClose,
+  filterType,
+}) => {
+  const petContext = usePets();
+  const serviceContext = useServices();
 
-  // Meng-update state ketika input berubah
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    const { name, value } = e.target;
-    setFilters((prevFilters) => ({
-      ...prevFilters,
-      [name]: value,
-    }));
-  };
+  const isPetsFilter = filterType === "pets";
+  const fetchFunction = isPetsFilter
+    ? petContext.fetchPets
+    : serviceContext.fetchServices;
 
   const handleReset = () => {
-    setFilters({
-      searchValue: "",
-      species: "",
-      minAge: "",
-      maxAge: "",
-      minPrice: "",
-      maxPrice: "",
-    });
+    if (filterType === "pets") {
+      const { setFilters } = petContext;
+      setFilters({
+        searchValue: "",
+        species: "",
+        minAge: "",
+        maxAge: "",
+        minPrice: "",
+        maxPrice: "",
+      });
+    } else {
+      const { setFilters } = serviceContext;
+      setFilters({
+        searchValue: "",
+        categoryName: "",
+        minPrice: "",
+        maxPrice: "",
+      });
+    }
   };
 
   return (
@@ -47,78 +61,7 @@ const FilterModal: React.FC<FilterModalProps> = ({ isOpen, onClose }) => {
           </button>
         </div>
 
-        {/* Filtering */}
-        <div className="w-full py-2">
-          <form onSubmit={(e) => e.preventDefault()}>
-            {/* Species */}
-            <label className="text-slate-400 font-semibold" htmlFor="species">
-              Species
-            </label>
-            <select
-              className="w-full outline-none bg-none border border-[#adadad] p-2 mt-2 mb-4 rounded-lg text-black"
-              name="species"
-              value={filters.species}
-              onChange={handleInputChange}
-            >
-              <option value="">Select a species</option>
-              {species.map((species) => (
-                <option key={species.species_id} value={species.slug}>
-                  {species.name}
-                </option>
-              ))}
-            </select>
-
-            {/* Age */}
-            <label className="text-slate-400 font-semibold" htmlFor="minAge">
-              Min Age
-            </label>
-            <input
-              type="text"
-              className="w-full outline-none bg-none border border-[#adadad] p-2 mt-2 mb-4 rounded-lg text-black"
-              name="minAge"
-              id="minAge"
-              value={filters.minAge}
-              onChange={handleInputChange}
-            />
-
-            <label className="text-slate-400 font-semibold" htmlFor="maxAge">
-              Max Age
-            </label>
-            <input
-              type="text"
-              className="w-full outline-none bg-none border border-[#adadad] p-2 mt-2 mb-4 rounded-lg text-black"
-              name="maxAge"
-              id="maxAge"
-              value={filters.maxAge}
-              onChange={handleInputChange}
-            />
-
-            {/* Price */}
-            <label className="text-slate-400 font-semibold" htmlFor="minPrice">
-              Min Price
-            </label>
-            <input
-              type="text"
-              className="w-full outline-none bg-none border border-[#adadad] p-2 mt-2 mb-4 rounded-lg text-black"
-              name="minPrice"
-              id="minPrice"
-              value={filters.minPrice}
-              onChange={handleInputChange}
-            />
-
-            <label className="text-slate-400 font-semibold" htmlFor="maxPrice">
-              Max Price
-            </label>
-            <input
-              type="text"
-              className="w-full outline-none bg-none border border-[#adadad] p-2 mt-2 mb-4 rounded-lg text-black"
-              name="maxPrice"
-              id="maxPrice"
-              value={filters.maxPrice}
-              onChange={handleInputChange}
-            />
-          </form>
-        </div>
+        {filterType === "pets" ? <PetFilterField /> : <ServiceFilterField />}
 
         {/* Filter Actions */}
         <div className="flex justify-center items-center gap-8 pt-4 border-t">
@@ -132,7 +75,7 @@ const FilterModal: React.FC<FilterModalProps> = ({ isOpen, onClose }) => {
           <button
             className="bg-blue-500 text-white border px-4 py-1 rounded-xl shadow-sm cursor-pointer hover:bg-blue-600 transition duration-300 ease-in-out"
             onClick={() => {
-              fetchPets();
+              fetchFunction();
               onClose();
             }}
           >

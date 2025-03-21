@@ -4,13 +4,12 @@ import PetList from "@/app/components/Adoptions/PetList";
 import BigHeroContent from "@/app/components/ContentTemplate/BigHeroContent";
 import NormalContent from "@/app/components/ContentTemplate/NormalContent";
 import PageNotFound from "@/app/components/PageNotFound";
-import { useGlobal } from "@/app/context/GlobalContext";
-import Loading from "@/app/loading";
+import { usePets } from "@/app/context/PetsContext";
 import React, { useEffect, useState } from "react";
 import { useDebounce } from "react-use";
 
 const Adoptions = () => {
-  const { pets, filters, fetchPets, loading, error } = useGlobal();
+  const { pets, filters, fetchPets, error } = usePets();
 
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
 
@@ -33,11 +32,7 @@ const Adoptions = () => {
 
   return (
     <>
-      {loading ? (
-        <NormalContent>
-          <Loading />
-        </NormalContent>
-      ) : error ? (
+      {error ? (
         <NormalContent>
           <PageNotFound image_url="/img/page-not-found.png" message="" />
         </NormalContent>

@@ -1,20 +1,21 @@
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar/Navbar";
-import { GlobalProvider } from "../context/GlobalContext";
+import { PetsProvider } from "../context/PetsContext";
+import { ServicesProvider } from "../context/ServicesContext";
 export default function Layout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <GlobalProvider>
-      <main className="font-work-sans">
-        <Navbar />
+    <PetsProvider>
+      <ServicesProvider>
+        <main className="font-work-sans">
+          <Navbar />
 
-        <div>
-          {children}
-        </div>
+          <div>{children}</div>
 
-        <Footer />
-      </main>
-    </GlobalProvider>
+          <Footer />
+        </main>
+      </ServicesProvider>
+    </PetsProvider>
   );
 }

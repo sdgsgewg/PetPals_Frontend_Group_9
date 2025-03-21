@@ -1,12 +1,12 @@
 import Image from "next/image";
-import SearchBox from "./SearchBox";
-import FilterBox from "./FilterBox";
+import SearchBox from "../SearchFilter/SearchBox";
+import FilterBox from "../SearchFilter/FilterBox";
 import { useState } from "react";
-import SearchFilterBox from "./SearchFilterBox";
-import { useGlobal } from "@/app/context/GlobalContext";
+import SearchFilterBox from "../SearchFilter/SearchFilterBox";
+import { usePets } from "@/app/context/PetsContext";
 
 const PetHero = () => {
-  const { filters, setFilters, fetchPets } = useGlobal();
+  const { filters } = usePets();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -37,18 +37,12 @@ const PetHero = () => {
       <div className="absolute w-[90%] xl:w-[80%] top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
         <h1 className="text-4xl font-extrabold mb-4">Find Your Best Pals</h1>
         <SearchFilterBox>
-          <SearchBox
-            filters={filters}
-            setFilters={setFilters}
-            fetchPets={fetchPets}
-          />
+          <SearchBox searchType="pets" placeholder="Search by name or breed" />
           <FilterBox
             isOpen={isModalOpen}
             onOpen={handleOpenModal}
             onClose={handleCloseModal}
-            filters={filters}
-            setFilters={setFilters}
-            fetchPets={fetchPets}
+            filterType="pets"
           />
         </SearchFilterBox>
       </div>

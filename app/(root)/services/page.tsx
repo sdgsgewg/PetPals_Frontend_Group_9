@@ -1,67 +1,45 @@
 "use client";
-import PetList from "@/app/components/Adoptions/PetList";
 import BigHeroContent from "@/app/components/ContentTemplate/BigHeroContent";
 import NormalContent from "@/app/components/ContentTemplate/NormalContent";
-import ItemNotFound from "@/app/components/PageNotFound";
+import PageNotFound from "@/app/components/PageNotFound";
 import ServiceHero from "@/app/components/Services/ServiceHero";
 import ServiceList from "@/app/components/Services/ServiceList";
-import { useGlobal } from "@/app/context/GlobalContext";
-import IService from "@/app/interface/IService";
-import Loading from "@/app/loading";
-import React, { useCallback, useEffect, useState } from "react";
+import { useServices } from "@/app/context/ServicesContext";
+import React, { useEffect, useState } from "react";
+import { useDebounce } from "react-use";
 
 const Services = () => {
-  const { services } = useGlobal();
+  const { services, filters, fetchServices, error } = useServices();
 
-  const [service, setService] = useState<string>("");
-  const [filteredServices, setFilteredServices] =
-    useState<IService[]>(services);
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
 
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<boolean>(false);
+  useDebounce(
+    () => {
+      setDebouncedSearchTerm(filters.searchValue);
+    },
+    500,
+    [filters.searchValue]
+  );
 
-  const fetchServices = useCallback((searchQuery: string = "") => {
-    try {
-      setLoading(true);
-      setError(false);
-
-      let filtered = [];
-      filtered = services.filter(
-        (svc) => svc.category.toLowerCase() === service.toLowerCase()
-      );
-
-      setFilteredServices(filtered);
-    } catch (error) {
-      console.error("Error fetching pets:", error);
-      setError(true);
-    } finally {
-      setLoading(false);
-    }
+  useEffect(() => {
+    fetchServices();
   }, []);
 
   useEffect(() => {
     fetchServices();
-  }, [fetchServices]);
+  }, [debouncedSearchTerm]);
 
   return (
     <>
-      {loading ? (
+      {error ? (
         <NormalContent>
-          <Loading />
-        </NormalContent>
-      ) : error ? (
-        <NormalContent>
-          <ItemNotFound
-            image_url="/img/pet-not-found.png"
-            size={350}
-            message=""
-          />
+          <PageNotFound image_url="/img/page-not-found.png" message="" />
         </NormalContent>
       ) : (
         <BigHeroContent>
-          <ServiceHero fetchServices={fetchServices} />
+          <ServiceHero />
           <div className="px-4 sm:px-6 md:px-8 lg:px-12 mt-20">
-            <ServiceList filteredServices={filteredServices} />
+            <ServiceList filteredServices={services} />
           </div>
         </BigHeroContent>
       )}
