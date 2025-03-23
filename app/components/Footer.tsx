@@ -2,20 +2,20 @@ import React from "react";
 
 const Footer = () => {
   return (
-    <footer className="w-full">
-      <div className="flex flex-col items-center justify-center bg-blue-200 py-12">
+    <footer className="w-full bg-blue-200 dark:bg-gray-800 transition-colors duration-300">
+      <div className="flex flex-col items-center justify-center py-12">
         <div className="container">
           <div className="w-full border-slate-700">
-            <p className="font-medium text-sm text-slate-600 text-center mb-4">
+            <p className="font-medium text-sm text-slate-600 dark:text-slate-300 text-center mb-4">
               © Copyright 2025. All rights reserved.
             </p>
-            <p className="font-medium text-xs text-slate-500 text-center">
+            <p className="font-medium text-xs text-slate-500 dark:text-slate-400 text-center">
               Made by{" "}
               <a
                 href="https://www.instagram.com/jessen_/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="font-bold text-primary"
+                className="font-bold text-primary dark:text-white"
               >
                 Jessen
               </a>
@@ -24,7 +24,7 @@ const Footer = () => {
                 href="https://www.instagram.com/jessen_/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="font-bold text-primary"
+                className="font-bold text-primary dark:text-white"
               >
                 Bryan Jonatan
               </a>
@@ -33,7 +33,7 @@ const Footer = () => {
                 href="https://nextjs.org/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-slate-900 font-bold"
+                className="text-slate-900 dark:text-white font-bold"
               >
                 Next.js
               </a>{" "}
@@ -42,7 +42,7 @@ const Footer = () => {
                 href="https://tailwindcss.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-sky-500 font-bold"
+                className="text-sky-500 dark:text-sky-400 font-bold"
               >
                 Tailwind CSS
               </a>

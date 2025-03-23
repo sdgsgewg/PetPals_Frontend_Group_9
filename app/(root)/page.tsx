@@ -6,7 +6,9 @@ const Home = () => {
   return (
     <NormalContent>
       <div className="text-center">
-        <h1 className="text-4xl font-bold text-slate-500 mb-2">Home</h1>
+        <h1 className="text-4xl font-bold text-slate-500 dark:text-gray-300 mb-2">
+          Home
+        </h1>
         <Slider />
       </div>
     </NormalContent>

@@ -12,7 +12,7 @@ const Hamburger: React.FC<HamburgerProps> = ({ isOpen, setIsOpen }) => {
       {/* Burger Menu Button (MD ke bawah) */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="md:hidden text-black focus:outline-none cursor-pointer"
+        className="md:hidden text-black dark:text-white focus:outline-none cursor-pointer"
       >
         {isOpen ? <X size={28} /> : <Menu size={28} />}
       </button>

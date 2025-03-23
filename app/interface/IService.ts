@@ -1,6 +1,6 @@
 interface IService {
   service_id: number;
-  provider_name: number;
+  providerName: number;
   name: string;
   slug: string;
   categoryName: string;

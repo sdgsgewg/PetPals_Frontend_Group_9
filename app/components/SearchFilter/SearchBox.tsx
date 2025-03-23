@@ -38,7 +38,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({ placeholder, searchType }) => {
         id="searchValue"
         value={filters.searchValue}
         placeholder={placeholder}
-        className="flex-1 w-80 border outline-none rounded-xl px-4 py-2 me-4 md:me-6 lg:me-8"
+        className="bg-white flex-1 w-80 border outline-none rounded-xl px-4 py-2 me-4 md:me-6 lg:me-8"
         onChange={handleInputChange}
       />
       <button

@@ -12,7 +12,7 @@ const NavItem: React.FC<NavItemProps> = ({ href, icon, label, setIsOpen }) => {
   return (
     <Link
       href={href}
-      className="flex items-center gap-2 text-sm font-semibold hover:text-slate-800 transition duration-300 ease-in-out"
+      className="flex items-center gap-2 text-sm font-semibold text-slate-700 dark:text-slate-300 hover:text-slate-800 dark:hover:text-slate-200 transition duration-300 ease-in-out"
       onClick={() => setIsOpen(false)}
     >
       {icon}

@@ -2,6 +2,7 @@ import IPet from "@/app/interface/IPet";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
+import CardLayout from "../Cards/CardLayout";
 
 interface PetCardProps {
   pet: IPet;
@@ -20,7 +21,7 @@ const PetCard: React.FC<PetCardProps> = ({ pet }) => {
 
   return (
     <Link href={`/adoptions/${pet.slug}`}>
-      <div className="w-full h-full flex flex-col items-center border rounded-md shadow-md overflow-hidden mb-4 hover:scale-105 transition ease-in-out duration-300 cursor-pointer">
+      <CardLayout>
         <div className="w-full h-[60%] overflow-hidden">
           <Image
             src={`/img/breed/${modifiedBreed}.jpg`}
@@ -32,21 +33,25 @@ const PetCard: React.FC<PetCardProps> = ({ pet }) => {
         </div>
         <div className="w-full h-[40%] flex flex-col justify-between p-3">
           <div>
-            <p className="text-sm font-semibold text-slate-300">{pet.breed}</p>
-            <p className="text-lg font-bold text-slate-500">{pet.name}</p>
+            <p className="text-sm font-semibold text-slate-700 dark:text-slate-300">
+              {pet.breed}
+            </p>
+            <p className="text-lg font-bold text-slate-900 dark:text-slate-400">
+              {pet.name}
+            </p>
             <div className="flex items-center gap-1 mt-1">
-              <span className="text-sm text-slate-400">
+              <span className="text-sm text-slate-600 dark:text-slate-400">
                 {pet.age < 1
                   ? `Age: ${Math.round(pet.age * 12)} months`
                   : `Age: ${pet.age} ${pet.age > 1 ? "years" : "year"}`}
               </span>
             </div>
           </div>
-          <div className="text-md font-semibold text-slate-400">
+          <div className="text-md font-semibold text-slate-600 dark:text-slate-400">
             <p>{"Rp " + formattedPrice(pet.price)}</p>
           </div>
         </div>
-      </div>
+      </CardLayout>
     </Link>
   );
 };
