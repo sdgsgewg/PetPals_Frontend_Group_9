@@ -1,54 +1,36 @@
 "use client";
+
+import { Button } from "@/components/ui/button";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
-import { Moon, Sun } from "lucide-react";
+import { FaMoon, FaSun, FaAdjust } from "react-icons/fa";
 
 const ThemeSwitcher = () => {
-  const { setTheme, resolvedTheme } = useTheme();
+  const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
-  const [systemPrefersDark, setSystemPrefersDark] = useState(false);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  useEffect(() => {
-    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-    setSystemPrefersDark(mediaQuery.matches);
-
-    const handleChange = (event: MediaQueryListEvent) => {
-      setSystemPrefersDark(event.matches);
-    };
-
-    mediaQuery.addEventListener("change", handleChange);
-    return () => mediaQuery.removeEventListener("change", handleChange);
-  }, []);
-
   if (!mounted) {
     return (
-      <button className="p-2 rounded-md bg-gray-200 dark:bg-gray-700">
-        {systemPrefersDark ? (
-          <Sun className="text-yellow-500" />
-        ) : (
-          <Moon className="text-gray-400" />
-        )}
-      </button>
+      <Button variant="outline" size="icon" className="rounded-full">
+        <FaAdjust className="absolute h-10 w-10 scale-100"></FaAdjust>
+      </Button>
     );
   }
 
   return (
-    <>
-      <button
-        onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
-        className="p-2 rounded-md bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition cursor-pointer"
-      >
-        {resolvedTheme === "dark" ? (
-          <Sun className="text-yellow-500" />
-        ) : (
-          <Moon className="text-gray-400" />
-        )}
-      </button>
-    </>
+    <Button
+      variant="outline"
+      size="icon"
+      className="rounded-full cursor-pointer"
+      onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+    >
+      <FaSun className="absolute h-10 w-10 rotate-90 scale-0 dark:-rotate-0 dark:scale-100"></FaSun>
+      <FaMoon className="absolute h-10 w-10 rotate-0 scale-100 dark:-rotate-90 dark:scale-0"></FaMoon>
+    </Button>
   );
 };
 
