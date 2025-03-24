@@ -7,21 +7,22 @@ import {
   useReducer,
   useState,
 } from "react";
-import IService from "../interface/IService";
-import { IServiceFilterParams } from "../interface/IServiceFilterParams";
-import { ServicesReducer } from "./ServicesReducer";
-import { GlobalActionType } from "./GlobalActions";
 import api from "@/lib/apiClient";
-import { IServiceCategory } from "../interface/IServiceCategory";
-import { serviceCategories } from "../data/serviceCategories";
+import { IServiceCategory } from "@/app/interface/IServiceCategory";
+import IService from "@/app/interface/IService";
+import { IServiceFilterParams } from "@/app/interface/IServiceFilterParams";
+import { ServicesReducer } from "./ServicesReducer";
+import { GlobalActionType } from "../GlobalActions";
 
 interface ServicesContextType {
   service_categories: IServiceCategory[];
   services: IService[];
   service: IService;
   filters: IServiceFilterParams;
-  setFilters: React.Dispatch<React.SetStateAction<IServiceFilterParams>>;
+  setFilters: (name: string, value: string) => void;
+  resetFilters: () => void;
   fetchServices: () => Promise<void>;
+  fetchServiceCategories: () => Promise<void>;
   fetchServiceDetail: (slug: string) => Promise<void>;
   loading: boolean;
   error: boolean;
@@ -33,16 +34,15 @@ const ServicesContext = createContext<ServicesContextType | undefined>(
 
 export function ServicesProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(ServicesReducer, {
-    service_categories: serviceCategories,
+    service_categories: [],
     services: [],
+    filters: {
+      searchValue: "",
+      categoryName: "",
+      minPrice: "",
+      maxPrice: "",
+    } as IServiceFilterParams,
     service: {} as IService,
-  });
-
-  const [filters, setFilters] = useState<IServiceFilterParams>({
-    searchValue: "",
-    categoryName: "",
-    minPrice: "",
-    maxPrice: "",
   });
 
   const [loading, setLoading] = useState<boolean>(true);
@@ -55,11 +55,11 @@ export function ServicesProvider({ children }: { children: ReactNode }) {
 
       const response = await api.get("/services-list", {
         params: {
-          name: filters.searchValue,
-          city: filters.searchValue,
-          categoryName: filters.categoryName,
-          minPrice: filters.minPrice,
-          maxPrice: filters.maxPrice,
+          name: state.filters.searchValue,
+          city: state.filters.searchValue,
+          categoryName: state.filters.categoryName,
+          minPrice: state.filters.minPrice,
+          maxPrice: state.filters.maxPrice,
         },
       });
 
@@ -78,6 +78,48 @@ export function ServicesProvider({ children }: { children: ReactNode }) {
     } finally {
       setLoading(false);
     }
+  };
+
+  const fetchServiceCategories = async () => {
+    try {
+      setLoading(true);
+      setError(false);
+
+      const response = await api.get("/get-service-categories", {
+        params: {
+          categoryId: "",
+          name: "",
+        },
+      });
+
+      if (response.data && Array.isArray(response.data)) {
+        dispatch({
+          type: GlobalActionType.GET_ALL_SERVICE_CATEGORIES,
+          payload: response.data,
+        });
+      } else {
+        console.error("Invalid API response format:", response.data);
+        setError(true);
+      }
+    } catch (error) {
+      console.error("Error fetching service categories:", error);
+      setError(true);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const setFilters = (name: string, value: string) => {
+    dispatch({
+      type: GlobalActionType.SET_SERVICE_FILTER,
+      payload: { name, value },
+    });
+  };
+
+  const resetFilters = () => {
+    dispatch({
+      type: GlobalActionType.RESET_SERVICE_FILTERS,
+    });
   };
 
   const fetchServiceDetail = async (slug: string) => {
@@ -110,9 +152,11 @@ export function ServicesProvider({ children }: { children: ReactNode }) {
         service_categories: state.service_categories,
         services: state.services,
         service: state.service,
-        filters,
+        filters: state.filters,
         setFilters,
+        resetFilters,
         fetchServices,
+        fetchServiceCategories,
         fetchServiceDetail,
         loading,
         error,

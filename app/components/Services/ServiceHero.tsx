@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { useState } from "react";
-import { usePets } from "@/app/context/PetsContext";
+import { usePets } from "@/app/context/adoptions/PetsContext";
 import SearchBox from "../SearchFilter/SearchBox";
 import FilterBox from "../SearchFilter/FilterBox";
 import SearchFilterBox from "../SearchFilter/SearchFilterBox";

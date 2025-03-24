@@ -1,6 +1,7 @@
 "use client";
 import BigHeroContent from "@/app/components/ContentTemplate/BigHeroContent";
 import NormalContent from "@/app/components/ContentTemplate/NormalContent";
+import FilterModal from "@/app/components/modals/FilterModal";
 import PageNotFound from "@/app/components/PageNotFound";
 import ServiceHero from "@/app/components/Services/ServiceHero";
 import ServiceList from "@/app/components/Services/ServiceList";
@@ -41,6 +42,7 @@ const Services = () => {
           <div className="px-4 sm:px-6 md:px-8 lg:px-12 mt-20">
             <ServiceList filteredServices={services} />
           </div>
+          <FilterModal filterType="services" />
         </BigHeroContent>
       )}
     </>

@@ -1,33 +1,21 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFilter } from "@fortawesome/free-solid-svg-icons";
-import FilterModal from "../modals/FilterModal";
+import { useGlobal } from "@/app/context/GlobalContext";
 
-interface FilterBoxProps {
-  isOpen: boolean;
-  onOpen: () => void;
-  onClose: () => void;
-  filterType: string;
-}
+const FilterBox = () => {
+  const { handleOpenModal } = useGlobal();
 
-const FilterBox: React.FC<FilterBoxProps> = ({
-  isOpen,
-  onOpen,
-  onClose,
-  filterType,
-}) => {
   return (
     <>
-      <div className="w-10 flex-none">
+      <div className="w-10 flex-none mt-3 md:mt-0">
         <button
-          className="bg-gray-500 text-white rounded-xl shadow-md px-4 py-2 hover:bg-gray-600 transition duration-300 ease-in-out cursor-pointer"
-          onClick={onOpen}
+          className="bg-gray-300 dark:bg-gray-600 text-slate-500 dark:text-slate-50 rounded-xl shadow-md px-4 py-2 hover:bg-gray-400 dark:hover:bg-gray-500 transition duration-300 ease-in-out cursor-pointer"
+          onClick={handleOpenModal}
         >
           <FontAwesomeIcon icon={faFilter} />
         </button>
       </div>
-
-      <FilterModal isOpen={isOpen} onClose={onClose} filterType={filterType} />
     </>
   );
 };

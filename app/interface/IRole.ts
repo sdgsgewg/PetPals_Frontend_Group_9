@@ -1,6 +1,4 @@
-interface IUser {
-  role_id: number;
+export interface IRole {
+  roleId: number;
   name: string;
 }
-
-export default IUser;

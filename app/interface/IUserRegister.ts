@@ -1,11 +1,8 @@
-interface IUser {
-  userId: number;
+export interface IUserRegister {
   name: string;
   email: string;
   password: string;
   phone: string;
   address: string;
-  role: string;
+  roleId: number;
 }
-
-export default IUser;

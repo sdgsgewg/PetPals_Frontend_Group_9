@@ -7,21 +7,22 @@ import {
   useReducer,
   useState,
 } from "react";
-import IPet from "../interface/IPet";
+import IPet from "../../interface/IPet";
 import { PetsReducer } from "./PetsReducer";
-import { GlobalActionType } from "./GlobalActions";
+import { GlobalActionType } from "../GlobalActions";
 import api from "@/lib/apiClient";
-import { IPetFilterParams } from "../interface/IPetFilterParams";
-import ISpecies from "../interface/ISpecies";
-import { species } from "../data/species";
+import { IPetFilterParams } from "../../interface/IPetFilterParams";
+import ISpecies from "../../interface/ISpecies";
 
 interface PetsContextType {
   species: ISpecies[];
   pets: IPet[];
   pet: IPet;
   filters: IPetFilterParams;
-  setFilters: React.Dispatch<React.SetStateAction<IPetFilterParams>>;
+  setFilters: (name: string, value: string) => void;
+  resetFilters: () => void;
   fetchPets: () => Promise<void>;
+  fetchSpecies: () => Promise<void>;
   fetchPetDetail: (slug: string) => Promise<void>;
   loading: boolean;
   error: boolean;
@@ -31,18 +32,17 @@ const PetsContext = createContext<PetsContextType | undefined>(undefined);
 
 export function PetsProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(PetsReducer, {
-    species: species,
+    species: [],
     pets: [],
+    filters: {
+      searchValue: "",
+      species: "",
+      minAge: "",
+      maxAge: "",
+      minPrice: "",
+      maxPrice: "",
+    } as IPetFilterParams,
     pet: {} as IPet,
-  });
-
-  const [filters, setFilters] = useState<IPetFilterParams>({
-    searchValue: "",
-    species: "",
-    minAge: "",
-    maxAge: "",
-    minPrice: "",
-    maxPrice: "",
   });
 
   const [loading, setLoading] = useState<boolean>(true);
@@ -55,13 +55,13 @@ export function PetsProvider({ children }: { children: ReactNode }) {
 
       const response = await api.get("/adoption-list", {
         params: {
-          name: filters.searchValue,
-          minAge: filters.minAge,
-          maxAge: filters.maxAge,
-          breed: filters.searchValue,
-          species: filters.species,
-          minPrice: filters.minPrice,
-          maxPrice: filters.maxPrice,
+          name: state.filters.searchValue,
+          minAge: state.filters.minAge,
+          maxAge: state.filters.maxAge,
+          breed: state.filters.searchValue,
+          species: state.filters.species,
+          minPrice: state.filters.minPrice,
+          maxPrice: state.filters.maxPrice,
         },
       });
 
@@ -80,6 +80,48 @@ export function PetsProvider({ children }: { children: ReactNode }) {
     } finally {
       setLoading(false);
     }
+  };
+
+  const fetchSpecies = async () => {
+    try {
+      setLoading(true);
+      setError(false);
+
+      const response = await api.get("/get-species", {
+        params: {
+          speciesId: "",
+          name: "",
+        },
+      });
+
+      if (response.data && Array.isArray(response.data)) {
+        dispatch({
+          type: GlobalActionType.GET_ALL_SPECIES,
+          payload: response.data,
+        });
+      } else {
+        console.error("Invalid API response format:", response.data);
+        setError(true);
+      }
+    } catch (error) {
+      console.error("Error fetching species:", error);
+      setError(true);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const setFilters = (name: string, value: string) => {
+    dispatch({
+      type: GlobalActionType.SET_PET_FILTER,
+      payload: { name, value },
+    });
+  };
+
+  const resetFilters = () => {
+    dispatch({
+      type: GlobalActionType.RESET_PET_FILTERS,
+    });
   };
 
   const fetchPetDetail = async (slug: string) => {
@@ -112,9 +154,11 @@ export function PetsProvider({ children }: { children: ReactNode }) {
         species: state.species,
         pets: state.pets,
         pet: state.pet,
-        filters,
+        filters: state.filters,
         setFilters,
+        resetFilters,
         fetchPets,
+        fetchSpecies,
         fetchPetDetail,
         loading,
         error,

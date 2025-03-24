@@ -2,7 +2,7 @@
 import CardDetailLayout from "@/app/components/Cards/CardDetailLayout";
 import NormalContent from "@/app/components/ContentTemplate/NormalContent";
 import PageNotFound from "@/app/components/PageNotFound";
-import { usePets } from "@/app/context/PetsContext";
+import { usePets } from "@/app/context/adoptions/PetsContext";
 import Loading from "@/app/loading";
 import Image from "next/image";
 import { useParams } from "next/navigation";
