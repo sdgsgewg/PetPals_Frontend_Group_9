@@ -2,7 +2,7 @@
 import CardDetailLayout from "@/app/components/Cards/CardDetailLayout";
 import NormalContent from "@/app/components/ContentTemplate/NormalContent";
 import PageNotFound from "@/app/components/PageNotFound";
-import { useServices } from "@/app/context/ServicesContext";
+import { useServices } from "@/app/context/services/ServicesContext";
 import Loading from "@/app/loading";
 import Image from "next/image";
 import { useParams } from "next/navigation";
