@@ -4,6 +4,7 @@ import React from "react";
 import ServiceCard from "./ServiceCard";
 import { useServices } from "@/app/context/services/ServicesContext";
 import Loading from "@/app/loading";
+import ItemNotFound from "../ItemNotFound";
 
 interface ServiceListProps {
   filteredServices: IService[];
@@ -23,15 +24,10 @@ const ServiceList: React.FC<ServiceListProps> = ({ filteredServices }) => {
           ))}
         </div>
       ) : (
-        <div className="flex flex-col items-center justify-center gap-4 text-black">
-          <Image
-            src={`/img/service-not-found.png`}
-            alt="Service Not Found"
-            width={200}
-            height={200}
-          />
-          <p className="text-2xl font-bold">Service Not Found</p>
-        </div>
+        <ItemNotFound
+          image_url="/img/service-not-found.png"
+          message="Service Not Found"
+        />
       )}
     </>
   );

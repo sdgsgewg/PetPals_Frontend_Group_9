@@ -4,6 +4,7 @@ import PetCard from "./PetCard";
 import Image from "next/image";
 import { usePets } from "@/app/context/pets/PetsContext";
 import Loading from "@/app/loading";
+import ItemNotFound from "../ItemNotFound";
 
 interface PetListProps {
   filteredPets: IPet[];
@@ -23,15 +24,10 @@ const PetList: React.FC<PetListProps> = ({ filteredPets }) => {
           ))}
         </div>
       ) : (
-        <div className="flex flex-col items-center justify-center gap-4 text-black">
-          <Image
-            src={`/img/pet-not-found.png`}
-            alt="Pet Not Found"
-            width={200}
-            height={200}
-          />
-          <p className="text-2xl font-bold">Pet Not Found</p>
-        </div>
+        <ItemNotFound
+          image_url="/img/pet-not-found.png"
+          message="Pet Not Found"
+        />
       )}
     </>
   );

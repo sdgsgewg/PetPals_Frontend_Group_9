@@ -38,10 +38,11 @@ const ServiceDetail = () => {
     );
   }
 
-  const splitCategoryName = service.categoryName?.split(" ");
-  const modifiedCategoryName = splitCategoryName
-    .map((word) => word.toLowerCase())
-    .join("-");
+  const formattedCategoryName = (categoryName: string) =>
+    categoryName
+      ?.split(" ")
+      .map((word) => word.toLowerCase())
+      .join("-");
 
   const formattedPrice = (price: number) =>
     price?.toLocaleString("id-ID", {
@@ -55,7 +56,9 @@ const ServiceDetail = () => {
         {/* Left: Image */}
         <div className="flex justify-center">
           <Image
-            src={`/img/services/${modifiedCategoryName}.jpg`}
+            src={`/img/services/${formattedCategoryName(
+              service.categoryName
+            )}.jpg`}
             alt={service.name}
             width={400}
             height={400}
