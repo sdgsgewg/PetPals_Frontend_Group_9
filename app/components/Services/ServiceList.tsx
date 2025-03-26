@@ -2,7 +2,7 @@ import IService from "@/app/interface/IService";
 import Image from "next/image";
 import React from "react";
 import ServiceCard from "./ServiceCard";
-import { useServices } from "@/app/context/ServicesContext";
+import { useServices } from "@/app/context/services/ServicesContext";
 import Loading from "@/app/loading";
 
 interface ServiceListProps {

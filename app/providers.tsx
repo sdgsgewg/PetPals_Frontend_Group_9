@@ -1,10 +1,11 @@
 "use client";
 import { ThemeProvider } from "next-themes";
 import React from "react";
-import { PetsProvider } from "./context/adoptions/PetsContext";
+import { PetsProvider } from "./context/pets/PetsContext";
 import { ServicesProvider } from "./context/services/ServicesContext";
 import { GlobalProvider } from "./context/GlobalContext";
 import { UsersProvider } from "./context/users/UsersContext";
+import { AdoptionsProvider } from "./context/adoptions/AdoptionsContext";
 
 const Providers = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -12,7 +13,9 @@ const Providers = ({ children }: { children: React.ReactNode }) => {
       <GlobalProvider>
         <UsersProvider>
           <PetsProvider>
-            <ServicesProvider>{children}</ServicesProvider>
+            <AdoptionsProvider>
+              <ServicesProvider>{children}</ServicesProvider>
+            </AdoptionsProvider>
           </PetsProvider>
         </UsersProvider>
       </GlobalProvider>

@@ -4,17 +4,18 @@ import {
   createContext,
   ReactNode,
   useContext,
+  useEffect,
   useReducer,
-  useState,
 } from "react";
 import api from "@/lib/apiClient";
 import IUser from "@/app/interface/IUser";
 import { IRole } from "@/app/interface/IRole";
-import { UsersReducer } from "./UsersReducer";
+import { initialState, UsersReducer } from "./UsersReducer";
 import { GlobalActionType } from "../GlobalActions";
 import { IUserRegister } from "@/app/interface/IUserRegister";
 import { IUserLogin } from "@/app/interface/IUserLogin";
 import { useRouter } from "next/navigation";
+import { IRegisterErrorMessage } from "@/app/interface/IRegisterErrorMessage";
 
 interface UsersContextType {
   user: IUser;
@@ -22,6 +23,7 @@ interface UsersContextType {
   userLogin: IUserLogin;
   loggedInUser: IUser;
   roles: IRole[];
+  registerErrorMessages: IRegisterErrorMessage;
   fetchRoles: () => Promise<void>;
   setUserRegister: (name: string, value: string) => void;
   registerUser: () => Promise<void>;
@@ -29,42 +31,21 @@ interface UsersContextType {
   loginUser: () => Promise<void>;
   logoutUser: () => void;
   loading: boolean;
-  error: boolean;
+  error: string | null;
   isLoggedIn: boolean;
 }
 
 const UsersContext = createContext<UsersContextType | undefined>(undefined);
 
 export function UsersProvider({ children }: { children: ReactNode }) {
-  const [state, dispatch] = useReducer(UsersReducer, {
-    user: {} as IUser,
-    userRegister: {
-      name: "",
-      email: "",
-      password: "",
-      phone: "",
-      address: "",
-      roleId: 0,
-    },
-    userLogin: {
-      email: "",
-      password: "",
-    },
-    loggedInUser: {} as IUser,
-    roles: [],
-  });
-
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<boolean>(false);
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [state, dispatch] = useReducer(UsersReducer, initialState);
 
   const router = useRouter();
 
   const fetchRoles = async () => {
-    try {
-      setLoading(true);
-      setError(false);
+    dispatch({ type: GlobalActionType.SET_LOADING, payload: true });
 
+    try {
       const response = await api.get("/get-user-roles", {
         params: {
           RoleId: "",
@@ -79,13 +60,19 @@ export function UsersProvider({ children }: { children: ReactNode }) {
         });
       } else {
         console.error("Invalid API response format:", response.data);
-        setError(true);
+        dispatch({
+          type: GlobalActionType.SET_ERROR,
+          payload: response?.data?.message || "Registration failed",
+        });
       }
     } catch (error) {
       console.error("Error fetching user roles:", error);
-      setError(true);
+      dispatch({
+        type: GlobalActionType.SET_ERROR,
+        payload: "Fetch Role failed",
+      });
     } finally {
-      setLoading(false);
+      dispatch({ type: GlobalActionType.SET_LOADING, payload: false });
     }
   };
 
@@ -97,29 +84,81 @@ export function UsersProvider({ children }: { children: ReactNode }) {
   };
 
   const registerUser = async () => {
-    try {
-      setLoading(true);
-      setError(false);
+    dispatch({ type: GlobalActionType.SET_LOADING, payload: true });
 
+    // Reset error messages sebelum mengirim request
+    dispatch({
+      type: GlobalActionType.RESET_REGISTER_ERROR_MESSAGES,
+    });
+
+    try {
       const response = await api.post("/register-petpals", state.userRegister);
 
-      if (response.data) {
+      if (!response.data.errors) {
         alert("Registration successful");
 
+        console.log(response.data.errors);
+
+        // Reset state user yang ingin di-register
         dispatch({
           type: GlobalActionType.RESET_USER_REGISTER,
         });
+
+        // Redirect ke halaman login
+        router.push("/login");
       } else {
         console.error("Invalid API response format:", response.data);
-        alert("Registration Failed");
-        setError(true);
+
+        if (response.data.errors) {
+          const errors = response.data.errors.reduce(
+            (
+              acc: Record<string, string>,
+              error: { propertyName: string; errorMessage: string }
+            ) => {
+              acc[error.propertyName] = error.errorMessage;
+              return acc;
+            },
+            {}
+          );
+
+          dispatch({
+            type: GlobalActionType.SET_REGISTER_ERROR_MESSAGES,
+            payload: errors,
+          });
+        }
+
+        dispatch({
+          type: GlobalActionType.SET_ERROR,
+          payload: "Registration failed",
+        });
       }
     } catch (error) {
-      console.error("Error register user:", error);
-      alert("Registration Failed");
-      setError(true);
+      console.error("Error register user:", error.response.data);
+
+      if (error.response.data.errors) {
+        const errors = error.response.data.errors.reduce(
+          (
+            acc: Record<string, string>,
+            err: { propertyName: string; errorMessage: string }
+          ) => {
+            acc[err.propertyName] = err.errorMessage;
+            return acc;
+          },
+          {}
+        );
+
+        dispatch({
+          type: GlobalActionType.SET_REGISTER_ERROR_MESSAGES,
+          payload: errors,
+        });
+      }
+
+      dispatch({
+        type: GlobalActionType.SET_ERROR,
+        payload: "Registration failed",
+      });
     } finally {
-      setLoading(false);
+      dispatch({ type: GlobalActionType.SET_LOADING, payload: false });
     }
   };
 
@@ -131,15 +170,19 @@ export function UsersProvider({ children }: { children: ReactNode }) {
   };
 
   const loginUser = async () => {
+    dispatch({ type: GlobalActionType.SET_LOADING, payload: true });
     try {
-      setLoading(true);
-      setError(false);
-      setIsLoggedIn(false);
-
       const response = await api.post("/login-petpals", state.userLogin);
 
       if (response.data) {
         alert("Login successful");
+
+        const token = response.data.token;
+        const userData = response.data.user;
+
+        // Simpan token dan user di session storage
+        sessionStorage.setItem("token", token);
+        sessionStorage.setItem("loggedInUser", JSON.stringify(userData));
 
         dispatch({
           type: GlobalActionType.LOGIN_USER,
@@ -150,31 +193,61 @@ export function UsersProvider({ children }: { children: ReactNode }) {
           type: GlobalActionType.RESET_USER_LOGIN,
         });
 
-        setIsLoggedIn(true);
+        dispatch({
+          type: GlobalActionType.SET_LOGGED_IN,
+          payload: true,
+        });
 
         // Redirect ke halaman home
         router.push("/");
       } else {
         console.error("Invalid API response format:", response.data);
         alert("Login Failed");
-        setError(true);
+        dispatch({
+          type: GlobalActionType.SET_ERROR,
+          payload: "Login failed",
+        });
       }
     } catch (error) {
       console.error("Error login user:", error);
       alert("Login Failed");
-      setError(true);
+      dispatch({
+        type: GlobalActionType.SET_ERROR,
+        payload: "Login failed",
+      });
     } finally {
-      setLoading(false);
+      dispatch({ type: GlobalActionType.SET_LOADING, payload: false });
     }
   };
 
   const logoutUser = () => {
-    setIsLoggedIn(false);
+    dispatch({
+      type: GlobalActionType.SET_LOGGED_IN,
+      payload: false,
+    });
+
+    // Hapus token dan user dari session storage
+    sessionStorage.removeItem("token");
+    sessionStorage.removeItem("loggedInUser");
 
     dispatch({
       type: GlobalActionType.LOGOUT_USER,
     });
   };
+
+  useEffect(() => {
+    const storedUser = sessionStorage.getItem("loggedInUser");
+    if (storedUser) {
+      dispatch({
+        type: GlobalActionType.LOGIN_USER,
+        payload: JSON.parse(storedUser),
+      });
+      dispatch({
+        type: GlobalActionType.SET_LOGGED_IN,
+        payload: true,
+      });
+    }
+  }, []);
 
   return (
     <UsersContext.Provider
@@ -184,15 +257,16 @@ export function UsersProvider({ children }: { children: ReactNode }) {
         userLogin: state.userLogin,
         loggedInUser: state.loggedInUser,
         roles: state.roles,
+        registerErrorMessages: state.registerErrorMessages,
         fetchRoles,
         setUserRegister,
         registerUser,
         setUserLogin,
         loginUser,
         logoutUser,
-        loading,
-        error,
-        isLoggedIn,
+        loading: state.loading,
+        error: state.error,
+        isLoggedIn: state.isLoggedIn,
       }}
     >
       {children}

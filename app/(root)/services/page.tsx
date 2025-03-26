@@ -5,7 +5,7 @@ import FilterModal from "@/app/components/modals/FilterModal";
 import PageNotFound from "@/app/components/PageNotFound";
 import ServiceHero from "@/app/components/Services/ServiceHero";
 import ServiceList from "@/app/components/Services/ServiceList";
-import { useServices } from "@/app/context/ServicesContext";
+import { useServices } from "@/app/context/services/ServicesContext";
 import React, { useEffect, useState } from "react";
 import { useDebounce } from "react-use";
 

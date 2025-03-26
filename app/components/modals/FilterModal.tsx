@@ -1,5 +1,5 @@
-import { usePets } from "@/app/context/adoptions/PetsContext";
-import { useServices } from "@/app/context/ServicesContext";
+import { usePets } from "@/app/context/pets/PetsContext";
+import { useServices } from "@/app/context/services/ServicesContext";
 import React from "react";
 import PetFilterField from "./PetFilterField";
 import ServiceFilterField from "./ServiceFilterField";

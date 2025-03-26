@@ -5,17 +5,17 @@ import LoginInputField from "./Login/LoginInputField";
 import RegisterInputField from "./Register/RegisterInputField";
 import { useUsers } from "@/app/context/users/UsersContext";
 
-interface AuthBoxProps {
+interface AuthFormProps {
   authType: string;
 }
 
-const AuthBox: React.FC<AuthBoxProps> = ({ authType }) => {
+const AuthForm: React.FC<AuthFormProps> = ({ authType }) => {
   const userContext = useUsers();
   const authFunction =
     authType === "Login" ? userContext.loginUser : userContext.registerUser;
 
   return (
-    <div className="w-full max-w-md p-8 bg-white dark:bg-gray-800 shadow-md rounded-lg">
+    <div className="w-full max-w-sm md:max-w-md p-8 bg-white dark:bg-gray-800 shadow-md rounded-lg">
       <h2 className="text-2xl font-bold text-center mb-6">{authType}</h2>
       <form onSubmit={(e) => e.preventDefault()}>
         {/* Input Field */}
@@ -48,4 +48,4 @@ const AuthBox: React.FC<AuthBoxProps> = ({ authType }) => {
   );
 };
 
-export default AuthBox;
+export default AuthForm;

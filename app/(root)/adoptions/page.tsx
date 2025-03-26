@@ -5,7 +5,7 @@ import BigHeroContent from "@/app/components/ContentTemplate/BigHeroContent";
 import NormalContent from "@/app/components/ContentTemplate/NormalContent";
 import FilterModal from "@/app/components/modals/FilterModal";
 import PageNotFound from "@/app/components/PageNotFound";
-import { usePets } from "@/app/context/adoptions/PetsContext";
+import { usePets } from "@/app/context/pets/PetsContext";
 import React, { useEffect, useState } from "react";
 import { useDebounce } from "react-use";
 

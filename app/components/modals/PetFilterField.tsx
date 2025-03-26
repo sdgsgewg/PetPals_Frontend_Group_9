@@ -1,4 +1,4 @@
-import { usePets } from "@/app/context/adoptions/PetsContext";
+import { usePets } from "@/app/context/pets/PetsContext";
 import React, { useEffect } from "react";
 
 const PetFilterField = () => {
@@ -17,7 +17,7 @@ const PetFilterField = () => {
   };
 
   return (
-  <div className="w-full py-2">
+    <div className="w-full py-2">
       <form onSubmit={(e) => e.preventDefault()}>
         {/* Species */}
         <label
