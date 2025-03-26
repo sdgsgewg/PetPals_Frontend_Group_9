@@ -4,5 +4,6 @@ export interface IRegisterErrorMessage {
   Password: string;
   Phone: string;
   Address: string;
+  City: string;
   RoleId: string;
 }

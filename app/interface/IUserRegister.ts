@@ -4,5 +4,6 @@ export interface IUserRegister {
   password: string;
   phone: string;
   address: string;
+  city: string;
   roleId: number;
 }

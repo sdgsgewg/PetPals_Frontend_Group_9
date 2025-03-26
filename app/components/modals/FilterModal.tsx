@@ -11,7 +11,7 @@ interface FilterModalProps {
 }
 
 const FilterModal: React.FC<FilterModalProps> = ({ filterType }) => {
-  const { isModalOpen, handleCloseModal } = useGlobal();
+  const { isFilterModalOpen, handleCloseFilterModal } = useGlobal();
   const petContext = usePets();
   const serviceContext = useServices();
 
@@ -33,7 +33,7 @@ const FilterModal: React.FC<FilterModalProps> = ({ filterType }) => {
   return (
     <div
       className={`${
-        !isModalOpen
+        !isFilterModalOpen
           ? "hidden"
           : "fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
       }`}
@@ -43,7 +43,7 @@ const FilterModal: React.FC<FilterModalProps> = ({ filterType }) => {
           <h1 className="text-xl">Filter</h1>
           <button
             className="text-xl cursor-pointer text-gray-900 dark:text-gray-300"
-            onClick={handleCloseModal}
+            onClick={handleCloseFilterModal}
           >
             <X size={28} />
           </button>
@@ -64,7 +64,7 @@ const FilterModal: React.FC<FilterModalProps> = ({ filterType }) => {
             className="bg-blue-500 dark:bg-blue-600 text-white border px-4 py-1 rounded-xl shadow-sm cursor-pointer hover:bg-blue-600 dark:hover:bg-blue-500 transition duration-300 ease-in-out"
             onClick={() => {
               fetchFunction();
-              handleCloseModal();
+              handleCloseFilterModal();
             }}
           >
             Apply

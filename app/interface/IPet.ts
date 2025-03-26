@@ -1,3 +1,5 @@
+import IUser from "./IUser";
+
 export enum PetStatus {
   Available = "available",
   Adopted = "adopted",
@@ -5,7 +7,6 @@ export enum PetStatus {
 
 interface IPet {
   petId: number;
-  ownerName: string;
   name: string;
   slug: string;
   species: string;
@@ -14,6 +15,7 @@ interface IPet {
   description: string;
   status: PetStatus;
   price: number;
+  owner: IUser;
 }
 
 export default IPet;

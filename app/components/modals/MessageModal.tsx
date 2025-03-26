@@ -7,12 +7,12 @@ interface MessageModalProps {
 }
 
 const MessageModal: React.FC<MessageModalProps> = ({ title, message }) => {
-  const { isModalOpen, handleCloseModal } = useGlobal();
+  const { isMessageModalOpen, handleCloseMessageModal } = useGlobal();
 
   return (
     <div
       className={`${
-        !isModalOpen
+        !isMessageModalOpen
           ? "hidden"
           : "fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
       }`}
@@ -23,8 +23,8 @@ const MessageModal: React.FC<MessageModalProps> = ({ title, message }) => {
 
         <div className="flex justify-center mt-4">
           <button
-            onClick={handleCloseModal}
-            className="bg-gray-300 text-black px-3 py-1 rounded-lg hover:bg-gray-400 transition"
+            onClick={handleCloseMessageModal}
+            className="bg-gray-300 text-black px-3 py-1 rounded-lg hover:bg-gray-400 transition duration-300 ease-in-out cursor-pointer"
           >
             OK
           </button>

@@ -15,7 +15,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ authType }) => {
     authType === "Login" ? userContext.loginUser : userContext.registerUser;
 
   return (
-    <div className="w-full max-w-sm md:max-w-md p-8 bg-white dark:bg-gray-800 shadow-md rounded-lg">
+    <div className="w-full max-w-sm sm:max-w-md md:max-w-xl p-8 bg-white dark:bg-gray-800 shadow-md rounded-lg">
       <h2 className="text-2xl font-bold text-center mb-6">{authType}</h2>
       <form onSubmit={(e) => e.preventDefault()}>
         {/* Input Field */}

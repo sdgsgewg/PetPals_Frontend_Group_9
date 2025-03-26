@@ -11,7 +11,7 @@ import api from "@/lib/apiClient";
 import { IServiceCategory } from "@/app/interface/IServiceCategory";
 import IService from "@/app/interface/IService";
 import { IServiceFilterParams } from "@/app/interface/IServiceFilterParams";
-import { ServicesReducer } from "./ServicesReducer";
+import { initialState, ServicesReducer } from "./ServicesReducer";
 import { GlobalActionType } from "../GlobalActions";
 
 interface ServicesContextType {
@@ -24,8 +24,13 @@ interface ServicesContextType {
   fetchServices: () => Promise<void>;
   fetchServiceCategories: () => Promise<void>;
   fetchServiceDetail: (slug: string) => Promise<void>;
+  bookService: (
+    adopterId: number,
+    serviceId: number,
+    bookingDate: string
+  ) => Promise<void>;
   loading: boolean;
-  error: boolean;
+  error: string | null;
 }
 
 const ServicesContext = createContext<ServicesContextType | undefined>(
@@ -33,25 +38,11 @@ const ServicesContext = createContext<ServicesContextType | undefined>(
 );
 
 export function ServicesProvider({ children }: { children: ReactNode }) {
-  const [state, dispatch] = useReducer(ServicesReducer, {
-    service_categories: [],
-    services: [],
-    filters: {
-      searchValue: "",
-      categoryName: "",
-      minPrice: "",
-      maxPrice: "",
-    } as IServiceFilterParams,
-    service: {} as IService,
-  });
-
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<boolean>(false);
+  const [state, dispatch] = useReducer(ServicesReducer, initialState);
 
   const fetchServices = async () => {
     try {
-      setLoading(true);
-      setError(false);
+      dispatch({ type: GlobalActionType.SET_LOADING, payload: true });
 
       const response = await api.get("/services-list", {
         params: {
@@ -70,20 +61,25 @@ export function ServicesProvider({ children }: { children: ReactNode }) {
         });
       } else {
         console.error("Invalid API response format:", response.data);
-        setError(true);
+        dispatch({
+          type: GlobalActionType.SET_ERROR,
+          payload: "Fetch Service List failed",
+        });
       }
     } catch (error) {
       console.error("Error fetching pets:", error);
-      setError(true);
+      dispatch({
+        type: GlobalActionType.SET_ERROR,
+        payload: "Fetch Service List failed",
+      });
     } finally {
-      setLoading(false);
+      dispatch({ type: GlobalActionType.SET_LOADING, payload: false });
     }
   };
 
   const fetchServiceCategories = async () => {
     try {
-      setLoading(true);
-      setError(false);
+      dispatch({ type: GlobalActionType.SET_LOADING, payload: true });
 
       const response = await api.get("/get-service-categories", {
         params: {
@@ -99,13 +95,19 @@ export function ServicesProvider({ children }: { children: ReactNode }) {
         });
       } else {
         console.error("Invalid API response format:", response.data);
-        setError(true);
+        dispatch({
+          type: GlobalActionType.SET_ERROR,
+          payload: "Fetch Service Categories failed",
+        });
       }
     } catch (error) {
       console.error("Error fetching service categories:", error);
-      setError(true);
+      dispatch({
+        type: GlobalActionType.SET_ERROR,
+        payload: "Fetch Service Categories failed",
+      });
     } finally {
-      setLoading(false);
+      dispatch({ type: GlobalActionType.SET_LOADING, payload: false });
     }
   };
 
@@ -124,8 +126,7 @@ export function ServicesProvider({ children }: { children: ReactNode }) {
 
   const fetchServiceDetail = async (slug: string) => {
     try {
-      setLoading(true);
-      setError(false);
+      dispatch({ type: GlobalActionType.SET_LOADING, payload: true });
 
       const response = await api.get(`/service-list/${slug}`);
 
@@ -136,13 +137,53 @@ export function ServicesProvider({ children }: { children: ReactNode }) {
         });
       } else {
         console.error("Invalid API response format:", response.data);
-        setError(true);
+        dispatch({
+          type: GlobalActionType.SET_ERROR,
+          payload: "Fetch Service Detail failed",
+        });
       }
     } catch (error) {
-      console.error("Error fetching service:", error);
-      setError(true);
+      console.error("Error fetching service detail:", error);
+      dispatch({
+        type: GlobalActionType.SET_ERROR,
+        payload: "Fetch Service Detail failed",
+      });
     } finally {
-      setLoading(false);
+      dispatch({ type: GlobalActionType.SET_LOADING, payload: false });
+    }
+  };
+
+  const bookService = async (
+    adopterId: number,
+    serviceId: number,
+    bookingDate: string
+  ) => {
+    dispatch({ type: GlobalActionType.SET_LOADING, payload: true });
+
+    try {
+      const response = await api.post("/service-transaction", {
+        adopterId,
+        serviceId,
+        bookingDate,
+      });
+
+      if (response.data) {
+        console.log("Booking successful");
+      } else {
+        console.error("Invalid API response format:", response.data);
+        dispatch({
+          type: GlobalActionType.SET_ERROR,
+          payload: "Booking failed",
+        });
+      }
+    } catch (error) {
+      console.error("Error booking service:", error);
+      dispatch({
+        type: GlobalActionType.SET_ERROR,
+        payload: "Booking failed",
+      });
+    } finally {
+      dispatch({ type: GlobalActionType.SET_LOADING, payload: false });
     }
   };
 
@@ -158,8 +199,9 @@ export function ServicesProvider({ children }: { children: ReactNode }) {
         fetchServices,
         fetchServiceCategories,
         fetchServiceDetail,
-        loading,
-        error,
+        bookService,
+        loading: state.loading,
+        error: state.error,
       }}
     >
       {children}

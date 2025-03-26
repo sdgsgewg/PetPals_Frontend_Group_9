@@ -1,6 +1,9 @@
+import IUser from "./IUser";
+
 interface IService {
-  service_id: number;
-  providerName: number;
+  serviceId: number;
+  providerName: string;
+  providerPhone: string;
   name: string;
   slug: string;
   categoryName: string;
@@ -8,6 +11,7 @@ interface IService {
   price: number;
   address: string;
   city: string;
+  provider: IUser;
 }
 
 export default IService;

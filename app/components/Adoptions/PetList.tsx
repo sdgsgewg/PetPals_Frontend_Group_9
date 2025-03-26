@@ -1,7 +1,6 @@
 import IPet from "@/app/interface/IPet";
 import React from "react";
 import PetCard from "./PetCard";
-import Image from "next/image";
 import { usePets } from "@/app/context/pets/PetsContext";
 import Loading from "@/app/loading";
 import ItemNotFound from "../ItemNotFound";

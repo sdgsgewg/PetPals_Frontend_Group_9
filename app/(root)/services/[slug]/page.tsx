@@ -1,23 +1,54 @@
 "use client";
-import CardDetailLayout from "@/app/components/Cards/CardDetailLayout";
+import ContactPersonCard from "@/app/components/Cards/ContactPersonCard";
+import ItemDetailCard from "@/app/components/Cards/ItemDetailCard";
 import NormalContent from "@/app/components/ContentTemplate/NormalContent";
+import BookServiceModal from "@/app/components/modals/BookServiceModal";
+import MessageModal from "@/app/components/modals/MessageModal";
 import PageNotFound from "@/app/components/PageNotFound";
 import { useServices } from "@/app/context/services/ServicesContext";
+import { useUsers } from "@/app/context/users/UsersContext";
 import Loading from "@/app/loading";
-import Image from "next/image";
-import { useParams } from "next/navigation";
-import React, { useEffect } from "react";
+import { useParams, useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
 
 const ServiceDetail = () => {
   const params = useParams();
-  const slug = params.slug as string;
+  const slug = params?.slug as string | undefined;
+  const router = useRouter();
 
+  const { isLoggedIn } = useUsers();
   const { service, fetchServiceDetail, loading, error } = useServices();
+
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [price, setPrice] = useState<string | null>(null);
+  const [isBookServiceModalOpen, setIsBookServiceModalOpen] =
+    useState<boolean>(false);
+
+  const handleOpenBookServiceModal = () => setIsBookServiceModalOpen(true);
+  const handleCloseBookServiceModal = () => setIsBookServiceModalOpen(false);
 
   useEffect(() => {
     if (!slug) return;
     fetchServiceDetail(slug);
   }, [slug]);
+
+  useEffect(() => {
+    if (service) {
+      setImageUrl(getImageUrl());
+      setPrice(service.price?.toLocaleString("id-ID") || "0");
+    }
+  }, [service]);
+
+  const handleBooking = () => {
+    if (!service) return;
+
+    if (!isLoggedIn) {
+      router.push("/login");
+      return;
+    }
+
+    handleOpenBookServiceModal();
+  };
 
   if (loading) {
     return (
@@ -38,72 +69,39 @@ const ServiceDetail = () => {
     );
   }
 
-  const formattedCategoryName = (categoryName: string) =>
-    categoryName
-      ?.split(" ")
-      .map((word) => word.toLowerCase())
-      .join("-");
-
-  const formattedPrice = (price: number) =>
-    price?.toLocaleString("id-ID", {
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    });
+  const getImageUrl = () => {
+    if (!service?.categoryName) return null;
+    const modifiedCategoryName =
+      service.categoryName
+        ?.split(" ")
+        .map((word) => word.toLowerCase())
+        .join("-") || "";
+    return `/img/services/${modifiedCategoryName}.jpg`;
+  };
 
   return (
     <NormalContent>
-      <CardDetailLayout>
-        {/* Left: Image */}
-        <div className="flex justify-center">
-          <Image
-            src={`/img/services/${formattedCategoryName(
-              service.categoryName
-            )}.jpg`}
-            alt={service.name}
-            width={400}
-            height={400}
-            className="w-full h-auto object-cover rounded-lg shadow-md"
-          />
-        </div>
+      <div className="max-w-lg md:max-w-3xl lg:max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-[3fr_1fr] gap-6">
+        {/* Pet Information */}
+        <ItemDetailCard
+          itemType="service"
+          imageUrl={imageUrl}
+          price={price}
+          onClick={handleBooking}
+        />
 
-        {/* Right: Service Details */}
-        <div className="flex flex-col justify-center">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-            {service.name}
-          </h2>
-          <p className="text-gray-600 dark:text-gray-300 mb-1">
-            <span className="font-semibold">Category:</span>{" "}
-            {service.categoryName}
-          </p>
-          <p className="text-gray-600 dark:text-gray-300 mb-1">
-            <span className="font-semibold">Provider:</span>{" "}
-            {service.providerName}
-          </p>
-          <p className="text-gray-600 dark:text-gray-300 mb-1">
-            <span className="font-semibold">Address:</span> {service.address}
-          </p>
-          <p className="text-gray-600 dark:text-gray-300 mb-1">
-            <span className="font-semibold">City:</span> {service.city}
-          </p>
-          <p className="text-gray-600 dark:text-gray-300 mb-2">
-            <span className="font-semibold">Description:</span>{" "}
-            {service.description}
-          </p>
-          <p className="text-lg font-semibold text-indigo-600 dark:text-indigo-400">
-            Price: Rp {formattedPrice(service.price)}
-          </p>
+        {/* Owner Information */}
+        <ContactPersonCard itemType="service" data={service?.provider} />
+      </div>
 
-          {/* Action Buttons */}
-          <div className="mt-4 flex gap-3">
-            <button className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-md shadow-md cursor-pointer">
-              Book Now
-            </button>
-            <button className="bg-gray-300 hover:bg-gray-400 text-gray-900 font-semibold py-2 px-4 rounded-md shadow-md cursor-pointer">
-              Contact Seller
-            </button>
-          </div>
-        </div>
-      </CardDetailLayout>
+      <BookServiceModal
+        title="Book Service"
+        message="Please input the booking date"
+        isModalOpen={isBookServiceModalOpen}
+        onClose={handleCloseBookServiceModal}
+      />
+
+      <MessageModal title="Book Service" message="Service has been booked" />
     </NormalContent>
   );
 };

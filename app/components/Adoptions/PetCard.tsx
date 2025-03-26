@@ -9,8 +9,14 @@ interface PetCardProps {
 }
 
 const PetCard: React.FC<PetCardProps> = ({ pet }) => {
-  const splitBreed = pet.breed.split(" ");
-  const modifiedBreed = splitBreed.map((word) => word.toLowerCase()).join("-");
+  const getImageUrl = () => {
+    const modifiedSpecies = pet.species.toLowerCase();
+    const modifiedBreed = pet.breed
+      .split(" ")
+      .map((word) => word.toLowerCase())
+      .join("-");
+    return `/img/breed/${modifiedSpecies}/${modifiedBreed}.jpg`;
+  };
 
   const formattedPrice = (price: number) => {
     return price.toLocaleString("id-ID", {
@@ -24,7 +30,7 @@ const PetCard: React.FC<PetCardProps> = ({ pet }) => {
       <CardLayout>
         <div className="w-full h-[60%] overflow-hidden">
           <Image
-            src={`/img/breed/${modifiedBreed}.jpg`}
+            src={getImageUrl()}
             alt={pet.name}
             width={100}
             height={100}

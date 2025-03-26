@@ -66,7 +66,6 @@ const RegisterInputField = () => {
         value={userRegister.phone}
         onChange={handleInputChange}
         error={registerErrorMessages.Phone}
-        optional
       />
 
       <InputField
@@ -76,7 +75,15 @@ const RegisterInputField = () => {
         value={userRegister.address}
         onChange={handleInputChange}
         error={registerErrorMessages.Address}
-        optional
+      />
+
+      <InputField
+        label="City"
+        name="city"
+        placeholder="City"
+        value={userRegister.city}
+        onChange={handleInputChange}
+        error={registerErrorMessages.City}
       />
 
       <SelectField

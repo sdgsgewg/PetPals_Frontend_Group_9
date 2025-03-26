@@ -3,15 +3,30 @@ import { IServiceCategory } from "@/app/interface/IServiceCategory";
 import { IServiceFilterParams } from "@/app/interface/IServiceFilterParams";
 import { GlobalAction, GlobalActionType } from "../GlobalActions";
 
-export function ServicesReducer(
-  state: {
-    service_categories: IServiceCategory[];
-    services: IService[];
-    filters: IServiceFilterParams;
-    service: IService;
-  },
-  action: GlobalAction
-) {
+export interface ServiceState {
+  service_categories: IServiceCategory[];
+  services: IService[];
+  filters: IServiceFilterParams;
+  service: IService;
+  loading: boolean;
+  error: string | null;
+}
+
+export const initialState: ServiceState = {
+  service_categories: [],
+  services: [],
+  filters: {
+    searchValue: "",
+    categoryName: "",
+    minPrice: "",
+    maxPrice: "",
+  } as IServiceFilterParams,
+  service: {} as IService,
+  loading: false,
+  error: null,
+};
+
+export function ServicesReducer(state: ServiceState, action: GlobalAction) {
   switch (action.type) {
     case GlobalActionType.GET_ALL_SERVICES:
       return { ...state, services: action.payload };
@@ -37,6 +52,8 @@ export function ServicesReducer(
       };
     case GlobalActionType.GET_SERVICE_DETAIL:
       return { ...state, service: action.payload };
+    case GlobalActionType.BOOK_SERVICE:
+      return { ...state };
     default:
       return state;
   }

@@ -3,10 +3,13 @@ import { IRole } from "../interface/IRole";
 import IService from "../interface/IService";
 import { IServiceCategory } from "../interface/IServiceCategory";
 import ISpecies from "../interface/ISpecies";
+import { ITransaction } from "../interface/ITransaction";
 import IUser from "../interface/IUser";
 
 export enum GlobalActionType {
   // Global
+  SET_MESSAGE_MODAL = "SET_MESSAGE_MODAL",
+  SET_FILTER_MODAL = "SET_FILTER_MODAL",
   SET_LOADING = "SET_LOADING",
   SET_ERROR = "SET_ERROR",
 
@@ -44,11 +47,21 @@ export enum GlobalActionType {
   SET_SERVICE_FILTER = "SET_SERVICE_FILTER",
   RESET_SERVICE_FILTERS = "RESTE_SERVICE_FILTERS",
   GET_SERVICE_DETAIL = "GET_SERVICE_DETAIL",
+  BOOK_SERVICE = "BOOK_SERVICE",
+
+  // Transactions
+  GET_TRANSACTION_HISTORY = "GET_TRANSACTION_HISTORY",
+  SET_TRANSACTION_TYPE = "SET_TRANSACTION_TYPE",
 }
 
 export type GlobalAction =
-  // Users, Register, Login
+  // Global
+  | { type: GlobalActionType.SET_MESSAGE_MODAL; payload: boolean }
+  | { type: GlobalActionType.SET_FILTER_MODAL; payload: boolean }
+  | { type: GlobalActionType.SET_LOADING; payload: boolean }
+  | { type: GlobalActionType.SET_ERROR; payload: string | null }
 
+  // Users, Register, Login
   | {
       type: GlobalActionType.SET_USER_REGISTER;
       payload: { name: string; value: string | number };
@@ -83,8 +96,6 @@ export type GlobalAction =
       type: GlobalActionType.GET_USER_ROLES;
       payload: IRole[];
     }
-  | { type: GlobalActionType.SET_LOADING; payload: boolean }
-  | { type: GlobalActionType.SET_ERROR; payload: string | null }
   | { type: GlobalActionType.SET_LOGGED_IN; payload: boolean }
 
   // Pets
@@ -132,4 +143,17 @@ export type GlobalAction =
   | {
       type: GlobalActionType.GET_SERVICE_DETAIL;
       payload: IService;
+    }
+  | {
+      type: GlobalActionType.BOOK_SERVICE;
+    }
+
+  // Transactions
+  | {
+      type: GlobalActionType.GET_TRANSACTION_HISTORY;
+      payload: ITransaction[];
+    }
+  | {
+      type: GlobalActionType.SET_TRANSACTION_TYPE;
+      payload: string;
     };

@@ -5,6 +5,7 @@ interface IUser {
   password: string;
   phone: string;
   address: string;
+  city: string;
   role: string;
 }
 

@@ -27,12 +27,13 @@ export const initialState: UserState = {
   error: null,
   isLoggedIn: false,
   registerErrorMessages: {
-    name: "",
-    email: "",
-    password: "",
-    phone: "",
-    address: "",
-    roleId: 0,
+    Name: "",
+    Email: "",
+    Password: "",
+    Phone: "",
+    Address: "",
+    City: "",
+    RoleId: "",
   },
 };
 
