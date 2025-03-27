@@ -4,7 +4,7 @@ import { createContext, ReactNode, useContext, useReducer } from "react";
 import api from "@/lib/apiClient";
 import { GlobalActionType } from "../GlobalActions";
 import { TransactionsReducer, initialState } from "./TransactionsReducer";
-import { ITransaction } from "@/app/interface/ITransaction";
+import { ITransaction } from "@/app/interface/transaction/ITransaction";
 
 interface TransactionsContextType {
   transactions: ITransaction[];

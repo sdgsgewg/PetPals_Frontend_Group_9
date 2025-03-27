@@ -8,14 +8,14 @@ import {
   useReducer,
 } from "react";
 import api from "@/lib/apiClient";
-import IUser from "@/app/interface/IUser";
-import { IRole } from "@/app/interface/IRole";
+import IUser from "@/app/interface/user/IUser";
+import { IRole } from "@/app/interface/user/IRole";
 import { initialState, UsersReducer } from "./UsersReducer";
 import { GlobalActionType } from "../GlobalActions";
-import { IUserRegister } from "@/app/interface/IUserRegister";
-import { IUserLogin } from "@/app/interface/IUserLogin";
+import { IUserRegister } from "@/app/interface/auth/IUserRegister";
+import { IUserLogin } from "@/app/interface/auth/IUserLogin";
 import { useRouter } from "next/navigation";
-import { IRegisterErrorMessage } from "@/app/interface/IRegisterErrorMessage";
+import { IRegisterErrorMessage } from "@/app/interface/auth/IRegisterErrorMessage";
 
 interface UsersContextType {
   user: IUser;
@@ -96,8 +96,6 @@ export function UsersProvider({ children }: { children: ReactNode }) {
 
       if (!response.data.errors) {
         alert("Registration successful");
-
-        console.log(response.data.errors);
 
         // Reset state user yang ingin di-register
         dispatch({

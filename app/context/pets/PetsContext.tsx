@@ -7,12 +7,12 @@ import {
   useReducer,
   useState,
 } from "react";
-import IPet from "../../interface/IPet";
+import IPet from "../../interface/pet/IPet";
 import { PetsReducer } from "./PetsReducer";
 import { GlobalActionType } from "../GlobalActions";
 import api from "@/lib/apiClient";
-import { IPetFilterParams } from "../../interface/IPetFilterParams";
-import ISpecies from "../../interface/ISpecies";
+import { IPetFilterParams } from "../../interface/pet/IPetFilterParams";
+import ISpecies from "../../interface/pet/ISpecies";
 
 interface PetsContextType {
   species: ISpecies[];

@@ -1,16 +1,10 @@
 "use client";
 
-import {
-  createContext,
-  ReactNode,
-  useContext,
-  useReducer,
-  useState,
-} from "react";
+import { createContext, ReactNode, useContext, useReducer } from "react";
 import api from "@/lib/apiClient";
-import { IServiceCategory } from "@/app/interface/IServiceCategory";
-import IService from "@/app/interface/IService";
-import { IServiceFilterParams } from "@/app/interface/IServiceFilterParams";
+import { IServiceCategory } from "@/app/interface/service/IServiceCategory";
+import IService from "@/app/interface/service/IService";
+import { IServiceFilterParams } from "@/app/interface/service/IServiceFilterParams";
 import { initialState, ServicesReducer } from "./ServicesReducer";
 import { GlobalActionType } from "../GlobalActions";
 

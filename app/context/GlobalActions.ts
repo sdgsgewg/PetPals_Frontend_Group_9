@@ -1,10 +1,13 @@
-import IPet from "../interface/IPet";
-import { IRole } from "../interface/IRole";
-import IService from "../interface/IService";
-import { IServiceCategory } from "../interface/IServiceCategory";
-import ISpecies from "../interface/ISpecies";
-import { ITransaction } from "../interface/ITransaction";
-import IUser from "../interface/IUser";
+import IPet from "../interface/pet/IPet";
+import { IRole } from "../interface/user/IRole";
+import IService from "../interface/service/IService";
+import { IServiceCategory } from "../interface/service/IServiceCategory";
+import ISpecies from "../interface/pet/ISpecies";
+import { ITransaction } from "../interface/transaction/ITransaction";
+import IUser from "../interface/user/IUser";
+import IForumPost from "../interface/forum/IForumPost";
+import { IForumCategory } from "../interface/forum/IForumCategory";
+import IForumComment from "../interface/forum/IForumComment";
 
 export enum GlobalActionType {
   // Global
@@ -45,13 +48,28 @@ export enum GlobalActionType {
   GET_ALL_SERVICES = "GET_ALL_SERVICES",
   GET_ALL_SERVICE_CATEGORIES = "GET_ALL_SERVICE_CATEGORIES",
   SET_SERVICE_FILTER = "SET_SERVICE_FILTER",
-  RESET_SERVICE_FILTERS = "RESTE_SERVICE_FILTERS",
+  RESET_SERVICE_FILTERS = "RESET_SERVICE_FILTERS",
   GET_SERVICE_DETAIL = "GET_SERVICE_DETAIL",
   BOOK_SERVICE = "BOOK_SERVICE",
 
   // Transactions
   GET_TRANSACTION_HISTORY = "GET_TRANSACTION_HISTORY",
   SET_TRANSACTION_TYPE = "SET_TRANSACTION_TYPE",
+
+  // Forums
+  GET_FORUM_CATEGORIES = "GET_ALL_FORUM_CATEGORIES",
+  SET_FORUM_CATEGORY_ID = "SET_FORUM_CATEGORY_ID",
+  GET_FORUM_POSTS = "GET_FORUM_POSTS",
+  GET_FORUM_POST_DETAIL = "GET_FORUM_POST_DETAIL",
+  GET_FORUM_COMMENTS = "GET_FORUM_COMMENTS",
+  SET_NEW_FORUM_POST = "SET_NEW_FORUM_POST",
+  RESET_NEW_FORUM_POST = "RESET_NEW_FORUM_POST",
+  SET_NEW_FORUM_ERROR_MESSAGES = "SET_NEW_FORUM_ERROR_MESSAGES",
+  RESET_NEW_FORUM_ERROR_MESSAGES = "RESET_NEW_FORUM_ERROR_MESSAGES",
+  SET_NEW_FORUM_COMMENT = "SET_NEW_FORUM_COMMENT",
+  RESET_NEW_FORUM_COMMENT = "RESET_NEW_FORUM_COMMENT",
+  ADD_FORUM_POST = "ADD_FORUM_POST",
+  ADD_FORUM_COMMENT = "ADD_FORUM_COMMENT",
 }
 
 export type GlobalAction =
@@ -156,4 +174,53 @@ export type GlobalAction =
   | {
       type: GlobalActionType.SET_TRANSACTION_TYPE;
       payload: string;
+    }
+
+  // Forums
+  | {
+      type: GlobalActionType.GET_FORUM_CATEGORIES;
+      payload: IForumCategory[];
+    }
+  | {
+      type: GlobalActionType.SET_FORUM_CATEGORY_ID;
+      payload: number;
+    }
+  | {
+      type: GlobalActionType.GET_FORUM_POSTS;
+      payload: IForumPost[];
+    }
+  | {
+      type: GlobalActionType.GET_FORUM_POST_DETAIL;
+      payload: IForumPost;
+    }
+  | {
+      type: GlobalActionType.GET_FORUM_COMMENTS;
+      payload: IForumComment[];
+    }
+  | {
+      type: GlobalActionType.SET_NEW_FORUM_POST;
+      payload: { name: string; value: string | number };
+    }
+  | {
+      type: GlobalActionType.RESET_NEW_FORUM_POST;
+    }
+  | {
+      type: GlobalActionType.SET_NEW_FORUM_ERROR_MESSAGES;
+      payload: string[];
+    }
+  | {
+      type: GlobalActionType.RESET_NEW_FORUM_ERROR_MESSAGES;
+    }
+  | {
+      type: GlobalActionType.SET_NEW_FORUM_COMMENT;
+      payload: { name: string; value: string | number };
+    }
+  | {
+      type: GlobalActionType.RESET_NEW_FORUM_COMMENT;
+    }
+  | {
+      type: GlobalActionType.ADD_FORUM_POST;
+    }
+  | {
+      type: GlobalActionType.ADD_FORUM_COMMENT;
     };

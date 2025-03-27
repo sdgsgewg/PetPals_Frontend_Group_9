@@ -1,6 +1,6 @@
 import IPet from "../../interface/IPet";
-import { IPetFilterParams } from "../../interface/IPetFilterParams";
-import ISpecies from "../../interface/ISpecies";
+import { IPetFilterParams } from "../../interface/pet/IPetFilterParams";
+import ISpecies from "../../interface/pet/ISpecies";
 import { GlobalAction, GlobalActionType } from "../GlobalActions";
 
 export function PetsReducer(

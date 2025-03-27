@@ -1,4 +1,4 @@
-import IUser from "./IUser";
+import IUser from "./user/IUser";
 
 interface IService {
   serviceId: number;

@@ -25,8 +25,6 @@ const RegisterInputField = () => {
     setUserRegister(name, newValue);
   };
 
-  console.log(registerErrorMessages);
-
   return (
     <>
       <InputField

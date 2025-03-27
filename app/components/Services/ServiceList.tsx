@@ -1,5 +1,4 @@
-import IService from "@/app/interface/IService";
-import Image from "next/image";
+import IService from "@/app/interface/service/IService";
 import React from "react";
 import ServiceCard from "./ServiceCard";
 import { useServices } from "@/app/context/services/ServicesContext";
@@ -26,6 +25,7 @@ const ServiceList: React.FC<ServiceListProps> = ({ filteredServices }) => {
       ) : (
         <ItemNotFound
           image_url="/img/service-not-found.png"
+          size={200}
           message="Service Not Found"
         />
       )}

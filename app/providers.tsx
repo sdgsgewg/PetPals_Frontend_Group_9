@@ -7,6 +7,7 @@ import { GlobalProvider } from "./context/GlobalContext";
 import { UsersProvider } from "./context/users/UsersContext";
 import { AdoptionsProvider } from "./context/adoptions/AdoptionsContext";
 import { TransactionsProvider } from "./context/transactions/TransactionsContext";
+import { ForumsProvider } from "./context/forums/ForumsContext";
 
 const Providers = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -16,7 +17,9 @@ const Providers = ({ children }: { children: React.ReactNode }) => {
           <PetsProvider>
             <AdoptionsProvider>
               <ServicesProvider>
-                <TransactionsProvider>{children}</TransactionsProvider>
+                <TransactionsProvider>
+                  <ForumsProvider>{children}</ForumsProvider>
+                </TransactionsProvider>
               </ServicesProvider>
             </AdoptionsProvider>
           </PetsProvider>

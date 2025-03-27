@@ -1,4 +1,4 @@
-import IPet from "@/app/interface/IPet";
+import IPet from "@/app/interface/pet/IPet";
 import React from "react";
 import PetCard from "./PetCard";
 import { usePets } from "@/app/context/pets/PetsContext";
@@ -25,6 +25,7 @@ const PetList: React.FC<PetListProps> = ({ filteredPets }) => {
       ) : (
         <ItemNotFound
           image_url="/img/pet-not-found.png"
+          size={200}
           message="Pet Not Found"
         />
       )}

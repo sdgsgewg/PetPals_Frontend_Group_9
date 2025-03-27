@@ -3,7 +3,7 @@
 import { createContext, ReactNode, useContext, useReducer } from "react";
 import api from "@/lib/apiClient";
 import { GlobalActionType } from "../GlobalActions";
-import IAdoption from "@/app/interface/IAdoption";
+import IAdoption from "@/app/interface/adoption/IAdoption";
 import { AdoptionsReducer, initialState } from "./AdoptionsReducer";
 
 interface AdoptionsContextType {

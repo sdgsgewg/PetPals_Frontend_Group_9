@@ -1,4 +1,4 @@
-import { ITransaction } from "@/app/interface/ITransaction";
+import { ITransaction } from "@/app/interface/transaction/ITransaction";
 import { GlobalAction, GlobalActionType } from "../GlobalActions";
 
 export interface TransactionState {
@@ -24,6 +24,10 @@ export function TransactionsReducer(
       return { ...state, transactions: action.payload };
     case GlobalActionType.SET_TRANSACTION_TYPE:
       return { ...state, transactionType: action.payload };
+    case GlobalActionType.SET_LOADING:
+      return { ...state, loading: action.payload };
+    case GlobalActionType.SET_ERROR:
+      return { ...state, error: action.payload };
     default:
       return state;
   }

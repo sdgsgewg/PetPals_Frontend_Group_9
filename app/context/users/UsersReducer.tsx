@@ -1,9 +1,9 @@
-import { IRole } from "@/app/interface/IRole";
-import IUser from "@/app/interface/IUser";
+import { IRole } from "@/app/interface/user/IRole";
+import IUser from "@/app/interface/user/IUser";
 import { GlobalAction, GlobalActionType } from "../GlobalActions";
-import { IUserRegister } from "@/app/interface/IUserRegister";
-import { IUserLogin } from "@/app/interface/IUserLogin";
-import { IRegisterErrorMessage } from "@/app/interface/IRegisterErrorMessage";
+import { IUserRegister } from "@/app/interface/auth/IUserRegister";
+import { IUserLogin } from "@/app/interface/auth/IUserLogin";
+import { IRegisterErrorMessage } from "@/app/interface/auth/IRegisterErrorMessage";
 
 export interface UserState {
   user: IUser;

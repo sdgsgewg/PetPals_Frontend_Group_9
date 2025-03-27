@@ -1,4 +1,4 @@
-import { ITransaction } from "@/app/interface/ITransaction";
+import { ITransaction } from "@/app/interface/transaction/ITransaction";
 import React from "react";
 
 interface TransactionCardProps {
