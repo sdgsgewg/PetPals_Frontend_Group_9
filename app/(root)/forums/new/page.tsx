@@ -1,14 +1,11 @@
 "use client";
-import { useRouter } from "next/navigation";
 import NormalContent from "@/app/components/ContentTemplate/NormalContent";
 import { useForums } from "@/app/context/forums/ForumsContext";
 import { useEffect } from "react";
 import MessageModal from "@/app/components/modals/MessageModal";
-import { useGlobal } from "@/app/context/GlobalContext";
 import { useUsers } from "@/app/context/users/UsersContext";
 
 const NewForumPost = () => {
-  const { handleOpenMessageModal } = useGlobal();
   const { loggedInUser } = useUsers();
   const {
     forumCategories,
@@ -16,9 +13,7 @@ const NewForumPost = () => {
     fetchForumCategories,
     setNewPost,
     addForumPost,
-    error,
   } = useForums();
-  const router = useRouter();
 
   useEffect(() => {
     fetchForumCategories();

@@ -1,57 +1,44 @@
 "use client";
 
-import {
-  createContext,
-  ReactNode,
-  useContext,
-  useReducer,
-  useState,
-} from "react";
+import { createContext, ReactNode, useContext, useReducer } from "react";
 import IPet from "../../interface/pet/IPet";
-import { PetsReducer } from "./PetsReducer";
+import { initialState, PetsReducer } from "./PetsReducer";
 import { GlobalActionType } from "../GlobalActions";
 import api from "@/lib/apiClient";
 import { IPetFilterParams } from "../../interface/pet/IPetFilterParams";
 import ISpecies from "../../interface/pet/ISpecies";
+import { INewPet } from "@/app/interface/pet/INewPet";
+import { useGlobal } from "../GlobalContext";
+import { useRouter } from "next/navigation";
 
 interface PetsContextType {
   species: ISpecies[];
   pets: IPet[];
   pet: IPet;
+  newPet: INewPet;
   filters: IPetFilterParams;
   setFilters: (name: string, value: string) => void;
   resetFilters: () => void;
   fetchPets: () => Promise<void>;
   fetchSpecies: () => Promise<void>;
   fetchPetDetail: (slug: string) => Promise<void>;
+  setNewPet: (name: string, value: string | number) => void;
+  addNewPet: () => Promise<void>;
   loading: boolean;
-  error: boolean;
+  error: string | null;
 }
 
 const PetsContext = createContext<PetsContextType | undefined>(undefined);
 
 export function PetsProvider({ children }: { children: ReactNode }) {
-  const [state, dispatch] = useReducer(PetsReducer, {
-    species: [],
-    pets: [],
-    filters: {
-      searchValue: "",
-      species: "",
-      minAge: "",
-      maxAge: "",
-      minPrice: "",
-      maxPrice: "",
-    } as IPetFilterParams,
-    pet: {} as IPet,
-  });
+  const [state, dispatch] = useReducer(PetsReducer, initialState);
 
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<boolean>(false);
+  const { handleOpenMessageModal } = useGlobal();
+  const router = useRouter();
 
   const fetchPets = async () => {
     try {
-      setLoading(true);
-      setError(false);
+      dispatch({ type: GlobalActionType.SET_LOADING, payload: true });
 
       const response = await api.get("/adoption-list", {
         params: {
@@ -72,20 +59,25 @@ export function PetsProvider({ children }: { children: ReactNode }) {
         });
       } else {
         console.error("Invalid API response format:", response.data);
-        setError(true);
+        dispatch({
+          type: GlobalActionType.SET_ERROR,
+          payload: "Fetch pets failed",
+        });
       }
     } catch (error) {
       console.error("Error fetching pets:", error);
-      setError(true);
+      dispatch({
+        type: GlobalActionType.SET_ERROR,
+        payload: "Fetch pets failed",
+      });
     } finally {
-      setLoading(false);
+      dispatch({ type: GlobalActionType.SET_LOADING, payload: false });
     }
   };
 
   const fetchSpecies = async () => {
     try {
-      setLoading(true);
-      setError(false);
+      dispatch({ type: GlobalActionType.SET_LOADING, payload: true });
 
       const response = await api.get("/get-species", {
         params: {
@@ -101,13 +93,19 @@ export function PetsProvider({ children }: { children: ReactNode }) {
         });
       } else {
         console.error("Invalid API response format:", response.data);
-        setError(true);
+        dispatch({
+          type: GlobalActionType.SET_ERROR,
+          payload: "Fetch species failed",
+        });
       }
     } catch (error) {
       console.error("Error fetching species:", error);
-      setError(true);
+      dispatch({
+        type: GlobalActionType.SET_ERROR,
+        payload: "Fetch species failed",
+      });
     } finally {
-      setLoading(false);
+      dispatch({ type: GlobalActionType.SET_LOADING, payload: false });
     }
   };
 
@@ -126,8 +124,7 @@ export function PetsProvider({ children }: { children: ReactNode }) {
 
   const fetchPetDetail = async (slug: string) => {
     try {
-      setLoading(true);
-      setError(false);
+      dispatch({ type: GlobalActionType.SET_LOADING, payload: true });
 
       const response = await api.get(`/adoption-list/${slug}`);
 
@@ -138,13 +135,64 @@ export function PetsProvider({ children }: { children: ReactNode }) {
         });
       } else {
         console.error("Invalid API response format:", response.data);
-        setError(true);
+        dispatch({
+          type: GlobalActionType.SET_ERROR,
+          payload: "Fetch pet detail failed",
+        });
       }
     } catch (error) {
-      console.error("Error fetching pet:", error);
-      setError(true);
+      console.error("Error fetching pet detail:", error);
+      dispatch({
+        type: GlobalActionType.SET_ERROR,
+        payload: "Fetch pet detail failed",
+      });
     } finally {
-      setLoading(false);
+      dispatch({ type: GlobalActionType.SET_LOADING, payload: false });
+    }
+  };
+
+  const setNewPet = (name: string, value: string | number) => {
+    dispatch({
+      type: GlobalActionType.SET_NEW_PET,
+      payload: { name, value },
+    });
+  };
+
+  const addNewPet = async () => {
+    dispatch({ type: GlobalActionType.SET_LOADING, payload: true });
+
+    try {
+      const response = await api.post(`/input-new-pets`, state.newPet);
+
+      if (response.data) {
+        dispatch({
+          type: GlobalActionType.ADD_NEW_PET,
+        });
+
+        dispatch({
+          type: GlobalActionType.RESET_NEW_PET,
+        });
+
+        handleOpenMessageModal();
+
+        setTimeout(() => {
+          router.push("/adoptions");
+        }, 3000);
+      } else {
+        console.error("Invalid API response format:", response.data);
+        dispatch({
+          type: GlobalActionType.SET_ERROR,
+          payload: "Add new pet failed",
+        });
+      }
+    } catch (error) {
+      console.error("Error adding new pet:", error);
+      dispatch({
+        type: GlobalActionType.SET_ERROR,
+        payload: "Add new pet failed",
+      });
+    } finally {
+      dispatch({ type: GlobalActionType.SET_LOADING, payload: false });
     }
   };
 
@@ -154,14 +202,17 @@ export function PetsProvider({ children }: { children: ReactNode }) {
         species: state.species,
         pets: state.pets,
         pet: state.pet,
+        newPet: state.newPet,
         filters: state.filters,
         setFilters,
         resetFilters,
         fetchPets,
         fetchSpecies,
         fetchPetDetail,
-        loading,
-        error,
+        setNewPet,
+        addNewPet,
+        loading: state.loading,
+        error: state.error,
       }}
     >
       {children}

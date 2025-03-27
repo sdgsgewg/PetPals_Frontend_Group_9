@@ -1,5 +1,6 @@
 import { useUsers } from "@/app/context/users/UsersContext";
 import React from "react";
+import InputField from "../InputField";
 
 const LoginInputField = () => {
   const { userLogin, setUserLogin } = useUsers();
@@ -14,34 +15,20 @@ const LoginInputField = () => {
 
   return (
     <>
-      {/* Email */}
-      <label
-        className="text-gray-600 dark:text-gray-300 font-semibold"
-        htmlFor="email"
-      >
-        Email
-      </label>
-      <input
+      <InputField
+        label="Email"
+        name="email"
         type="email"
         placeholder="Email"
-        className="w-full px-4 py-2 mb-4 border rounded-lg"
-        name="email"
         value={userLogin.email}
         onChange={handleInputChange}
       />
 
-      {/* Password */}
-      <label
-        className="text-gray-600 dark:text-gray-300 font-semibold"
-        htmlFor="password"
-      >
-        Password
-      </label>
-      <input
+      <InputField
+        label="Password"
+        name="password"
         type="password"
         placeholder="Password"
-        className="w-full px-4 py-2 mb-4 border rounded-lg"
-        name="password"
         value={userLogin.password}
         onChange={handleInputChange}
       />

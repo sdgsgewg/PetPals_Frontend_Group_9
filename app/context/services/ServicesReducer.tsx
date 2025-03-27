@@ -2,12 +2,14 @@ import IService from "@/app/interface/service/IService";
 import { IServiceCategory } from "@/app/interface/service/IServiceCategory";
 import { IServiceFilterParams } from "@/app/interface/service/IServiceFilterParams";
 import { GlobalAction, GlobalActionType } from "../GlobalActions";
+import { INewService } from "@/app/interface/service/INewService";
 
 export interface ServiceState {
   service_categories: IServiceCategory[];
   services: IService[];
   filters: IServiceFilterParams;
   service: IService;
+  newService: INewService;
   loading: boolean;
   error: string | null;
 }
@@ -22,6 +24,7 @@ export const initialState: ServiceState = {
     maxPrice: "",
   } as IServiceFilterParams,
   service: {} as IService,
+  newService: {} as INewService,
   loading: false,
   error: null,
 };
@@ -53,6 +56,30 @@ export function ServicesReducer(state: ServiceState, action: GlobalAction) {
     case GlobalActionType.GET_SERVICE_DETAIL:
       return { ...state, service: action.payload };
     case GlobalActionType.BOOK_SERVICE:
+      return { ...state };
+    case GlobalActionType.SET_NEW_SERVICE:
+      return {
+        ...state,
+        newService: {
+          ...state.newService,
+          [action.payload.name]: action.payload.value,
+        },
+      };
+    case GlobalActionType.RESET_NEW_SERVICE:
+      return {
+        ...state,
+        newService: {
+          providerId: 0,
+          name: "",
+          categoryId: 0,
+          description: "",
+          price: 0,
+          address: "",
+          city: "",
+          createdBy: "",
+        },
+      };
+    case GlobalActionType.ADD_NEW_PET:
       return { ...state };
     default:
       return state;

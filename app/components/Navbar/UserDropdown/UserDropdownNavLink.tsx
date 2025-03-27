@@ -1,5 +1,5 @@
 import React from "react";
-import { FileText, User, LogOut } from "lucide-react";
+import { PawPrint, PlusCircle, FileText, User, LogOut } from "lucide-react";
 import { useUsers } from "@/app/context/users/UsersContext";
 import UserDropdownNavItem from "./UserDropdownNavItem";
 
@@ -12,7 +12,7 @@ const UserDropdownNavLink: React.FC<UserDropdownNavLinkProps> = ({
   setIsOpen,
   onClose,
 }) => {
-  const { logoutUser } = useUsers();
+  const { loggedInUser, logoutUser } = useUsers();
 
   const handleMenuClick = (menu: string) => {
     if (menu === "Log out") {
@@ -24,6 +24,22 @@ const UserDropdownNavLink: React.FC<UserDropdownNavLinkProps> = ({
 
   return (
     <>
+      {loggedInUser.role.toLowerCase() === "owner" && (
+        <UserDropdownNavItem
+          href="/adoptions/new"
+          icon={<PawPrint size={16} />}
+          label="Add New Pet"
+          onMenuClick={handleMenuClick}
+        />
+      )}
+      {loggedInUser.role.toLowerCase() === "provider" && (
+        <UserDropdownNavItem
+          href="/services/new"
+          icon={<PlusCircle size={16} />}
+          label="Add New Service"
+          onMenuClick={handleMenuClick}
+        />
+      )}
       <UserDropdownNavItem
         href="/transactions"
         icon={<FileText size={16} />}

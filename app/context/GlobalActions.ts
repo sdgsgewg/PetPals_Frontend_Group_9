@@ -36,6 +36,9 @@ export enum GlobalActionType {
   SET_PET_FILTER = "SET_PET_FILTER",
   RESET_PET_FILTERS = "RESTE_PET_FILTERS",
   GET_PET_DETAIL = "GET_PET_DETAIL",
+  SET_NEW_PET = "SET_NEW_PET",
+  RESET_NEW_PET = "RESET_NEW_PET",
+  ADD_NEW_PET = "ADD_NEW_PET",
 
   // Adoptions
   ADOPT_PET = "ADOPT_PET",
@@ -51,6 +54,9 @@ export enum GlobalActionType {
   RESET_SERVICE_FILTERS = "RESET_SERVICE_FILTERS",
   GET_SERVICE_DETAIL = "GET_SERVICE_DETAIL",
   BOOK_SERVICE = "BOOK_SERVICE",
+  SET_NEW_SERVICE = "SET_NEW_SERVICE",
+  RESET_NEW_SERVICE = "RESET_NEW_SERVICE",
+  ADD_NEW_SERVICE = "ADD_NEW_SERVICE",
 
   // Transactions
   GET_TRANSACTION_HISTORY = "GET_TRANSACTION_HISTORY",
@@ -136,6 +142,16 @@ export type GlobalAction =
       type: GlobalActionType.GET_PET_DETAIL;
       payload: IPet;
     }
+  | {
+      type: GlobalActionType.SET_NEW_PET;
+      payload: { name: string; value: string | number };
+    }
+  | {
+      type: GlobalActionType.RESET_NEW_PET;
+    }
+  | {
+      type: GlobalActionType.ADD_NEW_PET;
+    }
 
   // Adoptions
   | {
@@ -164,6 +180,16 @@ export type GlobalAction =
     }
   | {
       type: GlobalActionType.BOOK_SERVICE;
+    }
+  | {
+      type: GlobalActionType.SET_NEW_SERVICE;
+      payload: { name: string; value: string | number };
+    }
+  | {
+      type: GlobalActionType.RESET_NEW_SERVICE;
+    }
+  | {
+      type: GlobalActionType.ADD_NEW_SERVICE;
     }
 
   // Transactions

@@ -197,7 +197,9 @@ export function ForumsProvider({ children }: { children: ReactNode }) {
 
         handleOpenMessageModal();
 
-        router.push("/forums");
+        setTimeout(() => {
+          router.push("/forums");
+        }, 3000);
       } else {
         console.error("Invalid API response format:", response.data);
         dispatch({

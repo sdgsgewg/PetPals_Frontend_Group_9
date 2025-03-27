@@ -1,17 +1,15 @@
 "use client";
+import ISpecies from "@/app/interface/pet/ISpecies";
+import { IServiceCategory } from "@/app/interface/service/IServiceCategory";
+import { IRole } from "@/app/interface/user/IRole";
 import React from "react";
-
-interface Role {
-  roleId: number;
-  name: string;
-}
 
 interface SelectFieldProps {
   label: string;
   name: string;
   value: number;
   onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
-  options: Role[];
+  options: IRole[] | ISpecies[] | IServiceCategory[];
   error?: string;
 }
 
@@ -36,10 +34,25 @@ const SelectField: React.FC<SelectFieldProps> = ({
         value={value}
         onChange={onChange}
       >
-        <option value="0">Select a role</option>
-        {options.map((role) => (
-          <option key={role.roleId} value={role.roleId}>
-            {role.name}
+        <option value="0">Select a {label}</option>
+        {options.map((option) => (
+          <option
+            key={
+              label === "Role"
+                ? option.RoleId
+                : label === "Species"
+                ? option.speciesId
+                : option.categoryId
+            }
+            value={
+              label === "Role"
+                ? option.RoleId
+                : label === "Species"
+                ? option.speciesId
+                : option.categoryId
+            }
+          >
+            {option.name}
           </option>
         ))}
       </select>

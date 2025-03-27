@@ -51,7 +51,7 @@ const PostComments = () => {
         <div className="my-12">
           <ItemNotFound
             image_url="/img/comment-not-found.png"
-            size={180}
+            size={100}
             message="Comment Not Found"
           />
         </div>

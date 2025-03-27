@@ -45,7 +45,7 @@ const ForumDetail = () => {
 
   return (
     <NormalContent>
-      <div className="min-w-xl max-w-3xl mx-auto p-6 bg-white dark:bg-gray-900 dark:text-white dark:border dark:border-gray-700 shadow-md rounded-lg">
+      <div className="max-w-xl md:min-w-xl md:max-w-3xl mx-auto p-6 bg-white dark:bg-gray-900 dark:text-white dark:border dark:border-gray-700 shadow-md rounded-lg">
         {/* Judul & Info */}
         <h1 className="text-2xl font-bold">{forumPost.title}</h1>
         <p className="text-gray-500 dark:text-gray-400 text-sm">

@@ -1,9 +1,8 @@
-import IUser from "./user/IUser";
+import IUser from "../user/IUser";
 
 interface IService {
   serviceId: number;
-  providerName: string;
-  providerPhone: string;
+  categoryId: number;
   name: string;
   slug: string;
   categoryName: string;

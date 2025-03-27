@@ -7,11 +7,15 @@ import IService from "@/app/interface/service/IService";
 import { IServiceFilterParams } from "@/app/interface/service/IServiceFilterParams";
 import { initialState, ServicesReducer } from "./ServicesReducer";
 import { GlobalActionType } from "../GlobalActions";
+import { INewService } from "@/app/interface/service/INewService";
+import { useGlobal } from "../GlobalContext";
+import { useRouter } from "next/navigation";
 
 interface ServicesContextType {
   service_categories: IServiceCategory[];
   services: IService[];
   service: IService;
+  newService: INewService;
   filters: IServiceFilterParams;
   setFilters: (name: string, value: string) => void;
   resetFilters: () => void;
@@ -23,6 +27,8 @@ interface ServicesContextType {
     serviceId: number,
     bookingDate: string
   ) => Promise<void>;
+  setNewService: (name: string, value: string | number) => void;
+  addNewService: () => Promise<void>;
   loading: boolean;
   error: string | null;
 }
@@ -33,6 +39,9 @@ const ServicesContext = createContext<ServicesContextType | undefined>(
 
 export function ServicesProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(ServicesReducer, initialState);
+
+  const { handleOpenMessageModal } = useGlobal();
+  const router = useRouter();
 
   const fetchServices = async () => {
     try {
@@ -181,12 +190,58 @@ export function ServicesProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const setNewService = (name: string, value: string | number) => {
+    dispatch({
+      type: GlobalActionType.SET_NEW_SERVICE,
+      payload: { name, value },
+    });
+  };
+
+  const addNewService = async () => {
+    dispatch({ type: GlobalActionType.SET_LOADING, payload: true });
+
+    try {
+      const response = await api.post(`/input-new-services`, state.newService);
+
+      if (response.data) {
+        dispatch({
+          type: GlobalActionType.ADD_NEW_SERVICE,
+        });
+
+        dispatch({
+          type: GlobalActionType.RESET_NEW_SERVICE,
+        });
+
+        handleOpenMessageModal();
+
+        setTimeout(() => {
+          router.push("/services");
+        }, 3000);
+      } else {
+        console.error("Invalid API response format:", response.data);
+        dispatch({
+          type: GlobalActionType.SET_ERROR,
+          payload: "Add new service failed",
+        });
+      }
+    } catch (error) {
+      console.error("Error adding new service:", error);
+      dispatch({
+        type: GlobalActionType.SET_ERROR,
+        payload: "Add new service failed",
+      });
+    } finally {
+      dispatch({ type: GlobalActionType.SET_LOADING, payload: false });
+    }
+  };
+
   return (
     <ServicesContext.Provider
       value={{
         service_categories: state.service_categories,
         services: state.services,
         service: state.service,
+        newService: state.newService,
         filters: state.filters,
         setFilters,
         resetFilters,
@@ -194,6 +249,8 @@ export function ServicesProvider({ children }: { children: ReactNode }) {
         fetchServiceCategories,
         fetchServiceDetail,
         bookService,
+        setNewService,
+        addNewService,
         loading: state.loading,
         error: state.error,
       }}
