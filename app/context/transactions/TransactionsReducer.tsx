@@ -1,8 +1,10 @@
 import { ITransaction } from "@/app/interface/transaction/ITransaction";
 import { GlobalAction, GlobalActionType } from "../GlobalActions";
+import { IServiceTransaction } from "@/app/interface/transaction/IServiceTransaction";
+import { IAdoptionTransaction } from "@/app/interface/transaction/IAdoptionTransaction";
 
 export interface TransactionState {
-  transactions: ITransaction[];
+  transactions: ITransaction[] | IAdoptionTransaction[] | IServiceTransaction[];
   transactionType: string;
   loading: boolean;
   error: string | null;
@@ -20,10 +22,14 @@ export function TransactionsReducer(
   action: GlobalAction
 ) {
   switch (action.type) {
-    case GlobalActionType.GET_TRANSACTION_HISTORY:
-      return { ...state, transactions: action.payload };
     case GlobalActionType.SET_TRANSACTION_TYPE:
       return { ...state, transactionType: action.payload };
+    case GlobalActionType.GET_TRANSACTION_HISTORY:
+      return { ...state, transactions: action.payload };
+    case GlobalActionType.GET_ADOPTION_TRANSACTION_REQUEST:
+      return { ...state, transactions: action.payload };
+    case GlobalActionType.GET_SERVICE_TRANSACTION_REQUEST:
+      return { ...state, transactions: action.payload };
     case GlobalActionType.SET_LOADING:
       return { ...state, loading: action.payload };
     case GlobalActionType.SET_ERROR:

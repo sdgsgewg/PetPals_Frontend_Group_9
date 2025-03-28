@@ -11,6 +11,9 @@ interface GlobalContextType {
   isFilterModalOpen: boolean;
   handleOpenFilterModal: () => void;
   handleCloseFilterModal: () => void;
+  getImageUrlByBreed: (species: string, breed: string) => string;
+  getImageUrlByServiceCategory: (categoryName: string) => string;
+  formattedPrice: (price: number) => string;
 }
 
 const GlobalContext = createContext<GlobalContextType | undefined>(undefined);
@@ -33,6 +36,31 @@ export function GlobalProvider({ children }: { children: ReactNode }) {
     dispatch({ type: GlobalActionType.SET_FILTER_MODAL, payload: false });
   };
 
+  const getImageUrlByBreed = (species: string, breed: string) => {
+    if (species === null || breed === null) return "";
+    const modifiedSpecies = species.toLowerCase();
+    const modifiedBreed = breed
+      .split(" ")
+      .map((word) => word.toLowerCase())
+      .join("-");
+    return `/img/breed/${modifiedSpecies}/${modifiedBreed}.jpg`;
+  };
+
+  const getImageUrlByServiceCategory = (categoryName: string) => {
+    if (categoryName === null) return "";
+    const modifiedCategoryName = categoryName?.split(" ")
+      .map((word) => word.toLowerCase())
+      .join("-");
+    return `/img/services/${modifiedCategoryName}.jpg`;
+  };
+
+  const formattedPrice = (price: number) => {
+    return price.toLocaleString("id-ID", {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    });
+  };
+
   return (
     <GlobalContext.Provider
       value={{
@@ -42,6 +70,9 @@ export function GlobalProvider({ children }: { children: ReactNode }) {
         isFilterModalOpen: state.isFilterModalOpen,
         handleOpenFilterModal,
         handleCloseFilterModal,
+        getImageUrlByBreed,
+        getImageUrlByServiceCategory,
+        formattedPrice,
       }}
     >
       {children}

@@ -1,34 +1,25 @@
-import IService from "@/app/interface/IService";
+import IService from "@/app/interface/service/IService";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
 import Image from "next/image";
 import React from "react";
 import Link from "next/link";
 import CardLayout from "../Cards/CardLayout";
+import { useGlobal } from "@/app/context/GlobalContext";
 
 interface ServiceCardProps {
   service: IService;
 }
 
 const ServiceCard: React.FC<ServiceCardProps> = ({ service }) => {
-  const splitCategoryName = service.categoryName.split(" ");
-  const modifiedCategoryName = splitCategoryName
-    .map((word) => word.toLowerCase())
-    .join("-");
-
-  const formattedPrice = (price: number) => {
-    return price.toLocaleString("id-ID", {
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    });
-  };
+  const { getImageUrlByServiceCategory, formattedPrice } = useGlobal();
 
   return (
     <Link href={`/services/${service.slug}`}>
       <CardLayout>
         <div className="w-full h-[55%] overflow-hidden">
           <Image
-            src={`/img/services/${modifiedCategoryName}.jpg`}
+            src={`${getImageUrlByServiceCategory(service.categoryName)}`}
             alt={service.name}
             width={100}
             height={100}

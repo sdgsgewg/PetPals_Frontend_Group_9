@@ -3,34 +3,21 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import CardLayout from "../Cards/CardLayout";
+import { useGlobal } from "@/app/context/GlobalContext";
 
 interface PetCardProps {
   pet: IPet;
 }
 
 const PetCard: React.FC<PetCardProps> = ({ pet }) => {
-  const getImageUrl = () => {
-    const modifiedSpecies = pet.species.toLowerCase();
-    const modifiedBreed = pet.breed
-      .split(" ")
-      .map((word) => word.toLowerCase())
-      .join("-");
-    return `/img/breed/${modifiedSpecies}/${modifiedBreed}.jpg`;
-  };
-
-  const formattedPrice = (price: number) => {
-    return price.toLocaleString("id-ID", {
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    });
-  };
+  const { getImageUrlByBreed, formattedPrice } = useGlobal();
 
   return (
     <Link href={`/adoptions/${pet.slug}`}>
       <CardLayout>
         <div className="w-full h-[60%] overflow-hidden">
           <Image
-            src={getImageUrl()}
+            src={getImageUrlByBreed(pet.species, pet.breed)}
             alt={pet.name}
             width={100}
             height={100}

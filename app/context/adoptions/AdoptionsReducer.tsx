@@ -1,5 +1,5 @@
 import { GlobalAction, GlobalActionType } from "../GlobalActions";
-import IAdoption from "@/app/interface/adoption/IAdoption";
+import IAdoption from "@/app/interface/transaction/IAdoptionTransaction";
 
 export interface AdoptionState {
   adoptions: IAdoption[];

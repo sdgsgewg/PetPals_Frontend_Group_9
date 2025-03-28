@@ -8,6 +8,8 @@ import IUser from "../interface/user/IUser";
 import IForumPost from "../interface/forum/IForumPost";
 import { IForumCategory } from "../interface/forum/IForumCategory";
 import IForumComment from "../interface/forum/IForumComment";
+import { IAdoptionTransaction } from "../interface/transaction/IAdoptionTransaction";
+import { IServiceTransaction } from "../interface/transaction/IServiceTransaction";
 
 export enum GlobalActionType {
   // Global
@@ -59,8 +61,10 @@ export enum GlobalActionType {
   ADD_NEW_SERVICE = "ADD_NEW_SERVICE",
 
   // Transactions
-  GET_TRANSACTION_HISTORY = "GET_TRANSACTION_HISTORY",
   SET_TRANSACTION_TYPE = "SET_TRANSACTION_TYPE",
+  GET_TRANSACTION_HISTORY = "GET_TRANSACTION_HISTORY",
+  GET_ADOPTION_TRANSACTION_REQUEST = "GET_ADOPTION_TRANSACTION_REQUEST",
+  GET_SERVICE_TRANSACTION_REQUEST = "GET_SERVICE_TRANSACTION_REQUEST",
 
   // Forums
   GET_FORUM_CATEGORIES = "GET_ALL_FORUM_CATEGORIES",
@@ -194,12 +198,20 @@ export type GlobalAction =
 
   // Transactions
   | {
+      type: GlobalActionType.SET_TRANSACTION_TYPE;
+      payload: string;
+    }
+  | {
       type: GlobalActionType.GET_TRANSACTION_HISTORY;
       payload: ITransaction[];
     }
   | {
-      type: GlobalActionType.SET_TRANSACTION_TYPE;
-      payload: string;
+      type: GlobalActionType.GET_ADOPTION_TRANSACTION_REQUEST;
+      payload: IAdoptionTransaction[];
+    }
+  | {
+      type: GlobalActionType.GET_SERVICE_TRANSACTION_REQUEST;
+      payload: IServiceTransaction[];
     }
 
   // Forums

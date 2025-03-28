@@ -4,23 +4,37 @@ import React from "react";
 import TransactionCard from "./TransactionCard";
 import ItemNotFound from "../ItemNotFound";
 
-const TransactionList = () => {
+interface TransactionListProps {
+  transactionType: string; // history | adoptionReq | serviceReq
+}
+
+const TransactionList: React.FC<TransactionListProps> = ({
+  transactionType,
+}) => {
   const { transactions, loading } = useTransactions();
+
+  const transactionList =
+    transactionType === "history" ? transactions : transactions;
 
   return (
     <>
       {loading ? (
         <Loading />
       ) : transactions.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-8 p-4">
-          {transactions.map((transaction, index) => (
-            <TransactionCard key={index} transaction={transaction} />
+        <div className="grid grid-cols-1 gap-6">
+          {transactionList.map((transaction, index) => (
+            <TransactionCard
+              key={index}
+              transactionType={transactionType}
+              transaction={transaction}
+            />
           ))}
         </div>
       ) : (
         <ItemNotFound
           image_url="/img/pet-not-found.png"
-          message="Transaction Not Found"
+          size={200}
+          message="No Transaction Yet"
         />
       )}
     </>

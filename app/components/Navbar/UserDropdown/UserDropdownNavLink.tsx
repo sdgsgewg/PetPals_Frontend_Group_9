@@ -24,7 +24,7 @@ const UserDropdownNavLink: React.FC<UserDropdownNavLinkProps> = ({
 
   return (
     <>
-      {loggedInUser.role.toLowerCase() === "owner" && (
+      {loggedInUser.role.name.toLowerCase() === "owner" && (
         <UserDropdownNavItem
           href="/adoptions/new"
           icon={<PawPrint size={16} />}
@@ -32,7 +32,7 @@ const UserDropdownNavLink: React.FC<UserDropdownNavLinkProps> = ({
           onMenuClick={handleMenuClick}
         />
       )}
-      {loggedInUser.role.toLowerCase() === "provider" && (
+      {loggedInUser.role.name.toLowerCase() === "provider" && (
         <UserDropdownNavItem
           href="/services/new"
           icon={<PlusCircle size={16} />}
@@ -40,12 +40,28 @@ const UserDropdownNavLink: React.FC<UserDropdownNavLinkProps> = ({
           onMenuClick={handleMenuClick}
         />
       )}
-      <UserDropdownNavItem
-        href="/transactions"
-        icon={<FileText size={16} />}
-        label="View Transactions"
-        onMenuClick={handleMenuClick}
-      />
+      {loggedInUser.role.name.toLowerCase() === "adopter" ? (
+        <UserDropdownNavItem
+          href="/transactions"
+          icon={<FileText size={16} />}
+          label="View Transactions"
+          onMenuClick={handleMenuClick}
+        />
+      ) : loggedInUser.role.name.toLowerCase() === "owner" ? (
+        <UserDropdownNavItem
+          href="/adoption-transaction-request"
+          icon={<FileText size={16} />}
+          label="View Transaction Request"
+          onMenuClick={handleMenuClick}
+        />
+      ) : (
+        <UserDropdownNavItem
+          href="/service-transaction-request"
+          icon={<FileText size={16} />}
+          label="View Transaction Request"
+          onMenuClick={handleMenuClick}
+        />
+      )}
       <UserDropdownNavItem
         href="/profile"
         icon={<User size={16} />}
