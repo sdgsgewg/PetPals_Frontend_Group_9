@@ -5,5 +5,6 @@ export interface INewPet {
   speciesId: number;
   description: string;
   price: number;
+  imageUrl?: string;
   ownerId: number;
 }

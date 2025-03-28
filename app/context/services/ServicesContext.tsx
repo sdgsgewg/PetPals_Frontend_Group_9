@@ -24,6 +24,7 @@ interface ServicesContextType {
   fetchServiceDetail: (slug: string) => Promise<void>;
   bookService: (
     adopterId: number,
+    providerId: number,
     serviceId: number,
     bookingDate: string
   ) => Promise<void>;
@@ -158,6 +159,7 @@ export function ServicesProvider({ children }: { children: ReactNode }) {
 
   const bookService = async (
     adopterId: number,
+    providerId: number,
     serviceId: number,
     bookingDate: string
   ) => {
@@ -166,6 +168,7 @@ export function ServicesProvider({ children }: { children: ReactNode }) {
     try {
       const response = await api.post("/service-transaction", {
         adopterId,
+        providerId,
         serviceId,
         bookingDate,
       });

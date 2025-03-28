@@ -5,11 +5,14 @@ import NormalContent from "@/app/components/ContentTemplate/NormalContent";
 import MessageModal from "@/app/components/modals/MessageModal";
 import { usePets } from "@/app/context/pets/PetsContext";
 import { useUsers } from "@/app/context/users/UsersContext";
-import React, { useEffect } from "react";
+import Image from "next/image";
+import React, { useEffect, useState } from "react";
 
 const NewPet = () => {
   const { loggedInUser } = useUsers();
   const { species, newPet, fetchSpecies, setNewPet, addNewPet } = usePets();
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [imageUrl, setImageUrl] = useState("");
 
   useEffect(() => {
     fetchSpecies();
@@ -30,6 +33,37 @@ const NewPet = () => {
         ? Number(value)
         : value;
     setNewPet(name, newValue);
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      setSelectedFile(e.target.files[0]);
+    }
+  };
+
+  const handleUpload = async () => {
+    if (!selectedFile) {
+      alert("Pilih gambar terlebih dahulu!");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", selectedFile);
+
+    try {
+      const res = await fetch("/api/upload", {
+        method: "POST",
+        body: formData, // Jangan set Content-Type secara manual
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+
+      setImageUrl(data.url);
+      setNewPet("imageUrl", data.url);
+    } catch (error) {
+      alert("Upload gagal: " + error.message);
+    }
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {

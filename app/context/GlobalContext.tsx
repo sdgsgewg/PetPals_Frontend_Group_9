@@ -37,18 +37,19 @@ export function GlobalProvider({ children }: { children: ReactNode }) {
   };
 
   const getImageUrlByBreed = (species: string, breed: string) => {
-    if (species === null || breed === null) return "";
-    const modifiedSpecies = species.toLowerCase();
+    if (!species || !breed) return "";
+    const modifiedSpecies = species?.toLowerCase();
     const modifiedBreed = breed
-      .split(" ")
+      ?.split(" ")
       .map((word) => word.toLowerCase())
       .join("-");
     return `/img/breed/${modifiedSpecies}/${modifiedBreed}.jpg`;
   };
 
   const getImageUrlByServiceCategory = (categoryName: string) => {
-    if (categoryName === null) return "";
-    const modifiedCategoryName = categoryName?.split(" ")
+    if (!categoryName) return "";
+    const modifiedCategoryName = categoryName
+      ?.split(" ")
       .map((word) => word.toLowerCase())
       .join("-");
     return `/img/services/${modifiedCategoryName}.jpg`;

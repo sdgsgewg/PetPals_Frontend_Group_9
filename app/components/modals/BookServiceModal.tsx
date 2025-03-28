@@ -34,7 +34,12 @@ const BookServiceModal: React.FC<BookServiceProps> = ({
       return;
     }
 
-    bookService(loggedInUser.userId, service.serviceId, bookingDate);
+    bookService(
+      loggedInUser.userId,
+      service.provider.userId,
+      service.serviceId,
+      bookingDate
+    );
     onClose();
     handleOpenMessageModal();
   };

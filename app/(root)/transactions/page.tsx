@@ -24,8 +24,6 @@ const Transactions = () => {
     return (
       <NormalContent>
         <PageNotFound image_url="/img/page-not-found.png" message="" />
-        <p>{loggedInUser.name}</p>
-        <p>{transactionType}</p>
       </NormalContent>
     );
   }

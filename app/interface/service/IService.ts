@@ -3,10 +3,10 @@ import { IServiceCategory } from "./IServiceCategory";
 
 interface IService {
   serviceId: number;
+  providerId: number;
   categoryId: number;
   name: string;
   slug: string;
-  categoryName: string;
   description: string;
   price: number;
   address: string;

@@ -77,6 +77,7 @@ export function PetsReducer(state: PetState, action: GlobalAction) {
           speciesId: 0,
           description: "",
           price: 0,
+          imageUrl: "",
           ownerId: 0,
         },
       };

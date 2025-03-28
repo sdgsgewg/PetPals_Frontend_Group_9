@@ -3,12 +3,17 @@
 import { createContext, ReactNode, useContext, useReducer } from "react";
 import api from "@/lib/apiClient";
 import { GlobalActionType } from "../GlobalActions";
-import IAdoption from "@/app/interface/transaction/IAdoptionTransaction";
 import { AdoptionsReducer, initialState } from "./AdoptionsReducer";
+import { IAdoptionTransaction } from "@/app/interface/transaction/IAdoptionTransaction";
+import { useGlobal } from "../GlobalContext";
 
 interface AdoptionsContextType {
-  adoptions: IAdoption[];
-  adoptPet: (petId: number, userId: number) => Promise<void>;
+  adoptions: IAdoptionTransaction[];
+  adoptPet: (
+    adopterId: number,
+    ownerId: number,
+    petId: number
+  ) => Promise<void>;
   loading: boolean;
   error: string | null;
 }
@@ -20,17 +25,25 @@ const AdoptionsContext = createContext<AdoptionsContextType | undefined>(
 export function AdoptionsProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(AdoptionsReducer, initialState);
 
-  const adoptPet = async (petId: number, userId: number) => {
+  const { handleOpenMessageModal } = useGlobal();
+
+  const adoptPet = async (
+    adopterId: number,
+    ownerId: number,
+    petId: number
+  ) => {
     dispatch({ type: GlobalActionType.SET_LOADING, payload: true });
 
     try {
       const response = await api.post("/adoptions-transaction", {
+        adopterId,
+        ownerId,
         petId,
-        userId,
       });
 
       if (response.data) {
         console.log("Adoption successful");
+        handleOpenMessageModal();
       } else {
         console.error("Invalid API response format:", response.data);
         dispatch({

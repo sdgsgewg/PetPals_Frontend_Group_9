@@ -3,7 +3,6 @@ import NormalContent from "@/app/components/ContentTemplate/NormalContent";
 import MessageModal from "@/app/components/modals/MessageModal";
 import PageNotFound from "@/app/components/PageNotFound";
 import { usePets } from "@/app/context/pets/PetsContext";
-import { useGlobal } from "@/app/context/GlobalContext";
 import Loading from "@/app/loading";
 import { useParams, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
@@ -11,13 +10,14 @@ import { useAdoptions } from "@/app/context/adoptions/AdoptionsContext";
 import { useUsers } from "@/app/context/users/UsersContext";
 import ItemDetailCard from "@/app/components/Cards/ItemDetailCard";
 import ContactPersonCard from "@/app/components/Cards/ContactPersonCard";
+import { useGlobal } from "@/app/context/GlobalContext";
 
 const PetDetail = () => {
   const params = useParams();
   const slug = params?.slug as string | undefined;
   const router = useRouter();
 
-  const { handleOpenMessageModal } = useGlobal();
+  const { getImageUrlByBreed } = useGlobal();
   const { isLoggedIn, loggedInUser } = useUsers();
   const { pet, fetchPetDetail, loading, error } = usePets();
   const { adoptions, adoptPet } = useAdoptions();
@@ -34,7 +34,7 @@ const PetDetail = () => {
 
   useEffect(() => {
     if (pet) {
-      setImageUrl(getImageUrl());
+      setImageUrl(getImageUrlByBreed(pet?.species?.name, pet?.breed));
       setPrice(pet.price?.toLocaleString("id-ID") || "0");
       setStatus(getStatus());
     }
@@ -54,9 +54,8 @@ const PetDetail = () => {
       return;
     }
 
-    adoptPet(pet.petId, loggedInUser.userId);
+    adoptPet(loggedInUser.userId, pet.owner.userId, pet.petId);
     setIsAdopted(true);
-    handleOpenMessageModal();
   };
 
   if (loading) {
@@ -76,17 +75,6 @@ const PetDetail = () => {
         />
       </NormalContent>
     );
-  }
-
-  function getImageUrl() {
-    if (!pet?.species || !pet?.breed) return null;
-    const modifiedSpecies = pet.species?.toLowerCase() || "";
-    const modifiedBreed =
-      pet.breed
-        ?.split(" ")
-        .map((word) => word.toLowerCase())
-        .join("-") || "";
-    return `/img/breed/${modifiedSpecies}/${modifiedBreed}.jpg`;
   }
 
   function getStatus() {
@@ -109,8 +97,9 @@ const PetDetail = () => {
           onClick={handleAdoption}
         />
 
-        {/* Owner Information */}
-        <ContactPersonCard itemType="pet" data={pet?.owner} />
+        {loggedInUser?.role?.name?.toLowerCase() === "adopter" && (
+          <ContactPersonCard itemType="pet" data={pet?.owner} />
+        )}
       </div>
 
       <MessageModal

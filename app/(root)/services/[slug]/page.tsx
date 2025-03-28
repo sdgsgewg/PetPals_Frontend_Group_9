@@ -5,6 +5,7 @@ import NormalContent from "@/app/components/ContentTemplate/NormalContent";
 import BookServiceModal from "@/app/components/modals/BookServiceModal";
 import MessageModal from "@/app/components/modals/MessageModal";
 import PageNotFound from "@/app/components/PageNotFound";
+import { useGlobal } from "@/app/context/GlobalContext";
 import { useServices } from "@/app/context/services/ServicesContext";
 import { useUsers } from "@/app/context/users/UsersContext";
 import Loading from "@/app/loading";
@@ -16,7 +17,8 @@ const ServiceDetail = () => {
   const slug = params?.slug as string | undefined;
   const router = useRouter();
 
-  const { isLoggedIn } = useUsers();
+  const { getImageUrlByServiceCategory } = useGlobal();
+  const { isLoggedIn, loggedInUser } = useUsers();
   const { service, fetchServiceDetail, loading, error } = useServices();
 
   const [imageUrl, setImageUrl] = useState<string | null>(null);
@@ -34,7 +36,7 @@ const ServiceDetail = () => {
 
   useEffect(() => {
     if (service) {
-      setImageUrl(getImageUrl());
+      setImageUrl(getImageUrlByServiceCategory(service?.category?.name));
       setPrice(service.price?.toLocaleString("id-ID") || "0");
     }
   }, [service]);
@@ -69,16 +71,6 @@ const ServiceDetail = () => {
     );
   }
 
-  const getImageUrl = () => {
-    if (!service?.categoryName) return null;
-    const modifiedCategoryName =
-      service.categoryName
-        ?.split(" ")
-        .map((word) => word.toLowerCase())
-        .join("-") || "";
-    return `/img/services/${modifiedCategoryName}.jpg`;
-  };
-
   return (
     <NormalContent>
       <div className="max-w-lg md:max-w-3xl lg:max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-[3fr_1fr] gap-6">
@@ -90,16 +82,19 @@ const ServiceDetail = () => {
           onClick={handleBooking}
         />
 
-        {/* Owner Information */}
-        <ContactPersonCard itemType="service" data={service?.provider} />
+        {loggedInUser.role.name.toLowerCase() === "adopter" && (
+          <ContactPersonCard itemType="service" data={service?.provider} />
+        )}
       </div>
 
-      <BookServiceModal
-        title="Book Service"
-        message="Please input the booking date"
-        isModalOpen={isBookServiceModalOpen}
-        onClose={handleCloseBookServiceModal}
-      />
+      {loggedInUser.role.name.toLowerCase() === "adopter" && (
+        <BookServiceModal
+          title="Book Service"
+          message="Please input the booking date"
+          isModalOpen={isBookServiceModalOpen}
+          onClose={handleCloseBookServiceModal}
+        />
+      )}
 
       <MessageModal title="Book Service" message="Service has been booked" />
     </NormalContent>

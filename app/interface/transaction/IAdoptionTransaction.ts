@@ -17,5 +17,6 @@ export interface IAdoptionTransaction {
   booking_date: string;
   status: AdoptionStatus;
   adopter: IUser;
+  owner: IUser;
   pet: IPet;
 }

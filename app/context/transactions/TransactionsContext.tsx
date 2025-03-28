@@ -56,12 +56,21 @@ export function TransactionsProvider({ children }: { children: ReactNode }) {
           payload: "Fetch transaction history failed",
         });
       }
-    } catch (error) {
-      console.error("Error fetching transaction history:", error);
-      dispatch({
-        type: GlobalActionType.SET_ERROR,
-        payload: "Fetch transaction history failed",
-      });
+    } catch (error: any) {
+      if (error.response?.status === 404 || error.response?.status === 400) {
+        console.warn("No transactions found for the given AdopterId.");
+        // Set transaksi kosong tanpa error
+        dispatch({
+          type: GlobalActionType.GET_TRANSACTION_HISTORY,
+          payload: [],
+        });
+      } else {
+        console.error("Error fetching transaction history:", error);
+        dispatch({
+          type: GlobalActionType.SET_ERROR,
+          payload: "Fetch transaction history failed",
+        });
+      }
     } finally {
       dispatch({ type: GlobalActionType.SET_LOADING, payload: false });
     }
@@ -87,12 +96,20 @@ export function TransactionsProvider({ children }: { children: ReactNode }) {
           payload: "Fetch adoption transaction request failed",
         });
       }
-    } catch (error) {
-      console.error("Error fetching adoption transaction request:", error);
-      dispatch({
-        type: GlobalActionType.SET_ERROR,
-        payload: "Fetch adoption transaction request failed",
-      });
+    } catch (error: any) {
+      if (error.response?.status === 404 || error.response?.status === 400) {
+        console.warn("No transaction request found for the given OwnerId.");
+        dispatch({
+          type: GlobalActionType.GET_ADOPTION_TRANSACTION_REQUEST,
+          payload: [],
+        });
+      } else {
+        console.error("Error fetching adoption transaction request:", error);
+        dispatch({
+          type: GlobalActionType.SET_ERROR,
+          payload: "Fetch adoption transaction request failed",
+        });
+      }
     } finally {
       dispatch({ type: GlobalActionType.SET_LOADING, payload: false });
     }
@@ -118,12 +135,22 @@ export function TransactionsProvider({ children }: { children: ReactNode }) {
           payload: "Fetch service transaction request failed",
         });
       }
-    } catch (error) {
-      console.error("Error fetching service transaction request:", error);
-      dispatch({
-        type: GlobalActionType.SET_ERROR,
-        payload: "Fetch service transaction request failed",
-      });
+    } catch (error: any) {
+      if (error.response?.status === 404 || error.response?.status === 400) {
+        console.warn(
+          "No service transaction request found for the given ProviderId."
+        );
+        dispatch({
+          type: GlobalActionType.GET_SERVICE_TRANSACTION_REQUEST,
+          payload: [],
+        });
+      } else {
+        console.error("Error fetching service transaction request:", error);
+        dispatch({
+          type: GlobalActionType.SET_ERROR,
+          payload: "Fetch service transaction request failed",
+        });
+      }
     } finally {
       dispatch({ type: GlobalActionType.SET_LOADING, payload: false });
     }

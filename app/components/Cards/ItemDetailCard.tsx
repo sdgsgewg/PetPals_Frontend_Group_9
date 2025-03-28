@@ -1,5 +1,6 @@
 import { usePets } from "@/app/context/pets/PetsContext";
 import { useServices } from "@/app/context/services/ServicesContext";
+import { useUsers } from "@/app/context/users/UsersContext";
 import Image from "next/image";
 import React from "react";
 
@@ -20,6 +21,7 @@ const ItemDetailCard: React.FC<ItemDetailCardProps> = ({
   isAdopted = false,
   onClick,
 }) => {
+  const { loggedInUser } = useUsers();
   const petContext = usePets();
   const serviceContext = useServices();
 
@@ -50,7 +52,8 @@ const ItemDetailCard: React.FC<ItemDetailCardProps> = ({
           {isPet ? (
             <>
               <p className="text-gray-600 dark:text-gray-300 mb-1">
-                <span className="font-semibold">Species:</span> {data.species}
+                <span className="font-semibold">Species:</span>{" "}
+                {data?.species?.name}
               </p>
               <p className="text-gray-600 dark:text-gray-300 mb-1">
                 <span className="font-semibold">Breed:</span> {data.breed}
@@ -63,7 +66,7 @@ const ItemDetailCard: React.FC<ItemDetailCardProps> = ({
             <>
               <p className="text-gray-600 dark:text-gray-300 mb-1">
                 <span className="font-semibold">Category:</span>{" "}
-                {data.categoryName}
+                {data?.category?.name}
               </p>
               <p className="text-gray-600 dark:text-gray-300 mb-1">
                 <span className="font-semibold">Address:</span> {data.address}
@@ -89,30 +92,32 @@ const ItemDetailCard: React.FC<ItemDetailCardProps> = ({
           </p>
 
           {/* Action Buttons */}
-          <div className="mt-4">
-            {isPet ? (
-              <button
-                className={`${
-                  isAdopted
-                    ? "bg-green-500 cursor-not-allowed"
-                    : status?.toLowerCase() === "available"
-                    ? "bg-indigo-600 hover:bg-indigo-700 cursor-pointer"
-                    : "bg-gray-500 cursor-not-allowed"
-                } w-1/2 text-white font-semibold py-2 px-4 rounded-md shadow-md`}
-                onClick={onClick}
-                disabled={isAdopted || status?.toLowerCase() !== "available"}
-              >
-                {isAdopted ? "Adopted" : "Adopt Now"}
-              </button>
-            ) : (
-              <button
-                className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-md shadow-md cursor-pointer"
-                onClick={onClick}
-              >
-                Book Now
-              </button>
-            )}
-          </div>
+          {loggedInUser?.role?.name?.toLowerCase() === "adopter" && (
+            <div className="mt-4">
+              {isPet ? (
+                <button
+                  className={`${
+                    isAdopted
+                      ? "bg-green-500 cursor-not-allowed"
+                      : status?.toLowerCase() === "available"
+                      ? "bg-indigo-600 hover:bg-indigo-700 cursor-pointer"
+                      : "bg-gray-500 cursor-not-allowed"
+                  } w-1/2 text-white font-semibold py-2 px-4 rounded-md shadow-md`}
+                  onClick={onClick}
+                  disabled={isAdopted || status?.toLowerCase() !== "available"}
+                >
+                  {isAdopted ? "Adopted" : "Adopt Now"}
+                </button>
+              ) : (
+                <button
+                  className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-md shadow-md cursor-pointer"
+                  onClick={onClick}
+                >
+                  Book Now
+                </button>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </div>
