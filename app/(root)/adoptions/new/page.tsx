@@ -62,7 +62,7 @@ const NewPet = () => {
       setImageUrl(data.url);
       setNewPet("imageUrl", data.url);
     } catch (error) {
-      alert("Upload gagal: " + error.message);
+      alert("Upload gagal: " + (error as Error).message);
     }
   };
 
