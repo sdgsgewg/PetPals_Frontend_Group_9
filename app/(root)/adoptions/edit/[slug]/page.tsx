@@ -4,25 +4,37 @@ import SelectField from "@/app/components/Authentication/SelectField";
 import NormalContent from "@/app/components/ContentTemplate/NormalContent";
 import MessageModal from "@/app/components/modals/MessageModal";
 import { usePets } from "@/app/context/pets/PetsContext";
-import { useUsers } from "@/app/context/users/UsersContext";
-import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
+import React, { useEffect } from "react";
 
-const NewPet = () => {
-  const { loggedInUser } = useUsers();
-  const { species, newPet, fetchSpecies, setNewPet, addNewPet } = usePets();
-  // const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  // const [imageUrl, setImageUrl] = useState("");
+const EditPet = () => {
+  const params = useParams();
+  const slug = params?.slug as string;
+
+  const {
+    pet,
+    species,
+    newPet,
+    fetchSpecies,
+    fetchPetDetail,
+    setNewPet,
+    editPet,
+  } = usePets();
 
   useEffect(() => {
     fetchSpecies();
+    fetchPetDetail(slug);
   }, []);
 
   useEffect(() => {
-    if (loggedInUser?.userId && newPet.ownerId !== loggedInUser.userId) {
-      setNewPet("ownerId", loggedInUser.userId);
-    }
-  }, [loggedInUser?.userId]);
+    setNewPet("name", pet.name);
+    setNewPet("breed", pet.breed);
+    setNewPet("age", pet.age);
+    setNewPet("gender", pet.gender);
+    setNewPet("speciesId", pet?.species?.speciesId);
+    setNewPet("description", pet.description);
+    setNewPet("price", pet.price);
+  }, [pet]);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -35,41 +47,10 @@ const NewPet = () => {
     setNewPet(name, newValue);
   };
 
-  // const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   if (e.target.files && e.target.files.length > 0) {
-  //     setSelectedFile(e.target.files[0]);
-  //   }
-  // };
-
-  // const handleUpload = async () => {
-  //   if (!selectedFile) {
-  //     alert("Pilih gambar terlebih dahulu!");
-  //     return;
-  //   }
-
-  //   const formData = new FormData();
-  //   formData.append("file", selectedFile);
-
-  //   try {
-  //     const res = await fetch("/api/upload", {
-  //       method: "POST",
-  //       body: formData, // Jangan set Content-Type secara manual
-  //     });
-
-  //     const data = await res.json();
-  //     if (!res.ok) throw new Error(data.error);
-
-  //     setImageUrl(data.url);
-  //     setNewPet("imageUrl", data.url);
-  //   } catch (error) {
-  //     alert("Upload gagal: " + (error as Error).message);
-  //   }
-  // };
-
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    addNewPet();
+    editPet(pet.petId);
   };
 
   return (
@@ -156,14 +137,14 @@ const NewPet = () => {
             type="submit"
             className="w-full mt-8 bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 dark:hover:bg-blue-500 cursor-pointer"
           >
-            Add
+            Update
           </button>
         </form>
       </div>
 
-      <MessageModal title="Add New Pet" message="New Pet has been made" />
+      <MessageModal title="Update New Pet" message="Pet has been updated" />
     </NormalContent>
   );
 };
 
-export default NewPet;
+export default EditPet;

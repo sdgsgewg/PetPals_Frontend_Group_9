@@ -31,22 +31,25 @@ const Adoptions = () => {
     fetchPets();
   }, [debouncedSearchTerm]);
 
+  if (error) {
+    return (
+      <NormalContent>
+        <PageNotFound
+          image_url="/img/page-not-found.png"
+          message="Pet not found"
+        />
+      </NormalContent>
+    );
+  }
+
   return (
-    <>
-      {error ? (
-        <NormalContent>
-          <PageNotFound image_url="/img/page-not-found.png" message="" />
-        </NormalContent>
-      ) : (
-        <BigHeroContent>
-          <PetHero />
-          <div className="px-4 sm:px-6 md:px-8 lg:px-12 mt-20">
-            <PetList filteredPets={pets} />
-          </div>
-          <FilterModal filterType="pets" />
-        </BigHeroContent>
-      )}
-    </>
+    <BigHeroContent>
+      <PetHero />
+      <div className="px-4 sm:px-6 md:px-8 lg:px-12 mt-20">
+        <PetList filteredPets={pets} />
+      </div>
+      <FilterModal filterType="pets" />
+    </BigHeroContent>
   );
 };
 

@@ -12,6 +12,7 @@ interface IPet {
   slug: string;
   breed: string;
   age: number;
+  gender: string;
   description: string;
   status: PetStatus;
   price: number;

@@ -7,6 +7,7 @@ import { INewPet } from "@/app/interface/pet/INewPet";
 export interface PetState {
   species: ISpecies[];
   pets: IPet[];
+  ownerPets: IPet[];
   filters: IPetFilterParams;
   pet: IPet;
   newPet: INewPet;
@@ -17,6 +18,7 @@ export interface PetState {
 export const initialState: PetState = {
   species: [],
   pets: [],
+  ownerPets: [],
   filters: {
     searchValue: "",
     species: "",
@@ -83,6 +85,10 @@ export function PetsReducer(state: PetState, action: GlobalAction) {
       };
     case GlobalActionType.ADD_NEW_PET:
       return { ...state };
+    case GlobalActionType.EDIT_PET:
+      return { ...state };
+    case GlobalActionType.GET_OWNER_PETS:
+      return { ...state, ownerPets: action.payload };
     default:
       return state;
   }

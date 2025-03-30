@@ -14,6 +14,7 @@ import { useRouter } from "next/navigation";
 interface ServicesContextType {
   service_categories: IServiceCategory[];
   services: IService[];
+  providerServices: IService[];
   service: IService;
   newService: INewService;
   filters: IServiceFilterParams;
@@ -30,6 +31,8 @@ interface ServicesContextType {
   ) => Promise<void>;
   setNewService: (name: string, value: string | number) => void;
   addNewService: () => Promise<void>;
+  editService: (serviceId: number) => Promise<void>;
+  fetchProviderServices: (providerId: number) => Promise<void>;
   loading: boolean;
   error: string | null;
 }
@@ -238,11 +241,82 @@ export function ServicesProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const editService = async (serviceId: number) => {
+    dispatch({ type: GlobalActionType.SET_LOADING, payload: true });
+
+    try {
+      const response = await api.put(
+        `/edit-service/${serviceId}`,
+        state.newService
+      );
+
+      if (response.data) {
+        dispatch({
+          type: GlobalActionType.EDIT_SERVICE,
+        });
+
+        dispatch({
+          type: GlobalActionType.RESET_NEW_SERVICE,
+        });
+
+        handleOpenMessageModal();
+
+        setTimeout(() => {
+          router.push("/my-services");
+        }, 3000);
+      } else {
+        console.error("Invalid API response format:", response.data);
+        dispatch({
+          type: GlobalActionType.SET_ERROR,
+          payload: "Edit service failed",
+        });
+      }
+    } catch (error) {
+      console.error("Error updating service:", error);
+      dispatch({
+        type: GlobalActionType.SET_ERROR,
+        payload: "Edit service failed",
+      });
+    } finally {
+      dispatch({ type: GlobalActionType.SET_LOADING, payload: false });
+    }
+  };
+
+  const fetchProviderServices = async (providerId: number) => {
+    try {
+      dispatch({ type: GlobalActionType.SET_LOADING, payload: true });
+
+      const response = await api.get(`/get-provider-services/${providerId}`);
+
+      if (response.data && Array.isArray(response.data)) {
+        dispatch({
+          type: GlobalActionType.GET_PROVIDER_SERVICES,
+          payload: response.data,
+        });
+      } else {
+        console.error("Invalid API response format:", response.data);
+        dispatch({
+          type: GlobalActionType.SET_ERROR,
+          payload: "Fetch provider services failed",
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching provider services:", error);
+      dispatch({
+        type: GlobalActionType.SET_ERROR,
+        payload: "Fetch provider services failed",
+      });
+    } finally {
+      dispatch({ type: GlobalActionType.SET_LOADING, payload: false });
+    }
+  };
+
   return (
     <ServicesContext.Provider
       value={{
         service_categories: state.service_categories,
         services: state.services,
+        providerServices: state.providerServices,
         service: state.service,
         newService: state.newService,
         filters: state.filters,
@@ -254,6 +328,8 @@ export function ServicesProvider({ children }: { children: ReactNode }) {
         bookService,
         setNewService,
         addNewService,
+        editService,
+        fetchProviderServices,
         loading: state.loading,
         error: state.error,
       }}

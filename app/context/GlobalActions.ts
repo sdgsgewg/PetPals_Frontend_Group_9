@@ -41,6 +41,8 @@ export enum GlobalActionType {
   SET_NEW_PET = "SET_NEW_PET",
   RESET_NEW_PET = "RESET_NEW_PET",
   ADD_NEW_PET = "ADD_NEW_PET",
+  EDIT_PET = "EDIT_PET",
+  GET_OWNER_PETS = "GET_OWNER_PETS",
 
   // Adoptions
   ADOPT_PET = "ADOPT_PET",
@@ -59,12 +61,15 @@ export enum GlobalActionType {
   SET_NEW_SERVICE = "SET_NEW_SERVICE",
   RESET_NEW_SERVICE = "RESET_NEW_SERVICE",
   ADD_NEW_SERVICE = "ADD_NEW_SERVICE",
+  EDIT_SERVICE = "EDIT_SERVICE",
+  GET_PROVIDER_SERVICES = "GET_PROVIDER_SERVICES",
 
   // Transactions
   SET_TRANSACTION_TYPE = "SET_TRANSACTION_TYPE",
   GET_TRANSACTION_HISTORY = "GET_TRANSACTION_HISTORY",
   GET_ADOPTION_TRANSACTION_REQUEST = "GET_ADOPTION_TRANSACTION_REQUEST",
   GET_SERVICE_TRANSACTION_REQUEST = "GET_SERVICE_TRANSACTION_REQUEST",
+  GET_TRANSACTION_DETAIL = "GET_TRANSACTION_DETAIL",
 
   // Forums
   GET_FORUM_CATEGORIES = "GET_ALL_FORUM_CATEGORIES",
@@ -156,6 +161,13 @@ export type GlobalAction =
   | {
       type: GlobalActionType.ADD_NEW_PET;
     }
+  | {
+      type: GlobalActionType.EDIT_PET;
+    }
+  | {
+      type: GlobalActionType.GET_OWNER_PETS;
+      payload: IPet[];
+    }
 
   // Adoptions
   | {
@@ -194,6 +206,13 @@ export type GlobalAction =
     }
   | {
       type: GlobalActionType.ADD_NEW_SERVICE;
+    }
+  | {
+      type: GlobalActionType.EDIT_SERVICE;
+    }
+  | {
+      type: GlobalActionType.GET_PROVIDER_SERVICES;
+      payload: IService[];
     }
 
   // Transactions

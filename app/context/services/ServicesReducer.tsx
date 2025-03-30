@@ -7,6 +7,7 @@ import { INewService } from "@/app/interface/service/INewService";
 export interface ServiceState {
   service_categories: IServiceCategory[];
   services: IService[];
+  providerServices: IService[];
   filters: IServiceFilterParams;
   service: IService;
   newService: INewService;
@@ -17,6 +18,7 @@ export interface ServiceState {
 export const initialState: ServiceState = {
   service_categories: [],
   services: [],
+  providerServices: [],
   filters: {
     searchValue: "",
     categoryName: "",
@@ -79,8 +81,12 @@ export function ServicesReducer(state: ServiceState, action: GlobalAction) {
           createdBy: "",
         },
       };
-    case GlobalActionType.ADD_NEW_PET:
+    case GlobalActionType.ADD_NEW_SERVICE:
       return { ...state };
+    case GlobalActionType.EDIT_SERVICE:
+      return { ...state };
+    case GlobalActionType.GET_PROVIDER_SERVICES:
+      return { ...state, providerServices: action.payload };
     default:
       return state;
   }

@@ -14,6 +14,7 @@ import { useRouter } from "next/navigation";
 interface PetsContextType {
   species: ISpecies[];
   pets: IPet[];
+  ownerPets: IPet[];
   pet: IPet;
   newPet: INewPet;
   filters: IPetFilterParams;
@@ -24,6 +25,8 @@ interface PetsContextType {
   fetchPetDetail: (slug: string) => Promise<void>;
   setNewPet: (name: string, value: string | number) => void;
   addNewPet: () => Promise<void>;
+  editPet: (petId: number) => Promise<void>;
+  fetchOwnerPets: (ownerId: number) => Promise<void>;
   loading: boolean;
   error: string | null;
 }
@@ -196,11 +199,79 @@ export function PetsProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const editPet = async (petId: number) => {
+    dispatch({ type: GlobalActionType.SET_LOADING, payload: true });
+
+    try {
+      const response = await api.put(`/edit-pet/${petId}`, state.newPet);
+
+      if (response.data) {
+        dispatch({
+          type: GlobalActionType.EDIT_PET,
+        });
+
+        dispatch({
+          type: GlobalActionType.RESET_NEW_PET,
+        });
+
+        handleOpenMessageModal();
+
+        setTimeout(() => {
+          router.push("/my-pets");
+        }, 3000);
+      } else {
+        console.error("Invalid API response format:", response.data);
+        dispatch({
+          type: GlobalActionType.SET_ERROR,
+          payload: "Edit pet failed",
+        });
+      }
+    } catch (error) {
+      console.error("Error updating pet:", error);
+      dispatch({
+        type: GlobalActionType.SET_ERROR,
+        payload: "Edit pet failed",
+      });
+    } finally {
+      dispatch({ type: GlobalActionType.SET_LOADING, payload: false });
+    }
+  };
+
+  const fetchOwnerPets = async (ownerId: number) => {
+    try {
+      dispatch({ type: GlobalActionType.SET_LOADING, payload: true });
+
+      const response = await api.get(`/get-owner-pets/${ownerId}`);
+
+      if (response.data && Array.isArray(response.data)) {
+        dispatch({
+          type: GlobalActionType.GET_OWNER_PETS,
+          payload: response.data,
+        });
+      } else {
+        console.error("Invalid API response format:", response.data);
+        dispatch({
+          type: GlobalActionType.SET_ERROR,
+          payload: "Fetch owner pets failed",
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching owner pets:", error);
+      dispatch({
+        type: GlobalActionType.SET_ERROR,
+        payload: "Fetch owner pets failed",
+      });
+    } finally {
+      dispatch({ type: GlobalActionType.SET_LOADING, payload: false });
+    }
+  };
+
   return (
     <PetsContext.Provider
       value={{
         species: state.species,
         pets: state.pets,
+        ownerPets: state.ownerPets,
         pet: state.pet,
         newPet: state.newPet,
         filters: state.filters,
@@ -211,6 +282,8 @@ export function PetsProvider({ children }: { children: ReactNode }) {
         fetchPetDetail,
         setNewPet,
         addNewPet,
+        editPet,
+        fetchOwnerPets,
         loading: state.loading,
         error: state.error,
       }}

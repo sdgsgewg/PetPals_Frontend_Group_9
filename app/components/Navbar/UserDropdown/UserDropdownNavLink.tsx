@@ -24,7 +24,7 @@ const UserDropdownNavLink: React.FC<UserDropdownNavLinkProps> = ({
 
   return (
     <>
-      {loggedInUser.role.name.toLowerCase() === "owner" && (
+      {/* {loggedInUser.role.name.toLowerCase() === "owner" && (
         <UserDropdownNavItem
           href="/adoptions/new"
           icon={<PawPrint size={16} />}
@@ -39,7 +39,27 @@ const UserDropdownNavLink: React.FC<UserDropdownNavLinkProps> = ({
           label="Add New Service"
           onMenuClick={handleMenuClick}
         />
+      )} */}
+
+      {/* My Pets or My Services */}
+      {loggedInUser.role.name.toLowerCase() === "owner" && (
+        <UserDropdownNavItem
+          href="/my-pets"
+          icon={<PawPrint size={16} />}
+          label="My Pets"
+          onMenuClick={handleMenuClick}
+        />
       )}
+      {loggedInUser.role.name.toLowerCase() === "provider" && (
+        <UserDropdownNavItem
+          href="/my-services"
+          icon={<PlusCircle size={16} />}
+          label="My Services"
+          onMenuClick={handleMenuClick}
+        />
+      )}
+
+      {/* Transaction History or Requests */}
       {loggedInUser.role.name.toLowerCase() === "adopter" ? (
         <UserDropdownNavItem
           href="/transactions"
@@ -62,12 +82,16 @@ const UserDropdownNavLink: React.FC<UserDropdownNavLinkProps> = ({
           onMenuClick={handleMenuClick}
         />
       )}
+
+      {/* Profile */}
       <UserDropdownNavItem
         href="/profile"
         icon={<User size={16} />}
         label="Profile"
         onMenuClick={handleMenuClick}
       />
+
+      {/* Log Out */}
       <UserDropdownNavItem
         href="/"
         icon={<LogOut size={16} />}

@@ -61,6 +61,9 @@ const ItemDetailCard: React.FC<ItemDetailCardProps> = ({
               <p className="text-gray-600 dark:text-gray-300 mb-1">
                 <span className="font-semibold">Age:</span> {data.age} years
               </p>
+              <p className="text-gray-600 dark:text-gray-300 mb-1">
+                <span className="font-semibold">Gender:</span> {data.gender}
+              </p>
             </>
           ) : (
             <>
