@@ -73,6 +73,7 @@ export function PetsReducer(state: PetState, action: GlobalAction) {
       return {
         ...state,
         newPet: {
+          petId: 0,
           name: "",
           breed: "",
           age: 0,

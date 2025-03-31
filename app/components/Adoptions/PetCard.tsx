@@ -17,7 +17,7 @@ const PetCard: React.FC<PetCardProps> = ({ pet }) => {
       <CardLayout>
         <div className="w-full h-[60%] overflow-hidden">
           <Image
-            src={getImageUrlByBreed(pet.species.name, pet.breed)}
+            src={getImageUrlByBreed(pet?.species?.name, pet?.breed)}
             alt={pet.name}
             width={100}
             height={100}

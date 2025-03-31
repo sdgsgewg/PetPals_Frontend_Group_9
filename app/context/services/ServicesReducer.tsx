@@ -71,6 +71,7 @@ export function ServicesReducer(state: ServiceState, action: GlobalAction) {
       return {
         ...state,
         newService: {
+          serviceId: 0,
           providerId: 0,
           name: "",
           categoryId: 0,

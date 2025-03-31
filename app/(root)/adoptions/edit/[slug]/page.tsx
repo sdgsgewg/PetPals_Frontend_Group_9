@@ -27,6 +27,7 @@ const EditPet = () => {
   }, []);
 
   useEffect(() => {
+    setNewPet("petId", pet.petId);
     setNewPet("name", pet.name);
     setNewPet("breed", pet.breed);
     setNewPet("age", pet.age);
@@ -56,9 +57,8 @@ const EditPet = () => {
   return (
     <NormalContent>
       <div className="w-full max-w-xl mx-auto p-6 border bg-white dark:bg-gray-900 dark:border-gray-700 dark:text-white shadow-md rounded-lg">
-        <h1 className="text-2xl font-bold mb-4">
-          Tambah Hewan Peliharaan Baru
-        </h1>
+        <h1 className="text-2xl font-bold mb-4">Edit Hewan Peliharaan</h1>
+        <p>{pet.petId}</p>
 
         <form onSubmit={handleSubmit}>
           {/* Name */}
@@ -142,7 +142,7 @@ const EditPet = () => {
         </form>
       </div>
 
-      <MessageModal title="Update New Pet" message="Pet has been updated" />
+      <MessageModal title="Update Pet" message="Pet has been updated" />
     </NormalContent>
   );
 };

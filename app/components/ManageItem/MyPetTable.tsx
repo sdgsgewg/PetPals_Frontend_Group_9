@@ -8,7 +8,7 @@ const MyPetTable = () => {
 
   return (
     <div className="overflow-x-auto">
-      <table className="min-w-full border border-gray-300 dark:border-gray-700 shadow-md">
+      <table className="min-w-full text-sm border border-gray-300 dark:border-gray-700 shadow-md">
         <thead className="bg-gray-200 dark:bg-gray-800">
           <tr>
             <th className="p-3 text-left">#</th>
@@ -28,24 +28,24 @@ const MyPetTable = () => {
               <td className="p-3">{pet.name}</td>
               <td className="p-3">{pet.age}</td>
               <td className="p-3">{pet.gender}</td>
-              <td className="p-3 flex gap-3">
+              <td className="p-3 flex gap-2">
                 {/* View */}
                 <Link href={`/adoptions/${pet.slug}`}>
-                  <button className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 dark:bg-blue-700 dark:hover:bg-blue-800 cursor-pointer">
-                    <Eye size={18} />
+                  <button className="px-2 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 dark:bg-blue-700 dark:hover:bg-blue-800 cursor-pointer">
+                    <Eye size={16} />
                   </button>
                 </Link>
 
                 {/* Edit */}
                 <Link href={`/adoptions/edit/${pet.slug}`}>
-                  <button className="px-3 py-1 bg-yellow-400 text-black rounded hover:bg-yellow-500 dark:bg-yellow-500 dark:hover:bg-yellow-600 cursor-pointer">
-                    <Pencil size={18} />
+                  <button className="px-2 py-1 bg-yellow-400 text-black rounded hover:bg-yellow-500 dark:bg-yellow-500 dark:hover:bg-yellow-600 cursor-pointer">
+                    <Pencil size={16} />
                   </button>
                 </Link>
 
                 {/* Delete */}
-                <button className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 dark:bg-red-700 dark:hover:bg-red-800 cursor-pointer">
-                  <Trash size={18} />
+                <button className="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600 dark:bg-red-700 dark:hover:bg-red-800 cursor-pointer">
+                  <Trash size={16} />
                 </button>
               </td>
             </tr>
