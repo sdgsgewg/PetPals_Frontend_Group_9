@@ -1,12 +1,11 @@
 "use client";
-
 import { createContext, ReactNode, useContext, useReducer } from "react";
-import IPet from "../../interface/pet/IPet";
+import { IPet } from "../../interface/pet/IPet";
 import { initialState, PetsReducer } from "./PetsReducer";
 import { GlobalActionType } from "../GlobalActions";
 import api from "@/lib/apiClient";
 import { IPetFilterParams } from "../../interface/pet/IPetFilterParams";
-import ISpecies from "../../interface/pet/ISpecies";
+import { ISpecies } from "../../interface/pet/ISpecies";
 import { INewPet } from "@/app/interface/pet/INewPet";
 import { useGlobal } from "../GlobalContext";
 import { useRouter } from "next/navigation";
@@ -26,6 +25,7 @@ interface PetsContextType {
   setNewPet: (name: string, value: string | number) => void;
   addNewPet: () => Promise<void>;
   editPet: (petId: number) => Promise<void>;
+  removePet: (petId: number) => Promise<void>;
   fetchOwnerPets: (ownerId: number) => Promise<void>;
   loading: boolean;
   error: string | null;
@@ -179,7 +179,7 @@ export function PetsProvider({ children }: { children: ReactNode }) {
         handleOpenMessageModal();
 
         setTimeout(() => {
-          router.push("/adoptions");
+          router.push("/my-pets");
         }, 3000);
       } else {
         console.error("Invalid API response format:", response.data);
@@ -237,6 +237,40 @@ export function PetsProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const removePet = async (petId: number) => {
+    dispatch({ type: GlobalActionType.SET_LOADING, payload: true });
+
+    try {
+      const response = await api.delete(`/remove-pet/${petId}`);
+
+      if (response.data) {
+        dispatch({
+          type: GlobalActionType.REMOVE_PET,
+        });
+
+        handleOpenMessageModal();
+
+        setTimeout(() => {
+          router.push("/my-pets");
+        }, 3000);
+      } else {
+        console.error("Invalid API response format:", response.data);
+        dispatch({
+          type: GlobalActionType.SET_ERROR,
+          payload: "Remove pet failed",
+        });
+      }
+    } catch (error) {
+      console.error("Error removing pet:", error);
+      dispatch({
+        type: GlobalActionType.SET_ERROR,
+        payload: "Remove pet failed",
+      });
+    } finally {
+      dispatch({ type: GlobalActionType.SET_LOADING, payload: false });
+    }
+  };
+
   const fetchOwnerPets = async (ownerId: number) => {
     try {
       dispatch({ type: GlobalActionType.SET_LOADING, payload: true });
@@ -283,6 +317,7 @@ export function PetsProvider({ children }: { children: ReactNode }) {
         setNewPet,
         addNewPet,
         editPet,
+        removePet,
         fetchOwnerPets,
         loading: state.loading,
         error: state.error,

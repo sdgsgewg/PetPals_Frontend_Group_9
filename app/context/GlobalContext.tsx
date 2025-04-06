@@ -11,9 +11,10 @@ interface GlobalContextType {
   isFilterModalOpen: boolean;
   handleOpenFilterModal: () => void;
   handleCloseFilterModal: () => void;
-  getImageUrlByBreed: (species: string, breed: string) => string;
-  getImageUrlByServiceCategory: (categoryName: string) => string;
-  formattedPrice: (price: number) => string;
+  getImageUrlByBreed: (species: string, breed: string) => string | null;
+  getImageUrlByServiceCategory: (categoryName: string) => string | null;
+  formattedAge: (age: number) => string | null;
+  formattedPrice: (price: number | string) => string;
 }
 
 const GlobalContext = createContext<GlobalContextType | undefined>(undefined);
@@ -37,7 +38,7 @@ export function GlobalProvider({ children }: { children: ReactNode }) {
   };
 
   const getImageUrlByBreed = (species: string, breed: string) => {
-    if (!species || !breed) return "";
+    if (!species || !breed) return null;
     const modifiedSpecies = species?.toLowerCase();
     const modifiedBreed = breed
       ?.split(" ")
@@ -47,7 +48,7 @@ export function GlobalProvider({ children }: { children: ReactNode }) {
   };
 
   const getImageUrlByServiceCategory = (categoryName: string) => {
-    if (!categoryName) return "";
+    if (!categoryName) return null;
     const modifiedCategoryName = categoryName
       ?.split(" ")
       .map((word) => word.toLowerCase())
@@ -55,11 +56,17 @@ export function GlobalProvider({ children }: { children: ReactNode }) {
     return `/img/services/${modifiedCategoryName}.jpg`;
   };
 
-  const formattedPrice = (price: number) => {
-    return price.toLocaleString("id-ID", {
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    });
+  const formattedAge = (age: number) => {
+    if (age === 0) return "Unknown";
+    if (age < 1) return `${age * 10} months`;
+    return `${age} years`;
+  };
+
+  const formattedPrice = (value: number | string): string => {
+    if (!value) return "";
+    const number =
+      typeof value === "string" ? parseInt(value.replace(/\D/g, "")) : value;
+    return new Intl.NumberFormat("id-ID").format(number);
   };
 
   return (
@@ -73,6 +80,7 @@ export function GlobalProvider({ children }: { children: ReactNode }) {
         handleCloseFilterModal,
         getImageUrlByBreed,
         getImageUrlByServiceCategory,
+        formattedAge,
         formattedPrice,
       }}
     >

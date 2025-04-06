@@ -1,7 +1,7 @@
-import IUser from "../user/IUser";
+import { IUser } from "../user/IUser";
 import { IServiceCategory } from "./IServiceCategory";
 
-interface IService {
+export interface IService {
   serviceId: number;
   providerId: number;
   categoryId: number;
@@ -11,8 +11,7 @@ interface IService {
   price: number;
   address: string;
   city: string;
+  status: string;
   provider: IUser;
   category: IServiceCategory;
 }
-
-export default IService;

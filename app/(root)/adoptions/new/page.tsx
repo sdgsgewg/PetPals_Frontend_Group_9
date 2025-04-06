@@ -1,18 +1,22 @@
 "use client";
-import InputField from "@/app/components/Authentication/InputField";
-import SelectField from "@/app/components/Authentication/SelectField";
+import InputField from "@/app/components/FormField/InputField";
+import SelectField from "@/app/components/FormField/SelectField";
 import NormalContent from "@/app/components/ContentTemplate/NormalContent";
 import MessageModal from "@/app/components/modals/MessageModal";
+import { useGlobal } from "@/app/context/GlobalContext";
 import { usePets } from "@/app/context/pets/PetsContext";
 import { useUsers } from "@/app/context/users/UsersContext";
-import Image from "next/image";
 import React, { useEffect, useState } from "react";
+import TextareaField from "@/app/components/FormField/TextareaField";
 
 const NewPet = () => {
+  const { formattedPrice } = useGlobal();
   const { loggedInUser } = useUsers();
   const { species, newPet, fetchSpecies, setNewPet, addNewPet } = usePets();
-  // const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  // const [imageUrl, setImageUrl] = useState("");
+
+  const [displayPrice, setDisplayPrice] = useState<string>(
+    newPet.price ? formattedPrice(newPet.price) : ""
+  );
 
   useEffect(() => {
     fetchSpecies();
@@ -35,36 +39,12 @@ const NewPet = () => {
     setNewPet(name, newValue);
   };
 
-  // const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   if (e.target.files && e.target.files.length > 0) {
-  //     setSelectedFile(e.target.files[0]);
-  //   }
-  // };
-
-  // const handleUpload = async () => {
-  //   if (!selectedFile) {
-  //     alert("Pilih gambar terlebih dahulu!");
-  //     return;
-  //   }
-
-  //   const formData = new FormData();
-  //   formData.append("file", selectedFile);
-
-  //   try {
-  //     const res = await fetch("/api/upload", {
-  //       method: "POST",
-  //       body: formData, // Jangan set Content-Type secara manual
-  //     });
-
-  //     const data = await res.json();
-  //     if (!res.ok) throw new Error(data.error);
-
-  //     setImageUrl(data.url);
-  //     setNewPet("imageUrl", data.url);
-  //   } catch (error) {
-  //     alert("Upload gagal: " + (error as Error).message);
-  //   }
-  // };
+  const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const rawValue = e.target.value.replace(/\D/g, ""); // hanya angka
+    const numericValue = parseInt(rawValue || "0", 10);
+    setNewPet("price", numericValue); // Simpan dalam bentuk number di state utama
+    setDisplayPrice(formattedPrice(numericValue)); // Simpan display string untuk tampilan
+  };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -103,6 +83,7 @@ const NewPet = () => {
             label="Age"
             name="age"
             type="number"
+            step="0.1"
             placeholder="Age"
             value={newPet.age}
             onChange={handleInputChange}
@@ -133,22 +114,21 @@ const NewPet = () => {
           />
 
           {/* Description */}
-          <InputField
+          <TextareaField
             label="Description"
             name="description"
-            placeholder="Description"
+            placeholder="Describe your pet"
             value={newPet.description}
-            onChange={handleInputChange}
+            onChange={(e) => handleInputChange(e)}
           />
 
           {/* Price */}
           <InputField
             label="Price"
             name="price"
-            type="number"
             placeholder="Price"
-            value={newPet.price}
-            onChange={handleInputChange}
+            value={displayPrice}
+            onChange={handlePriceChange}
           />
 
           {/* Tombol Submit */}
@@ -161,7 +141,7 @@ const NewPet = () => {
         </form>
       </div>
 
-      <MessageModal title="Add New Pet" message="New Pet has been made" />
+      <MessageModal title="Add New Pet" message="New Pet has been added" />
     </NormalContent>
   );
 };

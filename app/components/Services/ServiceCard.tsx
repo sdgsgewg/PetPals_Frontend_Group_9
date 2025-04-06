@@ -1,4 +1,4 @@
-import IService from "@/app/interface/service/IService";
+import { IService } from "@/app/interface/service/IService";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
 import Image from "next/image";
@@ -19,7 +19,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service }) => {
       <CardLayout>
         <div className="w-full h-[55%] overflow-hidden">
           <Image
-            src={`${getImageUrlByServiceCategory(service.categoryName)}`}
+            src={`${getImageUrlByServiceCategory(service?.category?.name)}`}
             alt={service.name}
             width={100}
             height={100}
@@ -29,7 +29,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service }) => {
         <div className="w-full h-[45%] flex flex-col justify-between p-3">
           <div>
             <p className="text-sm font-semibold text-slate-700 dark:text-slate-300">
-              {service.categoryName}
+              {service?.category?.name}
             </p>
             <p className="text-lg font-bold text-slate-900 dark:text-slate-400">
               {service.name}

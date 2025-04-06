@@ -2,9 +2,25 @@ import React from "react";
 import { Eye, Pencil, Trash } from "lucide-react";
 import { usePets } from "@/app/context/pets/PetsContext";
 import Link from "next/link";
+import { useGlobal } from "@/app/context/GlobalContext";
+import { IPet } from "@/app/interface/pet/IPet";
 
-const MyPetTable = () => {
+interface MyPetTableProps {
+  updateSelectedPet: (pet: IPet) => void;
+  onOpen: () => void;
+}
+
+const MyPetTable: React.FC<MyPetTableProps> = ({
+  updateSelectedPet,
+  onOpen,
+}) => {
+  const { formattedAge } = useGlobal();
   const { ownerPets } = usePets();
+
+  const handleRemovePet = (pet: IPet) => {
+    updateSelectedPet(pet);
+    onOpen();
+  };
 
   return (
     <div className="overflow-x-auto">
@@ -26,7 +42,7 @@ const MyPetTable = () => {
             >
               <td className="p-3">{index + 1}</td>
               <td className="p-3">{pet.name}</td>
-              <td className="p-3">{pet.age}</td>
+              <td className="p-3">{formattedAge(pet.age)}</td>
               <td className="p-3">{pet.gender}</td>
               <td className="p-3 flex gap-2">
                 {/* View */}
@@ -44,7 +60,10 @@ const MyPetTable = () => {
                 </Link>
 
                 {/* Delete */}
-                <button className="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600 dark:bg-red-700 dark:hover:bg-red-800 cursor-pointer">
+                <button
+                  className="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600 dark:bg-red-700 dark:hover:bg-red-800 transition duration-300 ease-in-out cursor-pointer"
+                  onClick={() => handleRemovePet(pet)}
+                >
                   <Trash size={16} />
                 </button>
               </td>

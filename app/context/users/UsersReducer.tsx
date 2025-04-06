@@ -1,5 +1,5 @@
 import { IRole } from "@/app/interface/user/IRole";
-import IUser from "@/app/interface/user/IUser";
+import { IUser } from "@/app/interface/user/IUser";
 import { GlobalAction, GlobalActionType } from "../GlobalActions";
 import { IUserRegister } from "@/app/interface/auth/IUserRegister";
 import { IUserLogin } from "@/app/interface/auth/IUserLogin";
@@ -11,10 +11,10 @@ export interface UserState {
   userLogin: IUserLogin;
   loggedInUser: IUser;
   roles: IRole[];
-  loading: boolean;
-  error: string | null;
   isLoggedIn: boolean;
   registerErrorMessages: IRegisterErrorMessage;
+  loading: boolean;
+  error: string | null;
 }
 
 export const initialState: UserState = {
@@ -56,6 +56,7 @@ export function UsersReducer(state: UserState, action: GlobalAction) {
           password: "",
           phone: "",
           address: "",
+          city: "",
           roleId: 0,
         },
       };
@@ -79,11 +80,13 @@ export function UsersReducer(state: UserState, action: GlobalAction) {
       return {
         ...state,
         loggedInUser: action.payload,
+        isLoggedIn: true,
       };
     case GlobalActionType.LOGOUT_USER:
       return {
         ...state,
-        loggedInUser: {},
+        loggedInUser: {} as IUser,
+        isLoggedIn: false,
       };
     case GlobalActionType.REGISTER_USER:
       return { ...state, loading: false, error: null };
@@ -104,7 +107,8 @@ export function UsersReducer(state: UserState, action: GlobalAction) {
           Password: "",
           Phone: "",
           Address: "",
-          RoleId: 0,
+          City: "",
+          RoleId: "",
         },
       };
     case GlobalActionType.GET_LOGGED_IN_USER:

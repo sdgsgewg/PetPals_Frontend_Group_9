@@ -1,5 +1,5 @@
 "use client";
-import ISpecies from "@/app/interface/pet/ISpecies";
+import { ISpecies } from "@/app/interface/pet/ISpecies";
 import { IServiceCategory } from "@/app/interface/service/IServiceCategory";
 import { IRole } from "@/app/interface/user/IRole";
 import React from "react";
@@ -39,14 +39,14 @@ const SelectField: React.FC<SelectFieldProps> = ({
           <option
             key={
               label === "Role"
-                ? option.RoleId
+                ? option.roleId
                 : label === "Species"
                 ? option.speciesId
                 : option.categoryId
             }
             value={
               label === "Role"
-                ? option.RoleId
+                ? option.roleId
                 : label === "Species"
                 ? option.speciesId
                 : option.categoryId

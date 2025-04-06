@@ -65,7 +65,7 @@ const ServiceDetail = () => {
       <NormalContent>
         <PageNotFound
           image_url="/img/page-not-found.png"
-          message="Pet not found"
+          message=""
         />
       </NormalContent>
     );

@@ -1,16 +1,19 @@
 "use client";
-import InputField from "@/app/components/Authentication/InputField";
-import SelectField from "@/app/components/Authentication/SelectField";
+import InputField from "@/app/components/FormField/InputField";
+import SelectField from "@/app/components/FormField/SelectField";
 import NormalContent from "@/app/components/ContentTemplate/NormalContent";
 import MessageModal from "@/app/components/modals/MessageModal";
 import { useServices } from "@/app/context/services/ServicesContext";
 import { useParams } from "next/navigation";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { useGlobal } from "@/app/context/GlobalContext";
+import TextareaField from "@/app/components/FormField/TextareaField";
 
 const EditService = () => {
   const params = useParams();
   const slug = params?.slug as string;
 
+  const { formattedPrice } = useGlobal();
   const {
     service,
     service_categories,
@@ -20,6 +23,10 @@ const EditService = () => {
     setNewService,
     editService,
   } = useServices();
+
+  const [displayPrice, setDisplayPrice] = useState<string>(
+    newService.price ? formattedPrice(newService.price) : ""
+  );
 
   useEffect(() => {
     fetchServiceCategories();
@@ -43,6 +50,13 @@ const EditService = () => {
     const newValue: string | number =
       name === "categoryId" ? Number(value) : value;
     setNewService(name, newValue);
+  };
+
+  const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const rawValue = e.target.value.replace(/\D/g, "");
+    const numericValue = parseInt(rawValue || "0", 10);
+    setNewService("price", numericValue);
+    setDisplayPrice(formattedPrice(numericValue));
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -78,22 +92,21 @@ const EditService = () => {
           />
 
           {/* Description */}
-          <InputField
+          <TextareaField
             label="Description"
             name="description"
-            placeholder="Description"
+            placeholder="Describe your service"
             value={newService.description}
-            onChange={handleInputChange}
+            onChange={(e) => handleInputChange(e)}
           />
 
           {/* Price */}
           <InputField
             label="Price"
             name="price"
-            type="number"
             placeholder="Price"
-            value={newService.price}
-            onChange={handleInputChange}
+            value={displayPrice}
+            onChange={handlePriceChange}
           />
 
           {/* Address */}

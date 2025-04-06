@@ -1,6 +1,6 @@
 import { IRole } from "./IRole";
 
-interface IUser {
+export interface IUser {
   userId: number;
   name: string;
   email: string;
@@ -10,5 +10,3 @@ interface IUser {
   city: string;
   role: IRole;
 }
-
-export default IUser;

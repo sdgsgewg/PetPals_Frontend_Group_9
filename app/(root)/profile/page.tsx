@@ -5,7 +5,6 @@ import { useUsers } from "@/app/context/users/UsersContext";
 import React from "react";
 
 const Profile = () => {
-  // Simulasi data user (nantinya data ini bisa diambil dari API)
   const { loggedInUser } = useUsers();
 
   return (
@@ -28,11 +27,6 @@ const Profile = () => {
         {/* Role */}
         <DataField label="Role" value={loggedInUser.role.name} />
       </div>
-      {/* <div className="mt-6 flex justify-center">
-          <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
-            Edit Profil
-          </button>
-        </div> */}
     </NormalContent>
   );
 };

@@ -1,4 +1,4 @@
-import IUser from "@/app/interface/user/IUser";
+import { IUser } from "@/app/interface/user/IUser";
 import Link from "next/link";
 import React from "react";
 import { AiOutlineWhatsApp } from "react-icons/ai";

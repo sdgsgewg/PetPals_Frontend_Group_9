@@ -17,7 +17,7 @@ const PetDetail = () => {
   const slug = params?.slug as string | undefined;
   const router = useRouter();
 
-  const { getImageUrlByBreed } = useGlobal();
+  const { getImageUrlByBreed, formattedPrice } = useGlobal();
   const { isLoggedIn, loggedInUser } = useUsers();
   const { pet, fetchPetDetail, loading, error } = usePets();
   const { adoptions, adoptPet } = useAdoptions();
@@ -35,7 +35,7 @@ const PetDetail = () => {
   useEffect(() => {
     if (pet) {
       setImageUrl(getImageUrlByBreed(pet?.species?.name, pet?.breed));
-      setPrice(pet.price?.toLocaleString("id-ID") || "0");
+      setPrice(formattedPrice(pet.price));
       setStatus(getStatus());
     }
   }, [pet]);
@@ -58,6 +58,13 @@ const PetDetail = () => {
     setIsAdopted(true);
   };
 
+  const getStatus = () => {
+    if (!pet?.status) return "Unknown";
+    return (
+      pet.status.charAt(0).toUpperCase() + pet.status.slice(1).toLowerCase()
+    );
+  };
+
   if (loading) {
     return (
       <NormalContent>
@@ -74,13 +81,6 @@ const PetDetail = () => {
           message="Pet not found"
         />
       </NormalContent>
-    );
-  }
-
-  function getStatus() {
-    if (!pet?.status) return "Unknown";
-    return (
-      pet.status.charAt(0).toUpperCase() + pet.status.slice(1).toLowerCase()
     );
   }
 

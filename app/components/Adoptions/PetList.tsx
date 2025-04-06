@@ -1,4 +1,4 @@
-import IPet from "@/app/interface/pet/IPet";
+import { IPet } from "@/app/interface/pet/IPet";
 import React from "react";
 import PetCard from "./PetCard";
 import { usePets } from "@/app/context/pets/PetsContext";

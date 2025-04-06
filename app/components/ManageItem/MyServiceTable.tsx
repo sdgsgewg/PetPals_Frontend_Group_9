@@ -3,10 +3,24 @@ import { Eye, Pencil, Trash } from "lucide-react";
 import { useServices } from "@/app/context/services/ServicesContext";
 import Link from "next/link";
 import { useGlobal } from "@/app/context/GlobalContext";
+import { IService } from "@/app/interface/service/IService";
 
-const MyServiceTable = () => {
+interface MyServiceTableProps {
+  updateSelectedService: (service: IService) => void;
+  onOpen: () => void;
+}
+
+const MyServiceTable: React.FC<MyServiceTableProps> = ({
+  updateSelectedService,
+  onOpen,
+}) => {
   const { formattedPrice } = useGlobal();
   const { providerServices } = useServices();
+
+  const handleRemoveService = (service: IService) => {
+    updateSelectedService(service);
+    onOpen();
+  };
 
   return (
     <div className="overflow-x-auto">
@@ -44,9 +58,12 @@ const MyServiceTable = () => {
                 </Link>
 
                 {/* Delete */}
-                {/* <button className="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600 dark:bg-red-700 dark:hover:bg-red-800 cursor-pointer">
+                <button
+                  className="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600 dark:bg-red-700 dark:hover:bg-red-800 cursor-pointer"
+                  onClick={() => handleRemoveService(service)}
+                >
                   <Trash size={16} />
-                </button> */}
+                </button>
               </td>
             </tr>
           ))}

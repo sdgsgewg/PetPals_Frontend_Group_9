@@ -1,6 +1,6 @@
-import IPet from "@/app/interface/pet/IPet";
+import { IPet } from "@/app/interface/pet/IPet";
 import { IPetFilterParams } from "../../interface/pet/IPetFilterParams";
-import ISpecies from "../../interface/pet/ISpecies";
+import { ISpecies } from "../../interface/pet/ISpecies";
 import { GlobalAction, GlobalActionType } from "../GlobalActions";
 import { INewPet } from "@/app/interface/pet/INewPet";
 
@@ -8,9 +8,9 @@ export interface PetState {
   species: ISpecies[];
   pets: IPet[];
   ownerPets: IPet[];
-  filters: IPetFilterParams;
   pet: IPet;
   newPet: INewPet;
+  filters: IPetFilterParams;
   loading: boolean;
   error: string | null;
 }
@@ -19,6 +19,8 @@ export const initialState: PetState = {
   species: [],
   pets: [],
   ownerPets: [],
+  pet: {} as IPet,
+  newPet: {} as INewPet,
   filters: {
     searchValue: "",
     species: "",
@@ -27,8 +29,6 @@ export const initialState: PetState = {
     minPrice: "",
     maxPrice: "",
   } as IPetFilterParams,
-  pet: {} as IPet,
-  newPet: {} as INewPet,
   loading: false,
   error: null,
 };
@@ -77,6 +77,7 @@ export function PetsReducer(state: PetState, action: GlobalAction) {
           name: "",
           breed: "",
           age: 0,
+          gender: "",
           speciesId: 0,
           description: "",
           price: 0,
@@ -87,6 +88,8 @@ export function PetsReducer(state: PetState, action: GlobalAction) {
     case GlobalActionType.ADD_NEW_PET:
       return { ...state };
     case GlobalActionType.EDIT_PET:
+      return { ...state };
+    case GlobalActionType.REMOVE_PET:
       return { ...state };
     case GlobalActionType.GET_OWNER_PETS:
       return { ...state, ownerPets: action.payload };

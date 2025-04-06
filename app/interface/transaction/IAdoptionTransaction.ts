@@ -1,5 +1,5 @@
-import IPet from "../pet/IPet";
-import IUser from "../user/IUser";
+import { IPet } from "../pet/IPet";
+import { IUser } from "../user/IUser";
 
 export enum AdoptionStatus {
   Pending = "pending",
@@ -14,7 +14,7 @@ export interface IAdoptionTransaction {
   petId: number;
   transactionType: string;
   price: number;
-  booking_date: string;
+  bookingDate: string;
   status: AdoptionStatus;
   adopter: IUser;
   owner: IUser;

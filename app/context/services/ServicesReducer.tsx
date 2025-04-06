@@ -1,4 +1,4 @@
-import IService from "@/app/interface/service/IService";
+import { IService } from "@/app/interface/service/IService";
 import { IServiceCategory } from "@/app/interface/service/IServiceCategory";
 import { IServiceFilterParams } from "@/app/interface/service/IServiceFilterParams";
 import { GlobalAction, GlobalActionType } from "../GlobalActions";
@@ -85,6 +85,8 @@ export function ServicesReducer(state: ServiceState, action: GlobalAction) {
     case GlobalActionType.ADD_NEW_SERVICE:
       return { ...state };
     case GlobalActionType.EDIT_SERVICE:
+      return { ...state };
+    case GlobalActionType.REMOVE_SERVICE:
       return { ...state };
     case GlobalActionType.GET_PROVIDER_SERVICES:
       return { ...state, providerServices: action.payload };

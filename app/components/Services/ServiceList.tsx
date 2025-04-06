@@ -1,4 +1,4 @@
-import IService from "@/app/interface/service/IService";
+import { IService } from "@/app/interface/service/IService";
 import React from "react";
 import ServiceCard from "./ServiceCard";
 import { useServices } from "@/app/context/services/ServicesContext";

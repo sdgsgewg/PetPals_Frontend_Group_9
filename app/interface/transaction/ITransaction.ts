@@ -1,6 +1,6 @@
-import IPet from "../pet/IPet";
-import IService from "../service/IService";
-import IUser from "../user/IUser";
+import { IPet } from "../pet/IPet";
+import { IService } from "../service/IService";
+import { IUser } from "../user/IUser";
 
 export interface ITransaction {
   transactionId: number;

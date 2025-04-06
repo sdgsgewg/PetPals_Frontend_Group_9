@@ -3,7 +3,7 @@
 import { createContext, ReactNode, useContext, useReducer } from "react";
 import api from "@/lib/apiClient";
 import { IServiceCategory } from "@/app/interface/service/IServiceCategory";
-import IService from "@/app/interface/service/IService";
+import { IService } from "@/app/interface/service/IService";
 import { IServiceFilterParams } from "@/app/interface/service/IServiceFilterParams";
 import { initialState, ServicesReducer } from "./ServicesReducer";
 import { GlobalActionType } from "../GlobalActions";
@@ -32,6 +32,7 @@ interface ServicesContextType {
   setNewService: (name: string, value: string | number) => void;
   addNewService: () => Promise<void>;
   editService: (serviceId: number) => Promise<void>;
+  removeService: (serviceId: number) => Promise<void>;
   fetchProviderServices: (providerId: number) => Promise<void>;
   loading: boolean;
   error: string | null;
@@ -221,7 +222,7 @@ export function ServicesProvider({ children }: { children: ReactNode }) {
         handleOpenMessageModal();
 
         setTimeout(() => {
-          router.push("/services");
+          router.push("/my-services");
         }, 3000);
       } else {
         console.error("Invalid API response format:", response.data);
@@ -282,6 +283,36 @@ export function ServicesProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const removeService = async (serviceId: number) => {
+    dispatch({ type: GlobalActionType.SET_LOADING, payload: true });
+
+    try {
+      const response = await api.delete(`/remove-service/${serviceId}`);
+
+      if (response.data) {
+        dispatch({
+          type: GlobalActionType.REMOVE_SERVICE,
+        });
+
+        handleOpenMessageModal();
+      } else {
+        console.error("Invalid API response format:", response.data);
+        dispatch({
+          type: GlobalActionType.SET_ERROR,
+          payload: "Remove service failed",
+        });
+      }
+    } catch (error) {
+      console.error("Error removing service:", error);
+      dispatch({
+        type: GlobalActionType.SET_ERROR,
+        payload: "Remove service failed",
+      });
+    } finally {
+      dispatch({ type: GlobalActionType.SET_LOADING, payload: false });
+    }
+  };
+
   const fetchProviderServices = async (providerId: number) => {
     try {
       dispatch({ type: GlobalActionType.SET_LOADING, payload: true });
@@ -329,6 +360,7 @@ export function ServicesProvider({ children }: { children: ReactNode }) {
         setNewService,
         addNewService,
         editService,
+        removeService,
         fetchProviderServices,
         loading: state.loading,
         error: state.error,

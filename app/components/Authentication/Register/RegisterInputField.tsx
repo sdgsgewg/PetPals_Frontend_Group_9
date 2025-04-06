@@ -1,8 +1,8 @@
 "use client";
 import { useUsers } from "@/app/context/users/UsersContext";
 import React, { useEffect } from "react";
-import InputField from "../InputField";
-import SelectField from "../SelectField";
+import InputField from "../../FormField/InputField";
+import SelectField from "../../FormField/SelectField";
 
 const RegisterInputField = () => {
   const {

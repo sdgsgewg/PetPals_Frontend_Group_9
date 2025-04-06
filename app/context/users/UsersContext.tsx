@@ -8,7 +8,7 @@ import {
   useReducer,
 } from "react";
 import api from "@/lib/apiClient";
-import IUser from "@/app/interface/user/IUser";
+import { IUser } from "@/app/interface/user/IUser";
 import { IRole } from "@/app/interface/user/IRole";
 import { initialState, UsersReducer } from "./UsersReducer";
 import { GlobalActionType } from "../GlobalActions";
@@ -23,6 +23,7 @@ interface UsersContextType {
   userLogin: IUserLogin;
   loggedInUser: IUser;
   roles: IRole[];
+  isLoggedIn: boolean;
   registerErrorMessages: IRegisterErrorMessage;
   fetchRoles: () => Promise<void>;
   setUserRegister: (name: string, value: string) => void;
@@ -32,7 +33,6 @@ interface UsersContextType {
   logoutUser: () => void;
   loading: boolean;
   error: string | null;
-  isLoggedIn: boolean;
 }
 
 const UsersContext = createContext<UsersContextType | undefined>(undefined);
@@ -130,11 +130,11 @@ export function UsersProvider({ children }: { children: ReactNode }) {
           payload: "Registration failed",
         });
       }
-    } catch (error) {
-      console.error("Error register user:", error.response.data);
+    } catch (error: any) {
+      console.error("Error register user:", error?.response?.data);
 
-      if (error.response.data.errors) {
-        const errors = error.response.data.errors.reduce(
+      if (error?.response?.data?.errors) {
+        const errors = error?.response?.data?.errors?.reduce(
           (
             acc: Record<string, string>,
             err: { propertyName: string; errorMessage: string }

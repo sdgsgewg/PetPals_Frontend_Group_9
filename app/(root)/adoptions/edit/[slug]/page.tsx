@@ -1,16 +1,19 @@
 "use client";
-import InputField from "@/app/components/Authentication/InputField";
-import SelectField from "@/app/components/Authentication/SelectField";
+import InputField from "@/app/components/FormField/InputField";
+import SelectField from "@/app/components/FormField/SelectField";
 import NormalContent from "@/app/components/ContentTemplate/NormalContent";
 import MessageModal from "@/app/components/modals/MessageModal";
 import { usePets } from "@/app/context/pets/PetsContext";
 import { useParams } from "next/navigation";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import TextareaField from "@/app/components/FormField/TextareaField";
+import { useGlobal } from "@/app/context/GlobalContext";
 
 const EditPet = () => {
   const params = useParams();
   const slug = params?.slug as string;
 
+  const { formattedPrice } = useGlobal();
   const {
     pet,
     species,
@@ -20,6 +23,10 @@ const EditPet = () => {
     setNewPet,
     editPet,
   } = usePets();
+
+  const [displayPrice, setDisplayPrice] = useState<string>(
+    pet.price ? formattedPrice(pet.price) : ""
+  );
 
   useEffect(() => {
     fetchSpecies();
@@ -35,6 +42,7 @@ const EditPet = () => {
     setNewPet("speciesId", pet?.species?.speciesId);
     setNewPet("description", pet.description);
     setNewPet("price", pet.price);
+    setDisplayPrice(formattedPrice(pet.price));
   }, [pet]);
 
   const handleInputChange = (
@@ -48,6 +56,13 @@ const EditPet = () => {
     setNewPet(name, newValue);
   };
 
+  const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const rawValue = e.target.value.replace(/\D/g, "");
+    const numericValue = parseInt(rawValue || "0", 10);
+    setNewPet("price", numericValue);
+    setDisplayPrice(formattedPrice(numericValue)); // Simpan display string untuk tampilan
+  };
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -58,7 +73,6 @@ const EditPet = () => {
     <NormalContent>
       <div className="w-full max-w-xl mx-auto p-6 border bg-white dark:bg-gray-900 dark:border-gray-700 dark:text-white shadow-md rounded-lg">
         <h1 className="text-2xl font-bold mb-4">Edit Hewan Peliharaan</h1>
-        <p>{pet.petId}</p>
 
         <form onSubmit={handleSubmit}>
           {/* Name */}
@@ -84,6 +98,7 @@ const EditPet = () => {
             label="Age"
             name="age"
             type="number"
+            step="0.1"
             placeholder="Age"
             value={newPet.age}
             onChange={handleInputChange}
@@ -114,22 +129,21 @@ const EditPet = () => {
           />
 
           {/* Description */}
-          <InputField
+          <TextareaField
             label="Description"
             name="description"
-            placeholder="Description"
+            placeholder="Describe your pet"
             value={newPet.description}
-            onChange={handleInputChange}
+            onChange={(e) => handleInputChange(e)}
           />
 
           {/* Price */}
           <InputField
             label="Price"
             name="price"
-            type="number"
             placeholder="Price"
-            value={newPet.price}
-            onChange={handleInputChange}
+            value={displayPrice}
+            onChange={handlePriceChange}
           />
 
           {/* Tombol Submit */}

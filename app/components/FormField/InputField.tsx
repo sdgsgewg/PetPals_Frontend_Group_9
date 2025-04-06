@@ -7,9 +7,10 @@ interface InputFieldProps {
   name: string;
   type?: string;
   placeholder: string;
-  value: string|number;
+  value: string | number;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   error?: string;
+  step?: string | number;
 }
 
 const InputField: React.FC<InputFieldProps> = ({
@@ -20,6 +21,7 @@ const InputField: React.FC<InputFieldProps> = ({
   value,
   onChange,
   error,
+  step,
 }) => {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -28,9 +30,15 @@ const InputField: React.FC<InputFieldProps> = ({
       <label className="text-gray-600 dark:text-gray-300 font-semibold">
         {label}
       </label>
+      {label === "Age" && (
+        <p className="text-slate-500 dark:text-slate-400 text-sm italic my-1">
+          Please input 0.X if your pet age is below 1 (Ex: 0.5 equals 5 months).
+        </p>
+      )}
       <div className="relative w-full">
         <input
           type={type === "password" && showPassword ? "text" : type}
+          step={type === "number" ? step ?? "any" : undefined}
           placeholder={placeholder}
           className={`w-full px-4 py-2 border rounded-lg mt-2 pr-10 ${
             error ? "border-red-500 mb-2" : "mb-4"

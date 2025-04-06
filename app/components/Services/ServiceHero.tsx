@@ -1,17 +1,11 @@
 import Image from "next/image";
-import { useState } from "react";
-import { usePets } from "@/app/context/pets/PetsContext";
 import SearchBox from "../SearchFilter/SearchBox";
 import FilterBox from "../SearchFilter/FilterBox";
 import SearchFilterBox from "../SearchFilter/SearchFilterBox";
+import { useServices } from "@/app/context/services/ServicesContext";
 
 const ServiceHero = () => {
-  const { filters } = usePets();
-
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const handleOpenModal = () => setIsModalOpen(true);
-  const handleCloseModal = () => setIsModalOpen(false);
+  const { filters } = useServices();
 
   return (
     <div className="relative w-full h-[50dvh] xl:h-[60dvh] text-white">
@@ -19,7 +13,7 @@ const ServiceHero = () => {
       <div className="w-full h-full overflow-hidden">
         <Image
           src={`/img/services.jpg`}
-          alt={filters.species}
+          alt={filters.categoryName}
           width={100}
           height={100}
           className="w-full h-full object-cover"
@@ -39,12 +33,7 @@ const ServiceHero = () => {
             searchType="services"
             placeholder="Search by name or city"
           />
-          <FilterBox
-            isOpen={isModalOpen}
-            onOpen={handleOpenModal}
-            onClose={handleCloseModal}
-            filterType="services"
-          />
+          <FilterBox />
         </SearchFilterBox>
       </div>
     </div>

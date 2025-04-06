@@ -25,10 +25,7 @@ const Forums = () => {
   if (error) {
     return (
       <NormalContent>
-        <PageNotFound
-          image_url="/img/page-not-found.png"
-          message="Pet not found"
-        />
+        <PageNotFound image_url="/img/page-not-found.png" message="" />
       </NormalContent>
     );
   }
