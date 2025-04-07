@@ -17,7 +17,7 @@ const ServiceDetail = () => {
   const slug = params?.slug as string | undefined;
   const router = useRouter();
 
-  const { getImageUrlByServiceCategory } = useGlobal();
+  const { getImageUrlByServiceCategory, formattedPrice } = useGlobal();
   const { isLoggedIn, loggedInUser } = useUsers();
   const { service, fetchServiceDetail, loading, error } = useServices();
 
@@ -37,7 +37,7 @@ const ServiceDetail = () => {
   useEffect(() => {
     if (service) {
       setImageUrl(getImageUrlByServiceCategory(service?.category?.name));
-      setPrice(service.price?.toLocaleString("id-ID") || "0");
+      setPrice(formattedPrice(service.price));
     }
   }, [service]);
 
@@ -60,13 +60,10 @@ const ServiceDetail = () => {
     );
   }
 
-  if (error || !service) {
+  if (error || !service || Object.keys(service).length === 0) {
     return (
       <NormalContent>
-        <PageNotFound
-          image_url="/img/page-not-found.png"
-          message=""
-        />
+        <PageNotFound image_url="/img/page-not-found.png" message="" />
       </NormalContent>
     );
   }

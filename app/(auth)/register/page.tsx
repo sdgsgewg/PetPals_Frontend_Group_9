@@ -1,8 +1,8 @@
-import AuthBox from "@/app/components/Authentication/AuthForm";
+import AuthForm from "@/app/components/Authentication/AuthForm";
 import React from "react";
 
 const Register = () => {
-  return <AuthBox authType="Register" />;
+  return <AuthForm authType="Register" />;
 };
 
 export default Register;

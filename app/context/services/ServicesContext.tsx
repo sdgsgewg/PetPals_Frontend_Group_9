@@ -138,7 +138,7 @@ export function ServicesProvider({ children }: { children: ReactNode }) {
 
       const response = await api.get(`/service-list/${slug}`);
 
-      if (response.data) {
+      if (response.data && response.data.serviceId) {
         dispatch({
           type: GlobalActionType.GET_SERVICE_DETAIL,
           payload: response.data,
@@ -295,6 +295,10 @@ export function ServicesProvider({ children }: { children: ReactNode }) {
         });
 
         handleOpenMessageModal();
+
+        setTimeout(() => {
+          router.push("/my-services");
+        }, 3000);
       } else {
         console.error("Invalid API response format:", response.data);
         dispatch({

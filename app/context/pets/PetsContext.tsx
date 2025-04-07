@@ -131,7 +131,7 @@ export function PetsProvider({ children }: { children: ReactNode }) {
 
       const response = await api.get(`/adoption-list/${slug}`);
 
-      if (response.data) {
+      if (response.data && response.data.petId) {
         dispatch({
           type: GlobalActionType.GET_PET_DETAIL,
           payload: response.data,

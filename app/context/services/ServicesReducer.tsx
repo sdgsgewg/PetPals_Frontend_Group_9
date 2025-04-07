@@ -90,6 +90,10 @@ export function ServicesReducer(state: ServiceState, action: GlobalAction) {
       return { ...state };
     case GlobalActionType.GET_PROVIDER_SERVICES:
       return { ...state, providerServices: action.payload };
+    case GlobalActionType.SET_LOADING:
+      return { ...state, loading: action.payload };
+    case GlobalActionType.SET_ERROR:
+      return { ...state, error: action.payload };
     default:
       return state;
   }

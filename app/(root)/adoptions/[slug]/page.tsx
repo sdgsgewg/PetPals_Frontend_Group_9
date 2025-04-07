@@ -73,13 +73,10 @@ const PetDetail = () => {
     );
   }
 
-  if (error || !pet) {
+  if (error || !pet || Object.keys(pet).length === 0) {
     return (
       <NormalContent>
-        <PageNotFound
-          image_url="/img/page-not-found.png"
-          message="Pet not found"
-        />
+        <PageNotFound image_url="/img/page-not-found.png" message="" />
       </NormalContent>
     );
   }

@@ -5,9 +5,9 @@ import { IServiceCategory } from "../interface/service/IServiceCategory";
 import { ISpecies } from "../interface/pet/ISpecies";
 import { ITransaction } from "../interface/transaction/ITransaction";
 import { IUser } from "../interface/user/IUser";
-import IForumPost from "../interface/forum/IForumPost";
+import { IForumPost } from "../interface/forum/IForumPost";
 import { IForumCategory } from "../interface/forum/IForumCategory";
-import IForumComment from "../interface/forum/IForumComment";
+import { IForumComment } from "../interface/forum/IForumComment";
 import { IAdoptionTransaction } from "../interface/transaction/IAdoptionTransaction";
 import { IServiceTransaction } from "../interface/transaction/IServiceTransaction";
 

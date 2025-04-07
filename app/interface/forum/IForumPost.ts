@@ -1,6 +1,6 @@
-import IUser from "../user/IUser";
+import { IUser } from "../user/IUser";
 
-interface IForumPost {
+export interface IForumPost {
   forumPostId: number;
   forumCategoryId: number;
   userId: number;
@@ -10,5 +10,3 @@ interface IForumPost {
   createdAt: string;
   user: IUser;
 }
-
-export default IForumPost;
