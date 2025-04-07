@@ -1,3 +1,5 @@
+import { useGlobal } from "@/app/context/GlobalContext";
+
 interface SelectFieldProps {
   label: string;
   name: string;
@@ -15,6 +17,8 @@ const SelectField: React.FC<SelectFieldProps> = ({
   options,
   error,
 }) => {
+  const { getForumCategoryName } = useGlobal();
+
   return (
     <div>
       <label className="text-gray-600 dark:text-gray-300 font-semibold">
@@ -31,7 +35,7 @@ const SelectField: React.FC<SelectFieldProps> = ({
         <option value="0">Select a {label}</option>
         {options.map((option) => (
           <option key={option.id} value={option.id}>
-            {option.name}
+            {getForumCategoryName(option.name)}
           </option>
         ))}
       </select>

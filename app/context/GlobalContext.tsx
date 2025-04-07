@@ -15,6 +15,8 @@ interface GlobalContextType {
   getImageUrlByServiceCategory: (categoryName: string) => string | null;
   formattedAge: (age: number) => string | null;
   formattedPrice: (price: number | string) => string;
+  getForumCategoryName: (categoryName: string) => string | null;
+  formattedDate: (dateString: string) => string | null;
 }
 
 const GlobalContext = createContext<GlobalContextType | undefined>(undefined);
@@ -69,6 +71,23 @@ export function GlobalProvider({ children }: { children: ReactNode }) {
     return new Intl.NumberFormat("id-ID").format(number);
   };
 
+  const getForumCategoryName = (categoryName: string) => {
+    if (!categoryName) return null;
+    const modifiedCategory =
+      categoryName.charAt(0).toUpperCase() +
+      categoryName.slice(1).toLowerCase();
+    return modifiedCategory;
+  };
+
+  const formattedDate = (dateString: string) => {
+    if (!dateString) return null;
+    return new Date(dateString).toLocaleDateString("id-ID", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    });
+  };
+
   return (
     <GlobalContext.Provider
       value={{
@@ -82,6 +101,8 @@ export function GlobalProvider({ children }: { children: ReactNode }) {
         getImageUrlByServiceCategory,
         formattedAge,
         formattedPrice,
+        getForumCategoryName,
+        formattedDate,
       }}
     >
       {children}

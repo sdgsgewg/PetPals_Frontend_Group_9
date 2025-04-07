@@ -1,4 +1,4 @@
 export interface IForumCategory {
-  forumCategoryId: number;
+  id: number;
   name: string;
 }

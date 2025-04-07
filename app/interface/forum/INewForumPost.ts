@@ -1,6 +1,6 @@
 export interface INewForumPost {
-  forumCategoryId: number;
   userId: number;
+  forumCategoryId: number;
   title: string;
   content: string;
 }
