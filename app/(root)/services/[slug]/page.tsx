@@ -79,12 +79,12 @@ const ServiceDetail = () => {
           onClick={handleBooking}
         />
 
-        {loggedInUser.role.name.toLowerCase() === "adopter" && (
+        {isLoggedIn && loggedInUser?.role?.name.toLowerCase() === "adopter" && (
           <ContactPersonCard itemType="service" data={service?.provider} />
         )}
       </div>
 
-      {loggedInUser.role.name.toLowerCase() === "adopter" && (
+      {isLoggedIn && loggedInUser?.role?.name.toLowerCase() === "adopter" && (
         <BookServiceModal
           title="Book Service"
           message="Please input the booking date"

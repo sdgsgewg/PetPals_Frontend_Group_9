@@ -94,9 +94,10 @@ const PetDetail = () => {
           onClick={handleAdoption}
         />
 
-        {loggedInUser?.role?.name?.toLowerCase() === "adopter" && (
-          <ContactPersonCard itemType="pet" data={pet?.owner} />
-        )}
+        {isLoggedIn &&
+          loggedInUser?.role?.name?.toLowerCase() === "adopter" && (
+            <ContactPersonCard itemType="pet" data={pet?.owner} />
+          )}
       </div>
 
       <MessageModal
