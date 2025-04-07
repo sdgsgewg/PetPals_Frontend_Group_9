@@ -35,10 +35,6 @@ const MyPets = () => {
     fetchOwnerPets(loggedInUser.userId);
   }, []);
 
-  useEffect(() => {
-    fetchOwnerPets(loggedInUser.userId);
-  }, [removePet]);
-
   if (error) {
     return (
       <NormalContent>

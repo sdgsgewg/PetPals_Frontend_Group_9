@@ -24,23 +24,6 @@ const UserDropdownNavLink: React.FC<UserDropdownNavLinkProps> = ({
 
   return (
     <>
-      {/* {loggedInUser.role.name.toLowerCase() === "owner" && (
-        <UserDropdownNavItem
-          href="/adoptions/new"
-          icon={<PawPrint size={16} />}
-          label="Add New Pet"
-          onMenuClick={handleMenuClick}
-        />
-      )}
-      {loggedInUser.role.name.toLowerCase() === "provider" && (
-        <UserDropdownNavItem
-          href="/services/new"
-          icon={<PlusCircle size={16} />}
-          label="Add New Service"
-          onMenuClick={handleMenuClick}
-        />
-      )} */}
-
       {/* My Pets or My Services */}
       {loggedInUser.role.name.toLowerCase() === "owner" && (
         <UserDropdownNavItem

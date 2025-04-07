@@ -6,6 +6,7 @@ import PageNotFound from "@/app/components/PageNotFound";
 import ServiceHero from "@/app/components/Services/ServiceHero";
 import ServiceList from "@/app/components/Services/ServiceList";
 import { useServices } from "@/app/context/services/ServicesContext";
+import { useUsers } from "@/app/context/users/UsersContext";
 import React, { useEffect, useState } from "react";
 import { useDebounce } from "react-use";
 

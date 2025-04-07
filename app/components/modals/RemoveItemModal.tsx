@@ -24,15 +24,22 @@ const RemoveItemModal: React.FC<RemoveItemModalProps> = ({
   onClose,
 }) => {
   const { formattedPrice } = useGlobal();
+  const { loggedInUser } = useUsers();
   const petsContext = usePets();
   const servicesContext = useServices();
 
-  const handleRemoveItem = () => {
+  const handleRemoveItem = async () => {
     const isPet = itemType.toLowerCase() === "pet";
     const removeFunction = isPet
       ? petsContext.removePet
       : servicesContext.removeService;
-    removeFunction(isPet ? item.petId : item.serviceId);
+    await removeFunction(isPet ? item.petId : item.serviceId);
+
+    const fetchFunction = isPet
+      ? petsContext.fetchOwnerPets
+      : servicesContext.fetchProviderServices;
+
+    fetchFunction(loggedInUser.userId);
     onClose();
   };
 

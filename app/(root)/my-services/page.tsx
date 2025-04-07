@@ -43,10 +43,6 @@ const MyServices = () => {
     fetchProviderServices(loggedInUser.userId);
   }, []);
 
-  useEffect(() => {
-    fetchProviderServices(loggedInUser.userId);
-  }, [removeService]);
-
   if (error) {
     return (
       <NormalContent>
