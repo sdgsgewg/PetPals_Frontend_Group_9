@@ -12,13 +12,24 @@ import TextareaField from "@/app/components/FormField/TextareaField";
 const NewPet = () => {
   const { formattedPrice } = useGlobal();
   const { loggedInUser } = useUsers();
-  const { species, newPet, fetchSpecies, setNewPet, addNewPet } = usePets();
+  const {
+    species,
+    newPet,
+    newPetErrorMessages,
+    genderOptions,
+    fetchSpecies,
+    setNewPet,
+    resetNewPet,
+    addNewPet,
+  } = usePets();
 
   const [displayPrice, setDisplayPrice] = useState<string>(
     newPet.price ? formattedPrice(newPet.price) : ""
   );
 
   useEffect(() => {
+    resetNewPet();
+    setDisplayPrice("");
     fetchSpecies();
   }, []);
 
@@ -33,7 +44,7 @@ const NewPet = () => {
   ) => {
     const { name, value } = e.target;
     const newValue: string | number =
-      name === "age" || name === " speciesId" || name === "price"
+      name === "age" || name === "speciesId" || name === "price"
         ? Number(value)
         : value;
     setNewPet(name, newValue);
@@ -67,6 +78,7 @@ const NewPet = () => {
             placeholder="Name"
             value={newPet.name}
             onChange={handleInputChange}
+            error={newPetErrorMessages.Name}
           />
 
           {/* Breed */}
@@ -76,6 +88,7 @@ const NewPet = () => {
             placeholder="Breed"
             value={newPet.breed}
             onChange={handleInputChange}
+            error={newPetErrorMessages.Breed}
           />
 
           {/* Age */}
@@ -87,22 +100,18 @@ const NewPet = () => {
             placeholder="Age"
             value={newPet.age}
             onChange={handleInputChange}
+            error={newPetErrorMessages.Age}
           />
 
           {/* Gender */}
-          <label className="text-gray-600 dark:text-gray-300 font-semibold">
-            Gender
-          </label>
-          <select
-            className={`w-full outline-none border border-gray-400 dark:border-gray-600 p-2 mt-2 mb-4 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white`}
+          <SelectField
+            label="Gender"
             name="gender"
-            value={newPet.gender}
+            value={newPet.genderId}
             onChange={handleInputChange}
-          >
-            <option value="">Select a Gender</option>
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
-          </select>
+            options={genderOptions}
+            error={newPetErrorMessages.Gender}
+          />
 
           {/* Species */}
           <SelectField
@@ -111,6 +120,7 @@ const NewPet = () => {
             value={newPet.speciesId}
             onChange={handleInputChange}
             options={species}
+            error={newPetErrorMessages.SpeciesId}
           />
 
           {/* Description */}
@@ -129,6 +139,7 @@ const NewPet = () => {
             placeholder="Price"
             value={displayPrice}
             onChange={handlePriceChange}
+            error={newPetErrorMessages.Price}
           />
 
           {/* Tombol Submit */}

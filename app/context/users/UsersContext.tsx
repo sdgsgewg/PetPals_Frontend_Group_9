@@ -113,7 +113,9 @@ export function UsersProvider({ children }: { children: ReactNode }) {
               acc: Record<string, string>,
               error: { propertyName: string; errorMessage: string }
             ) => {
-              acc[error.propertyName] = error.errorMessage;
+              if (!acc[error.propertyName]) {
+                acc[error.propertyName] = error.errorMessage;
+              }
               return acc;
             },
             {}
@@ -137,9 +139,11 @@ export function UsersProvider({ children }: { children: ReactNode }) {
         const errors = error?.response?.data?.errors?.reduce(
           (
             acc: Record<string, string>,
-            err: { propertyName: string; errorMessage: string }
+            error: { propertyName: string; errorMessage: string }
           ) => {
-            acc[err.propertyName] = err.errorMessage;
+            if (!acc[error.propertyName]) {
+              acc[error.propertyName] = error.errorMessage;
+            }
             return acc;
           },
           {}

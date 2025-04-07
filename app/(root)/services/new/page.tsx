@@ -15,8 +15,10 @@ const NewService = () => {
   const {
     service_categories,
     newService,
+    newServiceErrorMessages,
     fetchServiceCategories,
     setNewService,
+    resetNewService,
     addNewService,
   } = useServices();
 
@@ -25,6 +27,8 @@ const NewService = () => {
   );
 
   useEffect(() => {
+    resetNewService();
+    setDisplayPrice("");
     fetchServiceCategories();
   }, []);
 
@@ -74,6 +78,7 @@ const NewService = () => {
             placeholder="Name"
             value={newService.name}
             onChange={handleInputChange}
+            error={newServiceErrorMessages.Name}
           />
 
           {/* Service Category */}
@@ -83,6 +88,7 @@ const NewService = () => {
             value={newService.categoryId}
             onChange={handleInputChange}
             options={service_categories}
+            error={newServiceErrorMessages.CategoryId}
           />
 
           {/* Description */}
@@ -101,6 +107,7 @@ const NewService = () => {
             placeholder="Price"
             value={displayPrice}
             onChange={handlePriceChange}
+            error={newServiceErrorMessages.Price}
           />
 
           {/* Address */}
@@ -110,6 +117,7 @@ const NewService = () => {
             placeholder="Address"
             value={newService.address}
             onChange={handleInputChange}
+            error={newServiceErrorMessages.Address}
           />
 
           {/* City */}
@@ -119,6 +127,7 @@ const NewService = () => {
             placeholder="City"
             value={newService.city}
             onChange={handleInputChange}
+            error={newServiceErrorMessages.City}
           />
 
           {/* Tombol Submit */}

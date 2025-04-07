@@ -10,6 +10,7 @@ import { GlobalActionType } from "../GlobalActions";
 import { INewService } from "@/app/interface/service/INewService";
 import { useGlobal } from "../GlobalContext";
 import { useRouter } from "next/navigation";
+import { INewServiceErrorMessages } from "@/app/interface/service/INewServiceErrorMessages";
 
 interface ServicesContextType {
   service_categories: IServiceCategory[];
@@ -18,6 +19,7 @@ interface ServicesContextType {
   service: IService;
   newService: INewService;
   filters: IServiceFilterParams;
+  newServiceErrorMessages: INewServiceErrorMessages;
   setFilters: (name: string, value: string) => void;
   resetFilters: () => void;
   fetchServices: () => Promise<void>;
@@ -30,6 +32,7 @@ interface ServicesContextType {
     bookingDate: string
   ) => Promise<void>;
   setNewService: (name: string, value: string | number) => void;
+  resetNewService: () => void;
   addNewService: () => Promise<void>;
   editService: (serviceId: number) => Promise<void>;
   removeService: (serviceId: number) => Promise<void>;
@@ -45,7 +48,7 @@ const ServicesContext = createContext<ServicesContextType | undefined>(
 export function ServicesProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(ServicesReducer, initialState);
 
-  const { handleOpenMessageModal } = useGlobal();
+  const { handleOpenMessageModal, handleCloseMessageModal } = useGlobal();
   const router = useRouter();
 
   const fetchServices = async () => {
@@ -204,13 +207,24 @@ export function ServicesProvider({ children }: { children: ReactNode }) {
     });
   };
 
+  const resetNewService = () => {
+    dispatch({
+      type: GlobalActionType.RESET_NEW_SERVICE,
+    });
+  };
+
   const addNewService = async () => {
     dispatch({ type: GlobalActionType.SET_LOADING, payload: true });
+
+    // Reset error messages sebelum mengirim request
+    dispatch({
+      type: GlobalActionType.RESET_NEW_SERVICE_ERROR_MESSAGES,
+    });
 
     try {
       const response = await api.post(`/input-new-services`, state.newService);
 
-      if (response.data) {
+      if (!response.data.errors) {
         dispatch({
           type: GlobalActionType.ADD_NEW_SERVICE,
         });
@@ -222,17 +236,64 @@ export function ServicesProvider({ children }: { children: ReactNode }) {
         handleOpenMessageModal();
 
         setTimeout(() => {
+          handleCloseMessageModal();
           router.push("/my-services");
         }, 3000);
       } else {
         console.error("Invalid API response format:", response.data);
+
+        if (response.data.errors) {
+          // Store the property name and error message for each field
+          const errors = response.data.errors.reduce(
+            (
+              acc: Record<string, string>,
+              error: { propertyName: string; errorMessage: string }
+            ) => {
+              if (!acc[error.propertyName]) {
+                acc[error.propertyName] = error.errorMessage;
+              }
+              return acc;
+            },
+            {}
+          );
+
+          // Set error messages
+          dispatch({
+            type: GlobalActionType.SET_NEW_SERVICE_ERROR_MESSAGES,
+            payload: errors,
+          });
+        }
+
         dispatch({
           type: GlobalActionType.SET_ERROR,
           payload: "Add new service failed",
         });
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error adding new service:", error);
+
+      if (error?.response?.data?.errors) {
+        // Store the property name and error message for each field
+        const errors = error?.response?.data?.errors?.reduce(
+          (
+            acc: Record<string, string>,
+            error: { propertyName: string; errorMessage: string }
+          ) => {
+            if (!acc[error.propertyName]) {
+              acc[error.propertyName] = error.errorMessage;
+            }
+            return acc;
+          },
+          {}
+        );
+
+        // Set error messages
+        dispatch({
+          type: GlobalActionType.SET_NEW_SERVICE_ERROR_MESSAGES,
+          payload: errors,
+        });
+      }
+
       dispatch({
         type: GlobalActionType.SET_ERROR,
         payload: "Add new service failed",
@@ -244,6 +305,11 @@ export function ServicesProvider({ children }: { children: ReactNode }) {
 
   const editService = async (serviceId: number) => {
     dispatch({ type: GlobalActionType.SET_LOADING, payload: true });
+
+    // Reset error messages sebelum mengirim request
+    dispatch({
+      type: GlobalActionType.RESET_NEW_SERVICE_ERROR_MESSAGES,
+    });
 
     try {
       const response = await api.put(
@@ -263,17 +329,64 @@ export function ServicesProvider({ children }: { children: ReactNode }) {
         handleOpenMessageModal();
 
         setTimeout(() => {
+          handleCloseMessageModal();
           router.push("/my-services");
         }, 3000);
       } else {
         console.error("Invalid API response format:", response.data);
+
+        if (response.data.errors) {
+          // Store the property name and error message for each field
+          const errors = response.data.errors.reduce(
+            (
+              acc: Record<string, string>,
+              error: { propertyName: string; errorMessage: string }
+            ) => {
+              if (!acc[error.propertyName]) {
+                acc[error.propertyName] = error.errorMessage;
+              }
+              return acc;
+            },
+            {}
+          );
+
+          // Set error messages
+          dispatch({
+            type: GlobalActionType.SET_NEW_SERVICE_ERROR_MESSAGES,
+            payload: errors,
+          });
+        }
+
         dispatch({
           type: GlobalActionType.SET_ERROR,
           payload: "Edit service failed",
         });
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error updating service:", error);
+
+      if (error?.response?.data?.errors) {
+        // Store the property name and error message for each field
+        const errors = error?.response?.data?.errors?.reduce(
+          (
+            acc: Record<string, string>,
+            error: { propertyName: string; errorMessage: string }
+          ) => {
+            if (!acc[error.propertyName]) {
+              acc[error.propertyName] = error.errorMessage;
+            }
+            return acc;
+          },
+          {}
+        );
+
+        // Set error messages
+        dispatch({
+          type: GlobalActionType.SET_NEW_SERVICE_ERROR_MESSAGES,
+          payload: errors,
+        });
+      }
+
       dispatch({
         type: GlobalActionType.SET_ERROR,
         payload: "Edit service failed",
@@ -320,6 +433,7 @@ export function ServicesProvider({ children }: { children: ReactNode }) {
   const fetchProviderServices = async (providerId: number) => {
     try {
       dispatch({ type: GlobalActionType.SET_LOADING, payload: true });
+      dispatch({ type: GlobalActionType.SET_ERROR, payload: null });
 
       const response = await api.get(`/get-provider-services/${providerId}`);
 
@@ -355,6 +469,7 @@ export function ServicesProvider({ children }: { children: ReactNode }) {
         service: state.service,
         newService: state.newService,
         filters: state.filters,
+        newServiceErrorMessages: state.newServiceErrorMessages,
         setFilters,
         resetFilters,
         fetchServices,
@@ -362,6 +477,7 @@ export function ServicesProvider({ children }: { children: ReactNode }) {
         fetchServiceDetail,
         bookService,
         setNewService,
+        resetNewService,
         addNewService,
         editService,
         removeService,

@@ -18,6 +18,8 @@ const EditPet = () => {
     pet,
     species,
     newPet,
+    newPetErrorMessages,
+    genderOptions,
     fetchSpecies,
     fetchPetDetail,
     setNewPet,
@@ -38,8 +40,8 @@ const EditPet = () => {
     setNewPet("name", pet.name);
     setNewPet("breed", pet.breed);
     setNewPet("age", pet.age);
-    setNewPet("gender", pet.gender);
-    setNewPet("speciesId", pet?.species?.speciesId);
+    setNewPet("genderId", pet?.gender?.toLowerCase() === "male" ? 1 : 2);
+    setNewPet("speciesId", pet?.species?.id);
     setNewPet("description", pet.description);
     setNewPet("price", pet.price);
     setDisplayPrice(formattedPrice(pet.price));
@@ -50,7 +52,10 @@ const EditPet = () => {
   ) => {
     const { name, value } = e.target;
     const newValue: string | number =
-      name === "age" || name === " speciesId" || name === "price"
+      name === "age" ||
+      name === "speciesId" ||
+      name === "genderId" ||
+      name === "price"
         ? Number(value)
         : value;
     setNewPet(name, newValue);
@@ -82,6 +87,7 @@ const EditPet = () => {
             placeholder="Name"
             value={newPet.name}
             onChange={handleInputChange}
+            error={newPetErrorMessages.Name}
           />
 
           {/* Breed */}
@@ -91,6 +97,7 @@ const EditPet = () => {
             placeholder="Breed"
             value={newPet.breed}
             onChange={handleInputChange}
+            error={newPetErrorMessages.Breed}
           />
 
           {/* Age */}
@@ -102,22 +109,18 @@ const EditPet = () => {
             placeholder="Age"
             value={newPet.age}
             onChange={handleInputChange}
+            error={newPetErrorMessages.Age}
           />
 
           {/* Gender */}
-          <label className="text-gray-600 dark:text-gray-300 font-semibold">
-            Gender
-          </label>
-          <select
-            className={`w-full outline-none border border-gray-400 dark:border-gray-600 p-2 mt-2 mb-4 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white`}
+          <SelectField
+            label="Gender"
             name="gender"
-            value={newPet.gender}
+            value={newPet.genderId}
             onChange={handleInputChange}
-          >
-            <option value="">Select a Gender</option>
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
-          </select>
+            options={genderOptions}
+            error={newPetErrorMessages.Gender}
+          />
 
           {/* Species */}
           <SelectField
@@ -126,6 +129,7 @@ const EditPet = () => {
             value={newPet.speciesId}
             onChange={handleInputChange}
             options={species}
+            error={newPetErrorMessages.SpeciesId}
           />
 
           {/* Description */}
@@ -144,6 +148,7 @@ const EditPet = () => {
             placeholder="Price"
             value={displayPrice}
             onChange={handlePriceChange}
+            error={newPetErrorMessages.Price}
           />
 
           {/* Tombol Submit */}

@@ -18,6 +18,7 @@ const EditService = () => {
     service,
     service_categories,
     newService,
+    newServiceErrorMessages,
     fetchServiceCategories,
     fetchServiceDetail,
     setNewService,
@@ -41,6 +42,7 @@ const EditService = () => {
     setNewService("price", service.price);
     setNewService("address", service.address);
     setNewService("city", service.city);
+    setDisplayPrice(formattedPrice(service.price));
   }, [service]);
 
   const handleInputChange = (
@@ -80,6 +82,7 @@ const EditService = () => {
             placeholder="Name"
             value={newService.name}
             onChange={handleInputChange}
+            error={newServiceErrorMessages.Name}
           />
 
           {/* Service Category */}
@@ -89,6 +92,7 @@ const EditService = () => {
             value={newService.categoryId}
             onChange={handleInputChange}
             options={service_categories}
+            error={newServiceErrorMessages.CategoryId}
           />
 
           {/* Description */}
@@ -107,6 +111,7 @@ const EditService = () => {
             placeholder="Price"
             value={displayPrice}
             onChange={handlePriceChange}
+            error={newServiceErrorMessages.Price}
           />
 
           {/* Address */}
@@ -116,6 +121,7 @@ const EditService = () => {
             placeholder="Address"
             value={newService.address}
             onChange={handleInputChange}
+            error={newServiceErrorMessages.Address}
           />
 
           {/* City */}
@@ -125,6 +131,7 @@ const EditService = () => {
             placeholder="City"
             value={newService.city}
             onChange={handleInputChange}
+            error={newServiceErrorMessages.City}
           />
 
           {/* Tombol Submit */}

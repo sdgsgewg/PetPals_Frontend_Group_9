@@ -1,15 +1,9 @@
-"use client";
-import { ISpecies } from "@/app/interface/pet/ISpecies";
-import { IServiceCategory } from "@/app/interface/service/IServiceCategory";
-import { IRole } from "@/app/interface/user/IRole";
-import React from "react";
-
 interface SelectFieldProps {
   label: string;
   name: string;
-  value: number;
+  value: number | string;
   onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
-  options: IRole[] | ISpecies[] | IServiceCategory[];
+  options: { id: number; name: string }[]; // general type
   error?: string;
 }
 
@@ -36,29 +30,12 @@ const SelectField: React.FC<SelectFieldProps> = ({
       >
         <option value="0">Select a {label}</option>
         {options.map((option) => (
-          <option
-            key={
-              label === "Role"
-                ? option.roleId
-                : label === "Species"
-                ? option.speciesId
-                : option.categoryId
-            }
-            value={
-              label === "Role"
-                ? option.roleId
-                : label === "Species"
-                ? option.speciesId
-                : option.categoryId
-            }
-          >
+          <option key={option.id} value={option.id}>
             {option.name}
           </option>
         ))}
       </select>
-      {(error || Number(error) !== 0) && (
-        <p className="text-red-500 text-sm mb-4">{error}</p>
-      )}
+      {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
     </div>
   );
 };

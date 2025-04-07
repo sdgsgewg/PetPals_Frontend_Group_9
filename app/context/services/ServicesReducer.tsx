@@ -3,6 +3,7 @@ import { IServiceCategory } from "@/app/interface/service/IServiceCategory";
 import { IServiceFilterParams } from "@/app/interface/service/IServiceFilterParams";
 import { GlobalAction, GlobalActionType } from "../GlobalActions";
 import { INewService } from "@/app/interface/service/INewService";
+import { INewServiceErrorMessages } from "@/app/interface/service/INewServiceErrorMessages";
 
 export interface ServiceState {
   service_categories: IServiceCategory[];
@@ -11,6 +12,7 @@ export interface ServiceState {
   filters: IServiceFilterParams;
   service: IService;
   newService: INewService;
+  newServiceErrorMessages: INewServiceErrorMessages;
   loading: boolean;
   error: string | null;
 }
@@ -27,6 +29,14 @@ export const initialState: ServiceState = {
   } as IServiceFilterParams,
   service: {} as IService,
   newService: {} as INewService,
+  newServiceErrorMessages: {
+    Name: "",
+    CategoryId: "",
+    Price: "",
+    Address: "",
+    City: "",
+    ProviderId: "",
+  },
   loading: false,
   error: null,
 };
@@ -80,6 +90,26 @@ export function ServicesReducer(state: ServiceState, action: GlobalAction) {
           address: "",
           city: "",
           createdBy: "",
+        },
+      };
+    case GlobalActionType.SET_NEW_SERVICE_ERROR_MESSAGES:
+      return {
+        ...state,
+        newServiceErrorMessages: {
+          ...state.newServiceErrorMessages,
+          ...action.payload,
+        },
+      };
+    case GlobalActionType.RESET_NEW_SERVICE_ERROR_MESSAGES:
+      return {
+        ...state,
+        newServiceErrorMessages: {
+          Name: "",
+          CategoryId: "",
+          Price: "",
+          Address: "",
+          City: "",
+          ProviderId: "",
         },
       };
     case GlobalActionType.ADD_NEW_SERVICE:

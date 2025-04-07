@@ -40,6 +40,8 @@ export enum GlobalActionType {
   GET_PET_DETAIL = "GET_PET_DETAIL",
   SET_NEW_PET = "SET_NEW_PET",
   RESET_NEW_PET = "RESET_NEW_PET",
+  SET_NEW_PET_ERROR_MESSAGES = "SET_NEW_PET_ERROR_MESSAGES",
+  RESET_NEW_PET_ERROR_MESSAGES = "RESET_NEW_PET_ERROR_MESSAGES",
   ADD_NEW_PET = "ADD_NEW_PET",
   EDIT_PET = "EDIT_PET",
   REMOVE_PET = "REMOVE_PET",
@@ -61,6 +63,8 @@ export enum GlobalActionType {
   BOOK_SERVICE = "BOOK_SERVICE",
   SET_NEW_SERVICE = "SET_NEW_SERVICE",
   RESET_NEW_SERVICE = "RESET_NEW_SERVICE",
+  SET_NEW_SERVICE_ERROR_MESSAGES = "SET_NEW_SERVICE_ERROR_MESSAGES",
+  RESET_NEW_SERVICE_ERROR_MESSAGES = "RESET_NEW_SERVICE_ERROR_MESSAGES",
   ADD_NEW_SERVICE = "ADD_NEW_SERVICE",
   EDIT_SERVICE = "EDIT_SERVICE",
   REMOVE_SERVICE = "REMOVE_SERVICE",
@@ -163,6 +167,13 @@ export type GlobalAction =
       type: GlobalActionType.RESET_NEW_PET;
     }
   | {
+      type: GlobalActionType.SET_NEW_PET_ERROR_MESSAGES;
+      payload: Record<string, string>;
+    }
+  | {
+      type: GlobalActionType.RESET_NEW_PET_ERROR_MESSAGES;
+    }
+  | {
       type: GlobalActionType.ADD_NEW_PET;
     }
   | {
@@ -210,6 +221,13 @@ export type GlobalAction =
     }
   | {
       type: GlobalActionType.RESET_NEW_SERVICE;
+    }
+  | {
+      type: GlobalActionType.SET_NEW_SERVICE_ERROR_MESSAGES;
+      payload: Record<string, string>;
+    }
+  | {
+      type: GlobalActionType.RESET_NEW_SERVICE_ERROR_MESSAGES;
     }
   | {
       type: GlobalActionType.ADD_NEW_SERVICE;
