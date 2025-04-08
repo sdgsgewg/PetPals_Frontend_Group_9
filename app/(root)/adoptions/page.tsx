@@ -2,15 +2,13 @@
 import PetHero from "@/app/components/Adoptions/PetHero";
 import PetList from "@/app/components/Adoptions/PetList";
 import BigHeroContent from "@/app/components/ContentTemplate/BigHeroContent";
-import NormalContent from "@/app/components/ContentTemplate/NormalContent";
 import FilterModal from "@/app/components/modals/FilterModal";
-import PageNotFound from "@/app/components/PageNotFound";
 import { usePets } from "@/app/context/pets/PetsContext";
 import React, { useEffect, useState } from "react";
 import { useDebounce } from "react-use";
 
 const Adoptions = () => {
-  const { pets, filters, fetchPets, error } = usePets();
+  const { pets, filters, fetchPets } = usePets();
 
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
 
@@ -30,17 +28,6 @@ const Adoptions = () => {
   useEffect(() => {
     fetchPets();
   }, [debouncedSearchTerm]);
-
-  if (error) {
-    return (
-      <NormalContent>
-        <PageNotFound
-          image_url="/img/page-not-found.png"
-          message="Pet not found"
-        />
-      </NormalContent>
-    );
-  }
 
   return (
     <BigHeroContent>

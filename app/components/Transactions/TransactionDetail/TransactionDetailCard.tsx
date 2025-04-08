@@ -7,7 +7,7 @@ import Image from "next/image";
 import React from "react";
 
 interface TransactionDetailCardProps {
-  transactionType: string | undefined;
+  transactionType: string | undefined; // adoption or service
   item: IPet | IService;
 }
 
@@ -21,6 +21,7 @@ const TransactionDetailCard: React.FC<TransactionDetailCardProps> = ({
 
   return (
     <div className="w-full bg-white dark:bg-gray-800 rounded-md shadow-md px-4 py-4">
+      {transactionType}
       <div className="flex gap-4">
         <div className="w-[30%] md:w-[25%] lg:w-[22%]">
           <Image
@@ -37,7 +38,7 @@ const TransactionDetailCard: React.FC<TransactionDetailCardProps> = ({
         </div>
         <div>
           <p className="font-semibold mb-2">{item?.name}</p>
-          <span className="bg-slate-500 dark:bg-slate-600 text-xs font-semibold rounded-2xl px-2 py-1">
+          <span className="bg-slate-300 dark:bg-slate-600 text-xs font-semibold rounded-2xl px-2 py-1">
             {transactionType === "adoption"
               ? item?.breed
               : item?.category?.name}

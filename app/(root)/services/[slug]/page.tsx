@@ -8,7 +8,6 @@ import PageNotFound from "@/app/components/PageNotFound";
 import { useGlobal } from "@/app/context/GlobalContext";
 import { useServices } from "@/app/context/services/ServicesContext";
 import { useUsers } from "@/app/context/users/UsersContext";
-import Loading from "@/app/loading";
 import { useParams, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
@@ -19,7 +18,7 @@ const ServiceDetail = () => {
 
   const { getImageUrlByServiceCategory, formattedPrice } = useGlobal();
   const { isLoggedIn, loggedInUser } = useUsers();
-  const { service, fetchServiceDetail, loading, error } = useServices();
+  const { service, fetchServiceDetail, error } = useServices();
 
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [price, setPrice] = useState<string | null>(null);
@@ -52,15 +51,7 @@ const ServiceDetail = () => {
     handleOpenBookServiceModal();
   };
 
-  if (loading) {
-    return (
-      <NormalContent>
-        <Loading />
-      </NormalContent>
-    );
-  }
-
-  if (error || !service || Object.keys(service).length === 0) {
+  if (error) {
     return (
       <NormalContent>
         <PageNotFound image_url="/img/page-not-found.png" message="" />

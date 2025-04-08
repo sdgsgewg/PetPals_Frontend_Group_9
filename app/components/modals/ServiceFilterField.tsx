@@ -1,9 +1,16 @@
 import { useServices } from "@/app/context/services/ServicesContext";
 import React, { useEffect } from "react";
+import SelectField from "../FormField/SelectField";
+import InputField from "../FormField/InputField";
 
 const ServiceFilterField = () => {
-  const { service_categories, fetchServiceCategories, filters, setFilters } =
-    useServices();
+  const {
+    service_categories,
+    fetchServiceCategories,
+    filters,
+    setFilters,
+    serviceFiltersErrorMessages,
+  } = useServices();
 
   useEffect(() => {
     fetchServiceCategories();
@@ -21,58 +28,33 @@ const ServiceFilterField = () => {
     <div className="w-full py-2">
       <form onSubmit={(e) => e.preventDefault()}>
         {/* Service Category */}
-        <label
-          className="text-gray-600 dark:text-gray-300 font-semibold"
-          htmlFor="categoryName"
-        >
-          Service Category
-        </label>
-        <select
-          className="w-full outline-none border border-gray-400 dark:border-gray-600 p-2 mt-2 mb-4 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+        <SelectField
+          label="Service Category"
           name="categoryName"
           value={filters.categoryName}
           onChange={handleInputChange}
-        >
-          <option value="">All</option>
-          {service_categories.map((service_category) => (
-            <option
-              key={service_category.categoryId}
-              value={service_category.name}
-            >
-              {service_category.name}
-            </option>
-          ))}
-        </select>
-
-        {/* Price */}
-        <label
-          className="text-gray-600 dark:text-gray-300 font-semibold"
-          htmlFor="minPrice"
-        >
-          Min Price
-        </label>
-        <input
-          type="text"
-          className="w-full outline-none border border-gray-400 dark:border-gray-600 p-2 mt-2 mb-4 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-          name="minPrice"
-          id="minPrice"
-          value={filters.minPrice}
-          onChange={handleInputChange}
+          options={service_categories}
+          error={serviceFiltersErrorMessages.CategoryName}
         />
 
-        <label
-          className="text-gray-600 dark:text-gray-300 font-semibold"
-          htmlFor="maxPrice"
-        >
-          Max Price
-        </label>
-        <input
-          type="text"
-          className="w-full outline-none border border-gray-400 dark:border-gray-600 p-2 mt-2 mb-4 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+        {/* Price */}
+        <InputField
+          label="Min Price"
+          type="number"
+          name="minPrice"
+          placeholder="Minimum Price"
+          value={filters.minPrice}
+          onChange={handleInputChange}
+          error={serviceFiltersErrorMessages.MinPrice}
+        />
+        <InputField
+          label="Max Price"
+          type="number"
           name="maxPrice"
-          id="maxPrice"
+          placeholder="Maximum Price"
           value={filters.maxPrice}
           onChange={handleInputChange}
+          error={serviceFiltersErrorMessages.MaxPrice}
         />
       </form>
     </div>

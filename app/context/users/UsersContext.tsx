@@ -16,6 +16,7 @@ import { IUserRegister } from "@/app/interface/auth/IUserRegister";
 import { IUserLogin } from "@/app/interface/auth/IUserLogin";
 import { useRouter } from "next/navigation";
 import { IRegisterErrorMessage } from "@/app/interface/auth/IRegisterErrorMessage";
+import { ILoginErrorMessage } from "@/app/interface/auth/ILoginErrorMessage";
 
 interface UsersContextType {
   user: IUser;
@@ -25,6 +26,7 @@ interface UsersContextType {
   roles: IRole[];
   isLoggedIn: boolean;
   registerErrorMessages: IRegisterErrorMessage;
+  loginErrorMessages: ILoginErrorMessage;
   fetchRoles: () => Promise<void>;
   setUserRegister: (name: string, value: string) => void;
   registerUser: () => Promise<void>;
@@ -95,14 +97,11 @@ export function UsersProvider({ children }: { children: ReactNode }) {
       const response = await api.post("/register-petpals", state.userRegister);
 
       if (!response.data.errors) {
-        alert("Registration successful");
-
-        // Reset state user yang ingin di-register
         dispatch({
           type: GlobalActionType.RESET_USER_REGISTER,
         });
 
-        // Redirect ke halaman login
+        alert("Registration successful");
         router.push("/login");
       } else {
         console.error("Invalid API response format:", response.data);
@@ -173,22 +172,25 @@ export function UsersProvider({ children }: { children: ReactNode }) {
 
   const loginUser = async () => {
     dispatch({ type: GlobalActionType.SET_LOADING, payload: true });
+
+    // Reset error messages sebelum mengirim request
+    dispatch({
+      type: GlobalActionType.RESET_LOGIN_ERROR_MESSAGES,
+    });
+
     try {
       const response = await api.post("/login-petpals", state.userLogin);
 
-      if (response.data) {
-        alert("Login successful");
-
+      if (!response.data.errors && response.data.token && response.data.user) {
         const token = response.data.token;
         const userData = response.data.user;
 
-        // Simpan token dan user di session storage
         sessionStorage.setItem("token", token);
         sessionStorage.setItem("loggedInUser", JSON.stringify(userData));
 
         dispatch({
           type: GlobalActionType.LOGIN_USER,
-          payload: response.data.user,
+          payload: userData,
         });
 
         dispatch({
@@ -200,19 +202,64 @@ export function UsersProvider({ children }: { children: ReactNode }) {
           payload: true,
         });
 
-        // Redirect ke halaman home
+        alert("Login successful");
         router.push("/");
       } else {
         console.error("Invalid API response format:", response.data);
+
+        if (response.data.errors) {
+          const errors = response.data.errors.reduce(
+            (
+              acc: Record<string, string>,
+              error: { propertyName: string; errorMessage: string }
+            ) => {
+              if (!acc[error.propertyName]) {
+                acc[error.propertyName] = error.errorMessage;
+              }
+              return acc;
+            },
+            {}
+          );
+
+          dispatch({
+            type: GlobalActionType.SET_LOGIN_ERROR_MESSAGES,
+            payload: errors,
+          });
+        }
+
         alert("Login Failed");
         dispatch({
           type: GlobalActionType.SET_ERROR,
           payload: "Login failed",
         });
       }
-    } catch (error) {
-      console.error("Error login user:", error);
-      alert("Login Failed");
+    } catch (error: any) {
+      console.error("Error login user:", error?.response?.data);
+
+      if (error?.response?.data?.errors) {
+        const errors = error?.response?.data?.errors?.reduce(
+          (
+            acc: Record<string, string>,
+            error: { propertyName: string; errorMessage: string }
+          ) => {
+            if (!acc[error.propertyName]) {
+              acc[error.propertyName] = error.errorMessage;
+            }
+            return acc;
+          },
+          {}
+        );
+
+        dispatch({
+          type: GlobalActionType.SET_LOGIN_ERROR_MESSAGES,
+          payload: errors,
+        });
+      }
+
+      if (error?.response?.status === 401) {
+        alert(error?.response?.data?.detail);
+      }
+
       dispatch({
         type: GlobalActionType.SET_ERROR,
         payload: "Login failed",
@@ -260,6 +307,7 @@ export function UsersProvider({ children }: { children: ReactNode }) {
         loggedInUser: state.loggedInUser,
         roles: state.roles,
         registerErrorMessages: state.registerErrorMessages,
+        loginErrorMessages: state.loginErrorMessages,
         fetchRoles,
         setUserRegister,
         registerUser,

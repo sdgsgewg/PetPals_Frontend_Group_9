@@ -4,6 +4,7 @@ import { GlobalAction, GlobalActionType } from "../GlobalActions";
 import { IUserRegister } from "@/app/interface/auth/IUserRegister";
 import { IUserLogin } from "@/app/interface/auth/IUserLogin";
 import { IRegisterErrorMessage } from "@/app/interface/auth/IRegisterErrorMessage";
+import { ILoginErrorMessage } from "@/app/interface/auth/ILoginErrorMessage";
 
 export interface UserState {
   user: IUser;
@@ -13,6 +14,7 @@ export interface UserState {
   roles: IRole[];
   isLoggedIn: boolean;
   registerErrorMessages: IRegisterErrorMessage;
+  loginErrorMessages: ILoginErrorMessage;
   loading: boolean;
   error: string | null;
 }
@@ -34,6 +36,10 @@ export const initialState: UserState = {
     Address: "",
     City: "",
     RoleId: "",
+  },
+  loginErrorMessages: {
+    Email: "",
+    Password: "",
   },
 };
 
@@ -109,6 +115,22 @@ export function UsersReducer(state: UserState, action: GlobalAction) {
           Address: "",
           City: "",
           RoleId: "",
+        },
+      };
+    case GlobalActionType.SET_LOGIN_ERROR_MESSAGES:
+      return {
+        ...state,
+        loginErrorMessages: {
+          ...state.loginErrorMessages,
+          ...action.payload,
+        },
+      };
+    case GlobalActionType.RESET_LOGIN_ERROR_MESSAGES:
+      return {
+        ...state,
+        loginErrorMessages: {
+          Email: "",
+          Password: "",
         },
       };
     case GlobalActionType.GET_LOGGED_IN_USER:

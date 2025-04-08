@@ -79,7 +79,7 @@ const NewForumPost = () => {
             name="content"
             placeholder="Content"
             value={newForumPost.content}
-            onChange={(e) => handleInputChange(e)}
+            onChange={handleInputChange}
             error={newForumPostErrorMessage.Content}
           />
 

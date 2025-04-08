@@ -3,7 +3,7 @@ export interface INewPet {
   name: string;
   breed: string;
   age: number;
-  genderId: number;
+  gender: string;
   speciesId: number;
   description: string;
   price: number;

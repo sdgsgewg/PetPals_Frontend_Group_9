@@ -10,7 +10,7 @@ interface PetCardProps {
 }
 
 const PetCard: React.FC<PetCardProps> = ({ pet }) => {
-  const { getImageUrlByBreed, formattedPrice } = useGlobal();
+  const { getImageUrlByBreed, formattedAge, formattedPrice } = useGlobal();
 
   return (
     <Link href={`/adoptions/${pet.slug}`}>
@@ -34,9 +34,7 @@ const PetCard: React.FC<PetCardProps> = ({ pet }) => {
             </p>
             <div className="flex items-center gap-1 mt-1">
               <span className="text-sm text-slate-600 dark:text-slate-400">
-                {pet.age < 1
-                  ? `Age: ${Math.round(pet.age * 12)} months`
-                  : `Age: ${pet.age} ${pet.age > 1 ? "years" : "year"}`}
+                {formattedAge(pet.age)}
               </span>
             </div>
           </div>

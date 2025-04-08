@@ -4,12 +4,14 @@ import { IServiceFilterParams } from "@/app/interface/service/IServiceFilterPara
 import { GlobalAction, GlobalActionType } from "../GlobalActions";
 import { INewService } from "@/app/interface/service/INewService";
 import { INewServiceErrorMessages } from "@/app/interface/service/INewServiceErrorMessages";
+import { IServiceFilterErrorMessage } from "@/app/interface/service/IServiceFiltersErrorMessage";
 
 export interface ServiceState {
   service_categories: IServiceCategory[];
   services: IService[];
   providerServices: IService[];
   filters: IServiceFilterParams;
+  serviceFiltersErrorMessages: IServiceFilterErrorMessage;
   service: IService;
   newService: INewService;
   newServiceErrorMessages: INewServiceErrorMessages;
@@ -27,6 +29,12 @@ export const initialState: ServiceState = {
     minPrice: "",
     maxPrice: "",
   } as IServiceFilterParams,
+  serviceFiltersErrorMessages: {
+    SearchValue: "",
+    CategoryName: "",
+    MinPrice: "",
+    MaxPrice: "",
+  },
   service: {} as IService,
   newService: {} as INewService,
   newServiceErrorMessages: {
@@ -63,6 +71,24 @@ export function ServicesReducer(state: ServiceState, action: GlobalAction) {
           categoryName: "",
           minPrice: "",
           maxPrice: "",
+        },
+      };
+    case GlobalActionType.SET_SERVICE_FILTERS_ERROR_MESSAGES:
+      return {
+        ...state,
+        serviceFiltersErrorMessages: {
+          ...state.serviceFiltersErrorMessages,
+          ...action.payload,
+        },
+      };
+    case GlobalActionType.RESET_SERVICE_FILTERS_ERROR_MESSAGES:
+      return {
+        ...state,
+        serviceFiltersErrorMessages: {
+          SearchValue: "",
+          CategoryName: "",
+          MinPrice: "",
+          MaxPrice: "",
         },
       };
     case GlobalActionType.GET_SERVICE_DETAIL:

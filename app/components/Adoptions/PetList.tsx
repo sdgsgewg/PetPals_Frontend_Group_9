@@ -2,8 +2,8 @@ import { IPet } from "@/app/interface/pet/IPet";
 import React from "react";
 import PetCard from "./PetCard";
 import { usePets } from "@/app/context/pets/PetsContext";
-import Loading from "@/app/loading";
 import ItemNotFound from "../ItemNotFound";
+import Loading from "../loading";
 
 interface PetListProps {
   filteredPets: IPet[];
@@ -12,11 +12,11 @@ interface PetListProps {
 const PetList: React.FC<PetListProps> = ({ filteredPets }) => {
   const { loading } = usePets();
 
+  if (loading) return <Loading />;
+
   return (
     <>
-      {loading ? (
-        <Loading />
-      ) : filteredPets.length > 0 ? (
+      {filteredPets.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-8 p-4">
           {filteredPets.map((pet, index) => (
             <PetCard key={index} pet={pet} />

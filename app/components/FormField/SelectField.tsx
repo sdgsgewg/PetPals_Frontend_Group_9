@@ -7,6 +7,7 @@ interface SelectFieldProps {
   onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   options: { id: number; name: string }[]; // general type
   error?: string;
+  isDisabled?: boolean;
 }
 
 const SelectField: React.FC<SelectFieldProps> = ({
@@ -16,6 +17,7 @@ const SelectField: React.FC<SelectFieldProps> = ({
   onChange,
   options,
   error,
+  isDisabled,
 }) => {
   const { getForumCategoryName } = useGlobal();
 
@@ -25,16 +27,33 @@ const SelectField: React.FC<SelectFieldProps> = ({
         {label}
       </label>
       <select
-        className={`w-full outline-none border border-gray-400 dark:border-gray-600 p-2 mt-2 mb-4 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white ${
-          error ? "border-red-500" : ""
-        }`}
+        disabled={isDisabled}
+        className={`w-full outline-none border p-2 mt-2 mb-4 rounded-lg
+          ${
+            isDisabled
+              ? "bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-500 border-gray-300 dark:border-gray-600 cursor-not-allowed"
+              : "bg-white dark:bg-gray-700 text-gray-900 dark:text-white border-gray-400 dark:border-gray-600"
+          }
+          ${error ? "border-red-500" : ""}
+        `}
         name={name}
         value={value}
         onChange={onChange}
       >
-        <option value="0">Select a {label}</option>
+        <option
+          value={name === "species" || name === "categoryName" ? "" : "0"}
+        >
+          {name === "species" ? "All" : `Select a ${label}`}
+        </option>
         {options.map((option) => (
-          <option key={option.id} value={option.id}>
+          <option
+            key={option.id}
+            value={
+              name === "species" || name === "categoryName"
+                ? option.name
+                : option.id
+            }
+          >
             {getForumCategoryName(option.name)}
           </option>
         ))}

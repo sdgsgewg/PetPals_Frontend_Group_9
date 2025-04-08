@@ -3,7 +3,6 @@ import NormalContent from "@/app/components/ContentTemplate/NormalContent";
 import MessageModal from "@/app/components/modals/MessageModal";
 import PageNotFound from "@/app/components/PageNotFound";
 import { usePets } from "@/app/context/pets/PetsContext";
-import Loading from "@/app/loading";
 import { useParams, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { useAdoptions } from "@/app/context/adoptions/AdoptionsContext";
@@ -19,7 +18,7 @@ const PetDetail = () => {
 
   const { getImageUrlByBreed, formattedPrice } = useGlobal();
   const { isLoggedIn, loggedInUser } = useUsers();
-  const { pet, fetchPetDetail, loading, error } = usePets();
+  const { pet, fetchPetDetail, error } = usePets();
   const { adoptions, adoptPet } = useAdoptions();
 
   const [imageUrl, setImageUrl] = useState<string | null>(null);
@@ -65,15 +64,7 @@ const PetDetail = () => {
     );
   };
 
-  if (loading) {
-    return (
-      <NormalContent>
-        <Loading />
-      </NormalContent>
-    );
-  }
-
-  if (error || !pet || Object.keys(pet).length === 0) {
+  if (error) {
     return (
       <NormalContent>
         <PageNotFound image_url="/img/page-not-found.png" message="" />

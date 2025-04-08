@@ -30,6 +30,10 @@ const FilterModal: React.FC<FilterModalProps> = ({ filterType }) => {
     }
   };
 
+  const handleApply = () => {
+    fetchFunction();
+  };
+
   return (
     <div
       className={`${
@@ -62,10 +66,7 @@ const FilterModal: React.FC<FilterModalProps> = ({ filterType }) => {
           </button>
           <button
             className="bg-blue-500 dark:bg-blue-600 text-white border px-4 py-1 rounded-xl shadow-sm cursor-pointer hover:bg-blue-600 dark:hover:bg-blue-500 transition duration-300 ease-in-out"
-            onClick={() => {
-              fetchFunction();
-              handleCloseFilterModal();
-            }}
+            onClick={() => handleApply()}
           >
             Apply
           </button>

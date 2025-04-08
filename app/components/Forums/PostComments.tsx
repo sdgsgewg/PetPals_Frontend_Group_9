@@ -1,5 +1,5 @@
 import { useForums } from "@/app/context/forums/ForumsContext";
-import Loading from "@/app/loading";
+import Loading from "../loading";
 import React, { useEffect } from "react";
 import ItemNotFound from "../ItemNotFound";
 

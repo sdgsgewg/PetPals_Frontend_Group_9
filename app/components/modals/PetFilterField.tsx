@@ -1,8 +1,16 @@
 import { usePets } from "@/app/context/pets/PetsContext";
 import React, { useEffect } from "react";
+import SelectField from "../FormField/SelectField";
+import InputField from "../FormField/InputField";
 
 const PetFilterField = () => {
-  const { species, fetchSpecies, filters, setFilters } = usePets();
+  const {
+    species,
+    fetchSpecies,
+    filters,
+    setFilters,
+    petFiltersErrorMessages,
+  } = usePets();
 
   useEffect(() => {
     fetchSpecies();
@@ -20,86 +28,53 @@ const PetFilterField = () => {
     <div className="w-full py-2">
       <form onSubmit={(e) => e.preventDefault()}>
         {/* Species */}
-        <label
-          className="text-gray-600 dark:text-gray-300 font-semibold"
-          htmlFor="species"
-        >
-          Species
-        </label>
-        <select
-          className="w-full outline-none border border-gray-400 dark:border-gray-600 p-2 mt-2 mb-4 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+        <SelectField
+          label="Species"
           name="species"
           value={filters.species}
           onChange={handleInputChange}
-        >
-          <option value="">All</option>
-          {species.map((species) => (
-            <option key={species.speciesId} value={species.name}>
-              {species.name}
-            </option>
-          ))}
-        </select>
-
-        {/* Age */}
-        <label
-          className="text-gray-600 dark:text-gray-300 font-semibold"
-          htmlFor="minAge"
-        >
-          Min Age
-        </label>
-        <input
-          type="text"
-          className="w-full outline-none border border-gray-400 dark:border-gray-600 p-2 mt-2 mb-4 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-          name="minAge"
-          id="minAge"
-          value={filters.minAge}
-          onChange={handleInputChange}
+          options={species}
+          error={petFiltersErrorMessages.Species}
         />
 
-        <label
-          className="text-gray-600 dark:text-gray-300 font-semibold"
-          htmlFor="maxAge"
-        >
-          Max Age
-        </label>
-        <input
-          type="text"
-          className="w-full outline-none border border-gray-400 dark:border-gray-600 p-2 mt-2 mb-4 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+        {/* Age */}
+        <InputField
+          label="Min Age"
+          type="number"
+          name="minAge"
+          placeholder="Minimum Age"
+          value={filters.minAge}
+          onChange={handleInputChange}
+          error={petFiltersErrorMessages.MinAge}
+        />
+        <InputField
+          label="Max Age"
+          type="number"
           name="maxAge"
-          id="maxAge"
+          placeholder="Maximum Age"
           value={filters.maxAge}
           onChange={handleInputChange}
+          error={petFiltersErrorMessages.MaxAge}
         />
 
         {/* Price */}
-        <label
-          className="text-gray-600 dark:text-gray-300 font-semibold"
-          htmlFor="minPrice"
-        >
-          Min Price
-        </label>
-        <input
-          type="text"
-          className="w-full outline-none border border-gray-400 dark:border-gray-600 p-2 mt-2 mb-4 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+        <InputField
+          label="Min Price"
+          type="number"
           name="minPrice"
-          id="minPrice"
+          placeholder="Minimum Price"
           value={filters.minPrice}
           onChange={handleInputChange}
+          error={petFiltersErrorMessages.MinPrice}
         />
-
-        <label
-          className="text-gray-600 dark:text-gray-300 font-semibold"
-          htmlFor="maxPrice"
-        >
-          Max Price
-        </label>
-        <input
-          type="text"
-          className="w-full outline-none border border-gray-400 dark:border-gray-600 p-2 mt-2 mb-4 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+        <InputField
+          label="Max Price"
+          type="number"
           name="maxPrice"
-          id="maxPrice"
+          placeholder="Maximum Price"
           value={filters.maxPrice}
           onChange={handleInputChange}
+          error={petFiltersErrorMessages.MaxPrice}
         />
       </form>
     </div>

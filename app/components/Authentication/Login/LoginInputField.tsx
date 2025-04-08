@@ -3,13 +3,12 @@ import React from "react";
 import InputField from "../../FormField/InputField";
 
 const LoginInputField = () => {
-  const { userLogin, setUserLogin } = useUsers();
+  const { userLogin, setUserLogin, loginErrorMessages } = useUsers();
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
-
     setUserLogin(name, value);
   };
 
@@ -22,6 +21,7 @@ const LoginInputField = () => {
         placeholder="Email"
         value={userLogin.email}
         onChange={handleInputChange}
+        error={loginErrorMessages.Email}
       />
 
       <InputField
@@ -31,6 +31,7 @@ const LoginInputField = () => {
         placeholder="Password"
         value={userLogin.password}
         onChange={handleInputChange}
+        error={loginErrorMessages.Password}
       />
     </>
   );

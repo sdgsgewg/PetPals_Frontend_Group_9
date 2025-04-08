@@ -17,6 +17,10 @@ interface GlobalContextType {
   formattedPrice: (price: number | string) => string;
   getForumCategoryName: (categoryName: string) => string | null;
   formattedDate: (dateString: string) => string | null;
+  handleInputChange: (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+    setState: (name: string, value: string | number) => void
+  ) => void;
 }
 
 const GlobalContext = createContext<GlobalContextType | undefined>(undefined);
@@ -59,9 +63,16 @@ export function GlobalProvider({ children }: { children: ReactNode }) {
   };
 
   const formattedAge = (age: number) => {
-    if (age === 0) return "Unknown";
-    if (age < 1) return `${age * 10} months`;
-    return `${age} years`;
+    const years = Math.floor(age);
+    const months = Math.round((age - years) * 12);
+
+    let result = "";
+    if (years > 0) result += `${years} Year${years > 1 ? "s" : ""}`;
+    if (months > 0)
+      result += `${years > 0 ? " " : ""}${months} Month${
+        months > 1 ? "s" : ""
+      }`;
+    return result || "Unknown";
   };
 
   const formattedPrice = (value: number | string): string => {
@@ -88,6 +99,15 @@ export function GlobalProvider({ children }: { children: ReactNode }) {
     });
   };
 
+  // Meng-update state ketika input berubah
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+    setState: (name: string, value: string | number) => void
+  ) => {
+    const { name, value } = e.target;
+    setState(name, value);
+  };
+
   return (
     <GlobalContext.Provider
       value={{
@@ -103,6 +123,7 @@ export function GlobalProvider({ children }: { children: ReactNode }) {
         formattedPrice,
         getForumCategoryName,
         formattedDate,
+        handleInputChange,
       }}
     >
       {children}

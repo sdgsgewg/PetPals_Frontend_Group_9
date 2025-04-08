@@ -3,9 +3,18 @@ import { ClipLoader } from "react-spinners";
 
 const Loading = () => {
   return (
-    <div className="flex flex-col justify-center items-center">
-      <ClipLoader size={50} color="#2563eb" />
-      <p className="mt-4 text-2xl text-gray-700">Loading...</p>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-md">
+      <div className="bg-white dark:bg-gray-900 px-8 py-6 rounded-2xl shadow-xl w-full max-w-sm flex flex-col items-center animate-fade-in">
+        <div className="mb-4">
+          <ClipLoader size={48} color="#3b82f6" />
+        </div>
+        <p className="text-lg text-gray-800 dark:text-gray-200 font-semibold">
+          Please wait...
+        </p>
+        <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 text-center">
+          We’re preparing something awesome for you.
+        </p>
+      </div>
     </div>
   );
 };

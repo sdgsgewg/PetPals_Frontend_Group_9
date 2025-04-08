@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useState } from "react";
+import React from "react";
 import Hamburger from "./Hamburger";
 import Dropdown from "./Dropdown";
 import NavLink from "./NavLink";
@@ -14,13 +14,6 @@ import WelcomeMessage from "./WelcomeMessage";
 
 const Navbar = () => {
   const { isLoggedIn } = useUsers();
-  const [isOpen, setIsOpen] = useState(false);
-  const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
-
-  const toggleUserDropdown = () =>
-    setIsUserDropdownOpen(isUserDropdownOpen === true ? false : true);
-
-  const handleCloseUserDropdown = () => setIsUserDropdownOpen(false);
 
   return (
     <>
@@ -33,39 +26,26 @@ const Navbar = () => {
 
           {/* Menu Desktop */}
           <div className="hidden lg:flex items-center gap-6 text-slate-600 dark:text-gray-300 text-md">
-            <NavLink setIsOpen={setIsOpen} />
+            <NavLink />
             <ThemeSwitcher />
             {isLoggedIn ? (
               <>
-                <WelcomeMessage
-                  isUserDropdownOpen={isUserDropdownOpen}
-                  toggleUserDropdown={toggleUserDropdown}
-                />
+                <WelcomeMessage />
               </>
             ) : (
               <>
-                <LoginBox setIsOpen={setIsOpen} />
-                <RegisterBox setIsOpen={setIsOpen} />
+                <LoginBox />
+                <RegisterBox />
               </>
             )}
           </div>
 
-          <Hamburger isOpen={isOpen} setIsOpen={setIsOpen} />
+          <Hamburger />
         </nav>
 
-        <Dropdown
-          isOpen={isOpen}
-          setIsOpen={setIsOpen}
-          isUserDropdownOpen={isUserDropdownOpen}
-          toggleUserDropdown={toggleUserDropdown}
-          onClose={handleCloseUserDropdown}
-        />
+        <Dropdown />
       </div>
-      <UserDropdown
-        setIsOpen={setIsOpen}
-        isUserDropdownOpen={isUserDropdownOpen}
-        onClose={handleCloseUserDropdown}
-      />
+      <UserDropdown />
     </>
   );
 };

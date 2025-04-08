@@ -18,6 +18,12 @@ export enum GlobalActionType {
   SET_LOADING = "SET_LOADING",
   SET_ERROR = "SET_ERROR",
 
+  // Navbar
+  SET_DROPDOWN_MENU = "SET_DROPDOWN_MENU",
+  TOGGLE_DROPDOWN_MENU = "TOGGLE_DROPDOWN_MENU",
+  SET_USER_DROPDOWN_MENU = "SET_USER_DROPDOWN_MENU",
+  TOGGLE_USER_DROPDOWN_MENU = "TOGGLE_USER_DROPDOWN_MENU",
+
   // Users
   SET_USER_REGISTER = "SET_USER_REGISTER",
   RESET_USER_REGISTER = "RESET_USER_REGISTER",
@@ -30,6 +36,8 @@ export enum GlobalActionType {
   REGISTER_USER = "REGISTER_USER",
   SET_REGISTER_ERROR_MESSAGES = "SET_REGISTER_ERROR_MESSAGES",
   RESET_REGISTER_ERROR_MESSAGES = "RESET_REGISTER_ERROR_MESSAGES",
+  SET_LOGIN_ERROR_MESSAGES = "SET_LOGIN_ERROR_MESSAGES",
+  RESET_LOGIN_ERROR_MESSAGES = "RESET_LOGIN_ERROR_MESSAGES",
   SET_LOGGED_IN = "SET_LOGGED_IN",
 
   // Pets
@@ -37,6 +45,8 @@ export enum GlobalActionType {
   GET_ALL_SPECIES = "GET_ALL_SPECIES",
   SET_PET_FILTER = "SET_PET_FILTER",
   RESET_PET_FILTERS = "RESTE_PET_FILTERS",
+  SET_PET_FILTERS_ERROR_MESSAGES = "SET_PET_FILTERS_ERROR_MESSAGES",
+  RESET_PET_FILTERS_ERROR_MESSAGES = "RESET_PET_FILTERS_ERROR_MESSAGES",
   GET_PET_DETAIL = "GET_PET_DETAIL",
   SET_NEW_PET = "SET_NEW_PET",
   RESET_NEW_PET = "RESET_NEW_PET",
@@ -59,6 +69,8 @@ export enum GlobalActionType {
   GET_ALL_SERVICE_CATEGORIES = "GET_ALL_SERVICE_CATEGORIES",
   SET_SERVICE_FILTER = "SET_SERVICE_FILTER",
   RESET_SERVICE_FILTERS = "RESET_SERVICE_FILTERS",
+  SET_SERVICE_FILTERS_ERROR_MESSAGES = "SET_SERVICE_FILTERS_ERROR_MESSAGES",
+  RESET_SERVICE_FILTERS_ERROR_MESSAGES = "RESET_SERVICE_FILTERS_ERROR_MESSAGES",
   GET_SERVICE_DETAIL = "GET_SERVICE_DETAIL",
   BOOK_SERVICE = "BOOK_SERVICE",
   SET_NEW_SERVICE = "SET_NEW_SERVICE",
@@ -102,6 +114,12 @@ export type GlobalAction =
   | { type: GlobalActionType.SET_LOADING; payload: boolean }
   | { type: GlobalActionType.SET_ERROR; payload: string | null }
 
+  // Navbar
+  | { type: GlobalActionType.SET_DROPDOWN_MENU; payload: boolean }
+  | { type: GlobalActionType.TOGGLE_DROPDOWN_MENU }
+  | { type: GlobalActionType.SET_USER_DROPDOWN_MENU; payload: boolean }
+  | { type: GlobalActionType.TOGGLE_USER_DROPDOWN_MENU }
+
   // Users, Register, Login
   | {
       type: GlobalActionType.SET_USER_REGISTER;
@@ -132,6 +150,13 @@ export type GlobalAction =
   | {
       type: GlobalActionType.RESET_REGISTER_ERROR_MESSAGES;
     }
+  | {
+      type: GlobalActionType.SET_LOGIN_ERROR_MESSAGES;
+      payload: Record<string, string>;
+    }
+  | {
+      type: GlobalActionType.RESET_LOGIN_ERROR_MESSAGES;
+    }
   | { type: GlobalActionType.GET_LOGGED_IN_USER; payload: IUser }
   | {
       type: GlobalActionType.GET_USER_ROLES;
@@ -154,6 +179,13 @@ export type GlobalAction =
     }
   | {
       type: GlobalActionType.RESET_PET_FILTERS;
+    }
+  | {
+      type: GlobalActionType.SET_PET_FILTERS_ERROR_MESSAGES;
+      payload: Record<string, string>;
+    }
+  | {
+      type: GlobalActionType.RESET_PET_FILTERS_ERROR_MESSAGES;
     }
   | {
       type: GlobalActionType.GET_PET_DETAIL;
@@ -207,6 +239,13 @@ export type GlobalAction =
     }
   | {
       type: GlobalActionType.RESET_SERVICE_FILTERS;
+    }
+  | {
+      type: GlobalActionType.SET_SERVICE_FILTERS_ERROR_MESSAGES;
+      payload: Record<string, string>;
+    }
+  | {
+      type: GlobalActionType.RESET_SERVICE_FILTERS_ERROR_MESSAGES;
     }
   | {
       type: GlobalActionType.GET_SERVICE_DETAIL;

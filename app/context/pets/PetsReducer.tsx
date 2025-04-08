@@ -4,6 +4,7 @@ import { ISpecies } from "../../interface/pet/ISpecies";
 import { GlobalAction, GlobalActionType } from "../GlobalActions";
 import { INewPet } from "@/app/interface/pet/INewPet";
 import { INewPetErrorMessages } from "@/app/interface/pet/INewPetErrorMessages";
+import { IPetFilterErrorMessage } from "@/app/interface/pet/IPetFiltersErrorMessage";
 
 export interface PetState {
   species: ISpecies[];
@@ -12,6 +13,7 @@ export interface PetState {
   pet: IPet;
   newPet: INewPet;
   filters: IPetFilterParams;
+  petFiltersErrorMessages: IPetFilterErrorMessage;
   newPetErrorMessages: INewPetErrorMessages;
   loading: boolean;
   error: string | null;
@@ -31,6 +33,14 @@ export const initialState: PetState = {
     minPrice: "",
     maxPrice: "",
   } as IPetFilterParams,
+  petFiltersErrorMessages: {
+    SearchValue: "",
+    Species: "",
+    MinAge: "",
+    MaxAge: "",
+    MinPrice: "",
+    MaxPrice: "",
+  },
   newPetErrorMessages: {
     Name: "",
     Breed: "",
@@ -68,6 +78,26 @@ export function PetsReducer(state: PetState, action: GlobalAction) {
           maxAge: "",
           minPrice: "",
           maxPrice: "",
+        },
+      };
+    case GlobalActionType.SET_PET_FILTERS_ERROR_MESSAGES:
+      return {
+        ...state,
+        petFiltersErrorMessages: {
+          ...state.petFiltersErrorMessages,
+          ...action.payload,
+        },
+      };
+    case GlobalActionType.RESET_PET_FILTERS_ERROR_MESSAGES:
+      return {
+        ...state,
+        petFiltersErrorMessages: {
+          SearchValue: "",
+          Species: "",
+          MinAge: "",
+          MaxAge: "",
+          MinPrice: "",
+          MaxPrice: "",
         },
       };
     case GlobalActionType.GET_PET_DETAIL:

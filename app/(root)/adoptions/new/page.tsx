@@ -8,6 +8,8 @@ import { usePets } from "@/app/context/pets/PetsContext";
 import { useUsers } from "@/app/context/users/UsersContext";
 import React, { useEffect, useState } from "react";
 import TextareaField from "@/app/components/FormField/TextareaField";
+import AgeField from "@/app/components/FormField/AgeField";
+import GenderField from "@/app/components/FormField/GenderField";
 
 const NewPet = () => {
   const { formattedPrice } = useGlobal();
@@ -16,7 +18,6 @@ const NewPet = () => {
     species,
     newPet,
     newPetErrorMessages,
-    genderOptions,
     fetchSpecies,
     setNewPet,
     resetNewPet,
@@ -26,6 +27,26 @@ const NewPet = () => {
   const [displayPrice, setDisplayPrice] = useState<string>(
     newPet.price ? formattedPrice(newPet.price) : ""
   );
+
+  const handleInputChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >
+  ) => {
+    const { name, value } = e.target;
+    const newValue: string | number =
+      name === "age" || name === "speciesId" || name === "price"
+        ? Number(value)
+        : value;
+    setNewPet(name, newValue);
+  };
+
+  const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const rawValue = e.target.value.replace(/\D/g, ""); // hanya angka
+    const numericValue = parseInt(rawValue || "0", 10); // basis desimal
+    setNewPet("price", numericValue); // Simpan dalam bentuk number di state utama
+    setDisplayPrice(formattedPrice(numericValue)); // Simpan display string untuk tampilan
+  };
 
   useEffect(() => {
     resetNewPet();
@@ -38,24 +59,6 @@ const NewPet = () => {
       setNewPet("ownerId", loggedInUser.userId);
     }
   }, [loggedInUser?.userId]);
-
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    const { name, value } = e.target;
-    const newValue: string | number =
-      name === "age" || name === "speciesId" || name === "price"
-        ? Number(value)
-        : value;
-    setNewPet(name, newValue);
-  };
-
-  const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const rawValue = e.target.value.replace(/\D/g, ""); // hanya angka
-    const numericValue = parseInt(rawValue || "0", 10);
-    setNewPet("price", numericValue); // Simpan dalam bentuk number di state utama
-    setDisplayPrice(formattedPrice(numericValue)); // Simpan display string untuk tampilan
-  };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -81,6 +84,16 @@ const NewPet = () => {
             error={newPetErrorMessages.Name}
           />
 
+          {/* Species */}
+          <SelectField
+            label="Species"
+            name="speciesId"
+            value={newPet.speciesId}
+            onChange={handleInputChange}
+            options={species}
+            error={newPetErrorMessages.SpeciesId}
+          />
+
           {/* Breed */}
           <InputField
             label="Breed"
@@ -92,35 +105,17 @@ const NewPet = () => {
           />
 
           {/* Age */}
-          <InputField
-            label="Age"
-            name="age"
-            type="number"
-            step="0.1"
-            placeholder="Age"
+          <AgeField
             value={newPet.age}
-            onChange={handleInputChange}
+            onChange={(val) => setNewPet("age", val)}
             error={newPetErrorMessages.Age}
           />
 
           {/* Gender */}
-          <SelectField
-            label="Gender"
-            name="gender"
-            value={newPet.genderId}
+          <GenderField
+            value={newPet.gender}
             onChange={handleInputChange}
-            options={genderOptions}
             error={newPetErrorMessages.Gender}
-          />
-
-          {/* Species */}
-          <SelectField
-            label="Species"
-            name="speciesId"
-            value={newPet.speciesId}
-            onChange={handleInputChange}
-            options={species}
-            error={newPetErrorMessages.SpeciesId}
           />
 
           {/* Description */}
@@ -129,7 +124,7 @@ const NewPet = () => {
             name="description"
             placeholder="Describe your pet"
             value={newPet.description}
-            onChange={(e) => handleInputChange(e)}
+            onChange={handleInputChange}
           />
 
           {/* Price */}

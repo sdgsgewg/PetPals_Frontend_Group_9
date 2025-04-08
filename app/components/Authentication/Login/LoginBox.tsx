@@ -1,11 +1,10 @@
+import { useNavbar } from "@/app/context/navbar/NavbarContext";
 import Link from "next/link";
 import React from "react";
 
-interface LoginBoxProps {
-  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-}
+const LoginBox = () => {
+  const { handleCloseDropdownMenu } = useNavbar();
 
-const LoginBox: React.FC<LoginBoxProps> = ({ setIsOpen }) => {
   return (
     <Link href="/login">
       <button
@@ -16,7 +15,7 @@ const LoginBox: React.FC<LoginBoxProps> = ({ setIsOpen }) => {
       hover:bg-blue-200 dark:hover:bg-gray-500
       hover:text-blue-900 dark:hover:text-white cursor-pointer
     "
-        onClick={() => setIsOpen(false)}
+        onClick={handleCloseDropdownMenu}
       >
         Log in
       </button>

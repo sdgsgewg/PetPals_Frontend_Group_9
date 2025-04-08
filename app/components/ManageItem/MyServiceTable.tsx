@@ -29,6 +29,7 @@ const MyServiceTable: React.FC<MyServiceTableProps> = ({
           <tr>
             <th className="p-3 text-left">#</th>
             <th className="p-3 text-left">Name</th>
+            <th className="p-3 text-left">Category</th>
             <th className="p-3 text-left">Price (Rp)</th>
             <th className="p-3 text-left">Actions</th>
           </tr>
@@ -41,6 +42,7 @@ const MyServiceTable: React.FC<MyServiceTableProps> = ({
             >
               <td className="p-3">{index + 1}</td>
               <td className="p-3">{service.name}</td>
+              <td className="p-3">{service?.category?.name}</td>
               <td className="p-3">{formattedPrice(service.price)}</td>
               <td className="p-3 flex gap-2">
                 {/* View */}

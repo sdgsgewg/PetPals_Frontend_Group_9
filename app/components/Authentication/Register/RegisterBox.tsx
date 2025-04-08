@@ -1,11 +1,10 @@
+import { useNavbar } from "@/app/context/navbar/NavbarContext";
 import Link from "next/link";
 import React from "react";
 
-interface RegisterBoxProps {
-  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-}
+const RegisterBox = () => {
+  const { handleCloseDropdownMenu } = useNavbar();
 
-const RegisterBox: React.FC<RegisterBoxProps> = ({ setIsOpen }) => {
   return (
     <Link href="/register">
       <button
@@ -16,7 +15,7 @@ const RegisterBox: React.FC<RegisterBoxProps> = ({ setIsOpen }) => {
       hover:bg-blue-500 dark:hover:bg-gray-500
       hover:text-gray-100 dark:hover:text-white cursor-pointer
     "
-        onClick={() => setIsOpen(false)}
+        onClick={handleCloseDropdownMenu}
       >
         Sign up
       </button>

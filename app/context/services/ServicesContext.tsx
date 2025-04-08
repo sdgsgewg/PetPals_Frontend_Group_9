@@ -11,6 +11,7 @@ import { INewService } from "@/app/interface/service/INewService";
 import { useGlobal } from "../GlobalContext";
 import { useRouter } from "next/navigation";
 import { INewServiceErrorMessages } from "@/app/interface/service/INewServiceErrorMessages";
+import { IServiceFilterErrorMessage } from "@/app/interface/service/IServiceFiltersErrorMessage";
 
 interface ServicesContextType {
   service_categories: IServiceCategory[];
@@ -19,6 +20,7 @@ interface ServicesContextType {
   service: IService;
   newService: INewService;
   filters: IServiceFilterParams;
+  serviceFiltersErrorMessages: IServiceFilterErrorMessage;
   newServiceErrorMessages: INewServiceErrorMessages;
   setFilters: (name: string, value: string) => void;
   resetFilters: () => void;
@@ -48,13 +50,22 @@ const ServicesContext = createContext<ServicesContextType | undefined>(
 export function ServicesProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(ServicesReducer, initialState);
 
-  const { handleOpenMessageModal, handleCloseMessageModal } = useGlobal();
+  const {
+    handleOpenMessageModal,
+    handleCloseMessageModal,
+    handleCloseFilterModal,
+  } = useGlobal();
   const router = useRouter();
 
   const fetchServices = async () => {
-    try {
-      dispatch({ type: GlobalActionType.SET_LOADING, payload: true });
+    dispatch({ type: GlobalActionType.SET_LOADING, payload: true });
 
+    // Reset error messages sebelum mengirim request
+    dispatch({
+      type: GlobalActionType.RESET_SERVICE_FILTERS_ERROR_MESSAGES,
+    });
+
+    try {
       const response = await api.get("/services-list", {
         params: {
           name: state.filters.searchValue,
@@ -65,20 +76,72 @@ export function ServicesProvider({ children }: { children: ReactNode }) {
         },
       });
 
-      if (response.data && Array.isArray(response.data)) {
+      if (
+        !response.data.errors &&
+        response.data &&
+        Array.isArray(response.data)
+      ) {
         dispatch({
           type: GlobalActionType.GET_ALL_SERVICES,
           payload: response.data,
         });
+
+        handleCloseFilterModal();
       } else {
         console.error("Invalid API response format:", response.data);
+
+        if (response.data.errors) {
+          // Store the property name and error message for each field
+          const errors = response.data.errors.reduce(
+            (
+              acc: Record<string, string>,
+              error: { propertyName: string; errorMessage: string }
+            ) => {
+              if (!acc[error.propertyName]) {
+                acc[error.propertyName] = error.errorMessage;
+              }
+              return acc;
+            },
+            {}
+          );
+
+          // Set error messages
+          dispatch({
+            type: GlobalActionType.SET_SERVICE_FILTERS_ERROR_MESSAGES,
+            payload: errors,
+          });
+        }
+
         dispatch({
           type: GlobalActionType.SET_ERROR,
           payload: "Fetch Service List failed",
         });
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error fetching pets:", error);
+
+      if (error?.response?.data?.errors) {
+        // Store the property name and error message for each field
+        const errors = error?.response?.data?.errors?.reduce(
+          (
+            acc: Record<string, string>,
+            error: { propertyName: string; errorMessage: string }
+          ) => {
+            if (!acc[error.propertyName]) {
+              acc[error.propertyName] = error.errorMessage;
+            }
+            return acc;
+          },
+          {}
+        );
+
+        // Set error messages
+        dispatch({
+          type: GlobalActionType.SET_SERVICE_FILTERS_ERROR_MESSAGES,
+          payload: errors,
+        });
+      }
+
       dispatch({
         type: GlobalActionType.SET_ERROR,
         payload: "Fetch Service List failed",
@@ -469,6 +532,7 @@ export function ServicesProvider({ children }: { children: ReactNode }) {
         service: state.service,
         newService: state.newService,
         filters: state.filters,
+        serviceFiltersErrorMessages: state.serviceFiltersErrorMessages,
         newServiceErrorMessages: state.newServiceErrorMessages,
         setFilters,
         resetFilters,

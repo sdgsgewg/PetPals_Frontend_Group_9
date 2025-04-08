@@ -6,42 +6,23 @@ import RegisterBox from "../Authentication/Register/RegisterBox";
 import { useUsers } from "@/app/context/users/UsersContext";
 import WelcomeMessage from "./WelcomeMessage";
 import UserDropdown from "./UserDropdown/UserDropdown";
+import { useNavbar } from "@/app/context/navbar/NavbarContext";
 
-interface DropdownProps {
-  isOpen: boolean;
-  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  isUserDropdownOpen: boolean;
-  toggleUserDropdown: () => void;
-  onClose: () => void;
-}
-
-const Dropdown: React.FC<DropdownProps> = ({
-  isOpen,
-  setIsOpen,
-  isUserDropdownOpen,
-  toggleUserDropdown,
-  onClose,
-}) => {
+const Dropdown = () => {
+  const { isDropdownMenuOpen } = useNavbar();
   const { isLoggedIn } = useUsers();
 
   return (
     <div>
       {/* Dropdown Menu (Hanya muncul saat MD ke bawah) */}
-      {isOpen && (
+      {isDropdownMenuOpen && (
         <>
           <div className="lg:hidden mt-3 bg-white dark:bg-gray-800 text-slate-700 dark:text-slate-300 rounded-md shadow-md dark:shadow-gray-700 p-4 space-y-4 transition-all duration-300">
-            <NavLink setIsOpen={setIsOpen} />
+            <NavLink />
             {isLoggedIn && (
               <>
-                <WelcomeMessage
-                  isUserDropdownOpen={isUserDropdownOpen}
-                  toggleUserDropdown={toggleUserDropdown}
-                />
-                <UserDropdown
-                  setIsOpen={setIsOpen}
-                  isUserDropdownOpen={isUserDropdownOpen}
-                  onClose={onClose}
-                />
+                <WelcomeMessage />
+                <UserDropdown />
               </>
             )}
           </div>
@@ -49,8 +30,8 @@ const Dropdown: React.FC<DropdownProps> = ({
             <ThemeSwitcher />
             {!isLoggedIn && (
               <>
-                <LoginBox setIsOpen={setIsOpen} />
-                <RegisterBox setIsOpen={setIsOpen} />
+                <LoginBox />
+                <RegisterBox />
               </>
             )}
           </div>

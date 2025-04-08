@@ -2,24 +2,18 @@ import React from "react";
 import { PawPrint, PlusCircle, FileText, User, LogOut } from "lucide-react";
 import { useUsers } from "@/app/context/users/UsersContext";
 import UserDropdownNavItem from "./UserDropdownNavItem";
+import { useNavbar } from "@/app/context/navbar/NavbarContext";
 
-interface UserDropdownNavLinkProps {
-  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  onClose: () => void;
-}
-
-const UserDropdownNavLink: React.FC<UserDropdownNavLinkProps> = ({
-  setIsOpen,
-  onClose,
-}) => {
+const UserDropdownNavLink = () => {
+  const { handleCloseDropdownMenu, handleCloseUserDropdownMenu } = useNavbar();
   const { loggedInUser, logoutUser } = useUsers();
 
   const handleMenuClick = (menu: string) => {
     if (menu === "Log out") {
       logoutUser();
     }
-    onClose();
-    setIsOpen(false);
+    handleCloseDropdownMenu();
+    handleCloseUserDropdownMenu();
   };
 
   return (

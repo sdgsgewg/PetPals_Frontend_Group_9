@@ -8,22 +8,25 @@ import { UsersProvider } from "./context/users/UsersContext";
 import { AdoptionsProvider } from "./context/adoptions/AdoptionsContext";
 import { TransactionsProvider } from "./context/transactions/TransactionsContext";
 import { ForumsProvider } from "./context/forums/ForumsContext";
+import { NavbarProvider } from "./context/navbar/NavbarContext";
 
 const Providers = ({ children }: { children: React.ReactNode }) => {
   return (
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
       <GlobalProvider>
-        <UsersProvider>
-          <PetsProvider>
-            <AdoptionsProvider>
-              <ServicesProvider>
-                <TransactionsProvider>
-                  <ForumsProvider>{children}</ForumsProvider>
-                </TransactionsProvider>
-              </ServicesProvider>
-            </AdoptionsProvider>
-          </PetsProvider>
-        </UsersProvider>
+        <NavbarProvider>
+          <UsersProvider>
+            <PetsProvider>
+              <AdoptionsProvider>
+                <ServicesProvider>
+                  <TransactionsProvider>
+                    <ForumsProvider>{children}</ForumsProvider>
+                  </TransactionsProvider>
+                </ServicesProvider>
+              </AdoptionsProvider>
+            </PetsProvider>
+          </UsersProvider>
+        </NavbarProvider>
       </GlobalProvider>
     </ThemeProvider>
   );

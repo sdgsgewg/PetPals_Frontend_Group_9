@@ -1,11 +1,13 @@
 import { usePets } from "@/app/context/pets/PetsContext";
 import { useServices } from "@/app/context/services/ServicesContext";
 import { useUsers } from "@/app/context/users/UsersContext";
+import { IPet } from "@/app/interface/pet/IPet";
+import { IService } from "@/app/interface/service/IService";
 import Image from "next/image";
 import React from "react";
 
 interface ItemDetailCardProps {
-  itemType: string;
+  itemType: "pet" | "service";
   imageUrl: string | null;
   status?: string | null;
   price: string | null;
@@ -22,21 +24,22 @@ const ItemDetailCard: React.FC<ItemDetailCardProps> = ({
   onClick,
 }) => {
   const { loggedInUser } = useUsers();
-  const petContext = usePets();
-  const serviceContext = useServices();
+  const { pet } = usePets();
+  const { service } = useServices();
 
   const isPet = itemType === "pet";
-  const data = isPet ? petContext.pet : serviceContext.service;
+  const petData = isPet ? (pet as IPet) : null;
+  const serviceData = !isPet ? (service as IService) : null;
 
   return (
-    <div className="p-6 bg-white dark:bg-gray-700 shadow-lg rounded-lg">
+    <div className="min-w-md p-6 bg-white dark:bg-gray-700 shadow-lg rounded-lg">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Left: Image */}
         <div className="flex justify-center">
           {imageUrl && (
             <Image
               src={imageUrl}
-              alt={data.name}
+              alt={petData?.name || serviceData?.name || "Image"}
               width={400}
               height={400}
               className="w-full h-auto object-cover rounded-lg shadow-md"
@@ -44,52 +47,57 @@ const ItemDetailCard: React.FC<ItemDetailCardProps> = ({
           )}
         </div>
 
-        {/* Right: Pet or Service Details */}
+        {/* Right: Detail */}
         <div className="flex flex-col justify-center">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-            {data.name}
+            {petData?.name || serviceData?.name}
           </h2>
-          {isPet ? (
+
+          {petData && (
             <>
               <p className="text-gray-600 dark:text-gray-300 mb-1">
                 <span className="font-semibold">Species:</span>{" "}
-                {data?.species?.name}
+                {petData.species?.name}
               </p>
               <p className="text-gray-600 dark:text-gray-300 mb-1">
-                <span className="font-semibold">Breed:</span> {data.breed}
+                <span className="font-semibold">Breed:</span> {petData.breed}
               </p>
               <p className="text-gray-600 dark:text-gray-300 mb-1">
-                <span className="font-semibold">Age:</span> {data.age} years
+                <span className="font-semibold">Age:</span> {petData.age} years
               </p>
               <p className="text-gray-600 dark:text-gray-300 mb-1">
-                <span className="font-semibold">Gender:</span> {data.gender}
+                <span className="font-semibold">Gender:</span> {petData.gender}
               </p>
             </>
-          ) : (
+          )}
+
+          {serviceData && (
             <>
               <p className="text-gray-600 dark:text-gray-300 mb-1">
                 <span className="font-semibold">Category:</span>{" "}
-                {data?.category?.name}
+                {serviceData.category?.name}
               </p>
               <p className="text-gray-600 dark:text-gray-300 mb-1">
-                <span className="font-semibold">Address:</span> {data.address}
+                <span className="font-semibold">Address:</span>{" "}
+                {serviceData.address}
               </p>
               <p className="text-gray-600 dark:text-gray-300 mb-1">
-                <span className="font-semibold">City:</span> {data.city}
+                <span className="font-semibold">City:</span> {serviceData.city}
               </p>
             </>
           )}
 
           <p className="text-gray-600 dark:text-gray-300 mb-2">
             <span className="font-semibold">Description:</span>{" "}
-            {data.description}
+            {petData?.description || serviceData?.description}
           </p>
 
-          {isPet && (
+          {petData && (
             <p className="text-gray-600 dark:text-gray-300 mb-1">
               <span className="font-semibold">Status:</span> {status}
             </p>
           )}
+
           <p className="text-lg font-semibold text-indigo-600 dark:text-indigo-400">
             Price: Rp {price}
           </p>
@@ -97,7 +105,7 @@ const ItemDetailCard: React.FC<ItemDetailCardProps> = ({
           {/* Action Buttons */}
           {loggedInUser?.role?.name?.toLowerCase() === "adopter" && (
             <div className="mt-4">
-              {isPet ? (
+              {petData ? (
                 <button
                   className={`${
                     isAdopted

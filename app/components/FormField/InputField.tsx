@@ -11,6 +11,7 @@ interface InputFieldProps {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   error?: string;
   step?: string | number;
+  isDisabled?: boolean;
 }
 
 const InputField: React.FC<InputFieldProps> = ({
@@ -22,6 +23,7 @@ const InputField: React.FC<InputFieldProps> = ({
   onChange,
   error,
   step,
+  isDisabled,
 }) => {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -37,16 +39,21 @@ const InputField: React.FC<InputFieldProps> = ({
       )}
       <div className="relative w-full">
         <input
+          disabled={isDisabled}
           type={type === "password" && showPassword ? "text" : type}
           step={type === "number" ? step ?? "any" : undefined}
           placeholder={placeholder}
           className={`w-full px-4 py-2 border rounded-lg mt-2 pr-10 ${
-            error ? "border-red-500 mb-2" : "mb-4"
-          }`}
+            isDisabled
+              ? "bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-500 border-gray-300 dark:border-gray-600 cursor-not-allowed"
+              : "bg-white dark:bg-gray-700 text-gray-900 dark:text-white border-gray-400 dark:border-gray-600"
+          }
+              ${error ? "border-red-500 mb-2" : "mb-4"}`}
           name={name}
           value={value}
           onChange={onChange}
         />
+
         {type === "password" && (
           <button
             type="button"

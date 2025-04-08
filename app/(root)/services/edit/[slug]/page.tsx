@@ -37,7 +37,7 @@ const EditService = () => {
   useEffect(() => {
     setNewService("serviceId", service.serviceId);
     setNewService("name", service.name);
-    setNewService("categoryId", service?.category?.categoryId);
+    setNewService("categoryId", service?.category?.id);
     setNewService("description", service.description);
     setNewService("price", service.price);
     setNewService("address", service.address);
@@ -46,7 +46,9 @@ const EditService = () => {
   }, [service]);
 
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >
   ) => {
     const { name, value } = e.target;
     const newValue: string | number =
@@ -101,7 +103,7 @@ const EditService = () => {
             name="description"
             placeholder="Describe your service"
             value={newService.description}
-            onChange={(e) => handleInputChange(e)}
+            onChange={handleInputChange}
           />
 
           {/* Price */}
