@@ -27,6 +27,7 @@ const RegisterInputField = () => {
 
   return (
     <>
+      {/* Name */}
       <InputField
         label="Name"
         name="name"
@@ -36,6 +37,7 @@ const RegisterInputField = () => {
         error={registerErrorMessages.Name}
       />
 
+      {/* Email */}
       <InputField
         label="Email"
         name="email"
@@ -46,6 +48,7 @@ const RegisterInputField = () => {
         error={registerErrorMessages.Email}
       />
 
+      {/* Password */}
       <InputField
         label="Password"
         name="password"
@@ -56,6 +59,7 @@ const RegisterInputField = () => {
         error={registerErrorMessages.Password}
       />
 
+      {/* Phone */}
       <InputField
         label="Phone"
         name="phone"
@@ -66,6 +70,7 @@ const RegisterInputField = () => {
         error={registerErrorMessages.Phone}
       />
 
+      {/* Address */}
       <InputField
         label="Address"
         name="address"
@@ -75,6 +80,7 @@ const RegisterInputField = () => {
         error={registerErrorMessages.Address}
       />
 
+      {/* City */}
       <InputField
         label="City"
         name="city"
@@ -84,6 +90,7 @@ const RegisterInputField = () => {
         error={registerErrorMessages.City}
       />
 
+      {/* Role */}
       <SelectField
         label="Role"
         name="roleId"

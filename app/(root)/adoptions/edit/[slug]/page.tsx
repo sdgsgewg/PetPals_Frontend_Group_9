@@ -33,7 +33,7 @@ const EditPet = () => {
   useEffect(() => {
     fetchSpecies();
     fetchPetDetail(slug);
-  }, []);
+  }, [slug]);
 
   useEffect(() => {
     setNewPet("petId", pet.petId);
