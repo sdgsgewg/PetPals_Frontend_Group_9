@@ -2,7 +2,7 @@ import { IService } from "@/app/interface/service/IService";
 import React from "react";
 import ServiceCard from "./ServiceCard";
 import { useServices } from "@/app/context/services/ServicesContext";
-import Loading from "../loading";
+import Loading from "../Loading";
 import ItemNotFound from "../ItemNotFound";
 
 interface ServiceListProps {

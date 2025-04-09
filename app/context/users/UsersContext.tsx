@@ -7,6 +7,7 @@ import {
   useEffect,
   useReducer,
 } from "react";
+import Cookies from "js-cookie";
 import api from "@/lib/apiClient";
 import { IUser } from "@/app/interface/user/IUser";
 import { IRole } from "@/app/interface/user/IRole";
@@ -185,6 +186,10 @@ export function UsersProvider({ children }: { children: ReactNode }) {
         const token = response.data.token;
         const userData = response.data.user;
 
+        // ✅ Simpan ke cookie supaya middleware bisa akses
+        Cookies.set("token", token, { expires: 1 }); // expires 1 day
+
+        // (opsional) tetap simpan di sessionStorage untuk pemakaian di client
         sessionStorage.setItem("token", token);
         sessionStorage.setItem("loggedInUser", JSON.stringify(userData));
 
@@ -275,13 +280,14 @@ export function UsersProvider({ children }: { children: ReactNode }) {
       payload: false,
     });
 
-    // Hapus token dan user dari session storage
-    sessionStorage.removeItem("token");
-    sessionStorage.removeItem("loggedInUser");
+    Cookies.remove("token");
+    sessionStorage.clear();
 
     dispatch({
       type: GlobalActionType.LOGOUT_USER,
     });
+
+    router.push("/");
   };
 
   useEffect(() => {

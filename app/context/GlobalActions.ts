@@ -15,6 +15,7 @@ export enum GlobalActionType {
   // Global
   SET_MESSAGE_MODAL = "SET_MESSAGE_MODAL",
   SET_FILTER_MODAL = "SET_FILTER_MODAL",
+  SET_REMOVE_ITEM_MODAL = "SET_REMOVE_ITEM_MODAL",
   SET_LOADING = "SET_LOADING",
   SET_ERROR = "SET_ERROR",
 
@@ -111,6 +112,7 @@ export type GlobalAction =
   // Global
   | { type: GlobalActionType.SET_MESSAGE_MODAL; payload: boolean }
   | { type: GlobalActionType.SET_FILTER_MODAL; payload: boolean }
+  | { type: GlobalActionType.SET_REMOVE_ITEM_MODAL; payload: boolean }
   | { type: GlobalActionType.SET_LOADING; payload: boolean }
   | { type: GlobalActionType.SET_ERROR; payload: string | null }
 

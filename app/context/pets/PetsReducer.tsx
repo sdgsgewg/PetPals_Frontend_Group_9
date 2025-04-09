@@ -3,7 +3,7 @@ import { IPetFilterParams } from "../../interface/pet/IPetFilterParams";
 import { ISpecies } from "../../interface/pet/ISpecies";
 import { GlobalAction, GlobalActionType } from "../GlobalActions";
 import { INewPet } from "@/app/interface/pet/INewPet";
-import { INewPetErrorMessages } from "@/app/interface/pet/INewPetErrorMessages";
+import { INewPetErrorMessage } from "@/app/interface/pet/INewPetErrorMessage";
 import { IPetFilterErrorMessage } from "@/app/interface/pet/IPetFiltersErrorMessage";
 
 export interface PetState {
@@ -14,7 +14,7 @@ export interface PetState {
   newPet: INewPet;
   filters: IPetFilterParams;
   petFiltersErrorMessages: IPetFilterErrorMessage;
-  newPetErrorMessages: INewPetErrorMessages;
+  newPetErrorMessages: INewPetErrorMessage;
   loading: boolean;
   error: string | null;
 }
@@ -118,7 +118,7 @@ export function PetsReducer(state: PetState, action: GlobalAction) {
           name: "",
           breed: "",
           age: 0,
-          genderId: 0,
+          gender: "",
           speciesId: 0,
           description: "",
           price: 0,

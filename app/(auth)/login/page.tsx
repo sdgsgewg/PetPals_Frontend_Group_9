@@ -1,5 +1,5 @@
 "use client";
-import AuthBox from "@/app/components/Authentication/AuthForm";
+import AuthForm from "@/app/components/Authentication/AuthForm";
 import NormalContent from "@/app/components/ContentTemplate/NormalContent";
 import { useUsers } from "@/app/context/users/UsersContext";
 import Loading from "@/app/loading";
@@ -10,7 +10,7 @@ const Login = () => {
 
   return (
     <>
-      <AuthBox authType="Login" />
+      <AuthForm authType="Login" />
 
       {loading && (
         <NormalContent>

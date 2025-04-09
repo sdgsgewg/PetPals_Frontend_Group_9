@@ -1,4 +1,4 @@
-export interface INewServiceErrorMessages {
+export interface INewServiceErrorMessage {
   Name: string;
   CategoryId: string;
   Price: string;

@@ -8,7 +8,7 @@ export enum AdoptionStatus {
 }
 
 export interface IAdoptionTransaction {
-  adoptionId: number;
+  transactionId: number;
   adopterId: number;
   ownerId: number;
   petId: number;

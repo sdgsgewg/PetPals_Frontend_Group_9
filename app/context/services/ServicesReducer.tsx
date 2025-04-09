@@ -3,7 +3,7 @@ import { IServiceCategory } from "@/app/interface/service/IServiceCategory";
 import { IServiceFilterParams } from "@/app/interface/service/IServiceFilterParams";
 import { GlobalAction, GlobalActionType } from "../GlobalActions";
 import { INewService } from "@/app/interface/service/INewService";
-import { INewServiceErrorMessages } from "@/app/interface/service/INewServiceErrorMessages";
+import { INewServiceErrorMessage } from "@/app/interface/service/INewServiceErrorMessage";
 import { IServiceFilterErrorMessage } from "@/app/interface/service/IServiceFiltersErrorMessage";
 
 export interface ServiceState {
@@ -14,7 +14,7 @@ export interface ServiceState {
   serviceFiltersErrorMessages: IServiceFilterErrorMessage;
   service: IService;
   newService: INewService;
-  newServiceErrorMessages: INewServiceErrorMessages;
+  newServiceErrorMessages: INewServiceErrorMessage;
   loading: boolean;
   error: string | null;
 }

@@ -46,14 +46,14 @@ const UserDropdownNavLink = () => {
         />
       ) : loggedInUser.role.name.toLowerCase() === "owner" ? (
         <UserDropdownNavItem
-          href="/adoption-transaction-request"
+          href="/transactions/owner"
           icon={<FileText size={16} />}
           label="View Transaction Request"
           onMenuClick={handleMenuClick}
         />
       ) : (
         <UserDropdownNavItem
-          href="/service-transaction-request"
+          href="/transactions/provider"
           icon={<FileText size={16} />}
           label="View Transaction Request"
           onMenuClick={handleMenuClick}

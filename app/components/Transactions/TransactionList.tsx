@@ -1,8 +1,8 @@
 import { useTransactions } from "@/app/context/transactions/TransactionsContext";
-import Loading from "@/app/loading";
 import React from "react";
 import TransactionCard from "./TransactionCard";
 import ItemNotFound from "../ItemNotFound";
+import Loading from "../Loading";
 
 interface TransactionListProps {
   transactionType: string; // history | adoptionReq | serviceReq
@@ -16,11 +16,13 @@ const TransactionList: React.FC<TransactionListProps> = ({
   const transactionList =
     transactionType === "history" ? transactions : transactions;
 
+  if (loading) {
+    return <Loading />;
+  }
+
   return (
     <>
-      {loading ? (
-        <Loading />
-      ) : transactions.length > 0 ? (
+      {transactions.length > 0 ? (
         <div className="grid grid-cols-1 gap-6">
           {transactionList.map((transaction, index) => (
             <TransactionCard

@@ -11,8 +11,6 @@ interface RemoveItemModalProps {
   message: string;
   item: IPet | IService;
   itemType: string;
-  isOpen: boolean;
-  onClose: () => void;
 }
 
 const RemoveItemModal: React.FC<RemoveItemModalProps> = ({
@@ -20,10 +18,9 @@ const RemoveItemModal: React.FC<RemoveItemModalProps> = ({
   message,
   item,
   itemType,
-  isOpen,
-  onClose,
 }) => {
-  const { formattedPrice } = useGlobal();
+  const { formattedPrice, isRemoveItemModalOpen, handleCloseRemoveItemModal } =
+    useGlobal();
   const { loggedInUser } = useUsers();
   const petsContext = usePets();
   const servicesContext = useServices();
@@ -33,20 +30,26 @@ const RemoveItemModal: React.FC<RemoveItemModalProps> = ({
     const removeFunction = isPet
       ? petsContext.removePet
       : servicesContext.removeService;
-    await removeFunction(isPet ? item.petId : item.serviceId);
+    await removeFunction(
+      isPet && petsContext.isIPet(item)
+        ? item.petId
+        : servicesContext.isIService(item)
+        ? item.serviceId
+        : 0
+    );
 
     const fetchFunction = isPet
       ? petsContext.fetchOwnerPets
       : servicesContext.fetchProviderServices;
 
     fetchFunction(loggedInUser.userId);
-    onClose();
+    handleCloseRemoveItemModal();
   };
 
   return (
     <div
       className={`${
-        !isOpen
+        !isRemoveItemModalOpen
           ? "hidden"
           : "fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
       }`}
@@ -66,7 +69,7 @@ const RemoveItemModal: React.FC<RemoveItemModalProps> = ({
 
         <div className="flex justify-center mt-4 gap-4">
           <button
-            onClick={onClose}
+            onClick={handleCloseRemoveItemModal}
             className="bg-gray-300 text-black px-3 py-1 rounded-lg hover:bg-gray-400 transition duration-300 ease-in-out cursor-pointer"
           >
             Cancel

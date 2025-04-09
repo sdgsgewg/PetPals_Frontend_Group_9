@@ -1,4 +1,4 @@
-export interface INewPetErrorMessages {
+export interface INewPetErrorMessage {
   Name: string;
   Breed: string;
   SpeciesId: string;

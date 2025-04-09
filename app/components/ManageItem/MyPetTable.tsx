@@ -4,23 +4,24 @@ import { usePets } from "@/app/context/pets/PetsContext";
 import Link from "next/link";
 import { useGlobal } from "@/app/context/GlobalContext";
 import { IPet } from "@/app/interface/pet/IPet";
+import Loading from "../Loading";
 
 interface MyPetTableProps {
   updateSelectedPet: (pet: IPet) => void;
-  onOpen: () => void;
 }
 
-const MyPetTable: React.FC<MyPetTableProps> = ({
-  updateSelectedPet,
-  onOpen,
-}) => {
-  const { formattedAge } = useGlobal();
-  const { ownerPets } = usePets();
+const MyPetTable: React.FC<MyPetTableProps> = ({ updateSelectedPet }) => {
+  const { formattedAge, handleOpenRemoveItemModal } = useGlobal();
+  const { ownerPets, loading } = usePets();
 
   const handleRemovePet = (pet: IPet) => {
     updateSelectedPet(pet);
-    onOpen();
+    handleOpenRemoveItemModal();
   };
+
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <div className="overflow-x-auto">

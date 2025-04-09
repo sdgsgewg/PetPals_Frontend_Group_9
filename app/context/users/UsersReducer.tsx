@@ -35,7 +35,7 @@ export const initialState: UserState = {
     Phone: "",
     Address: "",
     City: "",
-    RoleId: "",
+  RoleId: "",
   },
   loginErrorMessages: {
     Email: "",

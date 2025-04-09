@@ -7,8 +7,6 @@ import { useUsers } from "../context/users/UsersContext";
 const Home = () => {
   const { isLoggedIn, loggedInUser } = useUsers();
 
-  console.log(loggedInUser);
-
   return (
     <NormalContent>
       <div className="text-center">

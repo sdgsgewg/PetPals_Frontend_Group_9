@@ -4,23 +4,26 @@ import { useServices } from "@/app/context/services/ServicesContext";
 import Link from "next/link";
 import { useGlobal } from "@/app/context/GlobalContext";
 import { IService } from "@/app/interface/service/IService";
+import Loading from "../Loading";
 
 interface MyServiceTableProps {
   updateSelectedService: (service: IService) => void;
-  onOpen: () => void;
 }
 
 const MyServiceTable: React.FC<MyServiceTableProps> = ({
   updateSelectedService,
-  onOpen,
 }) => {
-  const { formattedPrice } = useGlobal();
-  const { providerServices } = useServices();
+  const { formattedPrice, handleOpenRemoveItemModal } = useGlobal();
+  const { providerServices, loading } = useServices();
 
   const handleRemoveService = (service: IService) => {
     updateSelectedService(service);
-    onOpen();
+    handleOpenRemoveItemModal();
   };
+
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <div className="overflow-x-auto">

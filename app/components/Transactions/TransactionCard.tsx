@@ -1,4 +1,7 @@
 import { useGlobal } from "@/app/context/GlobalContext";
+import { usePets } from "@/app/context/pets/PetsContext";
+import { useTransactions } from "@/app/context/transactions/TransactionsContext";
+import { IService } from "@/app/interface/service/IService";
 import { IAdoptionTransaction } from "@/app/interface/transaction/IAdoptionTransaction";
 import { IServiceTransaction } from "@/app/interface/transaction/IServiceTransaction";
 import { ITransaction } from "@/app/interface/transaction/ITransaction";
@@ -17,6 +20,47 @@ const TransactionCard: React.FC<TransactionCardProps> = ({
 }) => {
   const { getImageUrlByBreed, getImageUrlByServiceCategory, formattedPrice } =
     useGlobal();
+  const {
+    isTransactionHistory,
+    isAdoptionTransactionRequest,
+    isServiceTransactionRequest,
+  } = useTransactions();
+  const { isIPet } = usePets();
+
+  let imageUrl: string = "/img/pets.jpg";
+  let itemName = "";
+
+  // Tentukan image dan nama
+  if (isTransactionHistory(transaction)) {
+    itemName = transaction.item.name;
+    if (
+      transaction?.transactionType?.toLowerCase() === "adoption" &&
+      isIPet(transaction.item)
+    ) {
+      imageUrl =
+        getImageUrlByBreed(
+          transaction?.item?.species?.name,
+          transaction?.item?.breed
+        ) ?? "/img/pets.jpg";
+    } else {
+      const service = transaction.item as IService;
+      imageUrl =
+        getImageUrlByServiceCategory(service?.category?.name) ??
+        "/img/services.jpg";
+    }
+  } else if (isAdoptionTransactionRequest(transaction)) {
+    imageUrl =
+      getImageUrlByBreed(
+        transaction?.pet?.species?.name,
+        transaction?.pet?.breed
+      ) ?? "/img/pets.jpg";
+    itemName = transaction.pet.name;
+  } else if (isServiceTransactionRequest(transaction)) {
+    imageUrl =
+      getImageUrlByServiceCategory(transaction?.service?.category?.name) ??
+      "/img/services.jpg";
+    itemName = transaction.service.name;
+  }
 
   return (
     <Link
@@ -28,56 +72,29 @@ const TransactionCard: React.FC<TransactionCardProps> = ({
         <div className="mb-2">
           <p className="font-semibold">
             {transactionType === "history"
-              ? transaction.user.name
-              : `From ${transaction.adopter.name}`}
+              ? isTransactionHistory(transaction)
+                ? transaction?.user?.name
+                : "Unknown"
+              : `From ${
+                  isAdoptionTransactionRequest(transaction) ||
+                  isServiceTransactionRequest(transaction)
+                    ? transaction?.adopter?.name
+                    : "Unknown"
+                }`}
           </p>
         </div>
         <div className="flex gap-4">
           <div className="w-[30%] md:w-[25%] lg:w-[22%]">
-            {transactionType === "history" ? (
-              <Image
-                src={
-                  transaction.transactionType.toLowerCase() === "service"
-                    ? getImageUrlByServiceCategory(
-                        transaction?.item?.category?.name
-                      )
-                    : getImageUrlByBreed(
-                        transaction?.item?.species?.name,
-                        transaction?.item?.breed
-                      )
-                }
-                alt="Test"
-                width={100}
-                height={100}
-                className="w-full h-full object-cover"
-              />
-            ) : (
-              <Image
-                src={
-                  transaction.transactionType === "Adoption"
-                    ? getImageUrlByBreed(
-                        transaction.pet.species.name,
-                        transaction.pet.breed
-                      )
-                    : getImageUrlByServiceCategory(
-                        transaction.service.category.name
-                      )
-                }
-                alt="Test"
-                width={100}
-                height={100}
-                className="w-full h-full object-cover"
-              />
-            )}
+            <Image
+              src={imageUrl}
+              alt={itemName}
+              width={100}
+              height={100}
+              className="w-full h-full object-cover"
+            />
           </div>
           <div>
-            <p className="font-semibold">
-              {transactionType === "history"
-                ? transaction.item.name
-                : transactionType === "adoptionReq"
-                ? transaction.pet.name
-                : transaction.service.name}
-            </p>
+            <p className="font-semibold">{itemName}</p>
           </div>
         </div>
         <div className="mt-2 text-end">

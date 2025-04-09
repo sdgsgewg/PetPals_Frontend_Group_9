@@ -11,6 +11,9 @@ interface GlobalContextType {
   isFilterModalOpen: boolean;
   handleOpenFilterModal: () => void;
   handleCloseFilterModal: () => void;
+  isRemoveItemModalOpen: boolean;
+  handleOpenRemoveItemModal: () => void;
+  handleCloseRemoveItemModal: () => void;
   getImageUrlByBreed: (species: string, breed: string) => string | null;
   getImageUrlByServiceCategory: (categoryName: string) => string | null;
   formattedAge: (age: number) => string | null;
@@ -41,6 +44,13 @@ export function GlobalProvider({ children }: { children: ReactNode }) {
   };
   const handleCloseFilterModal = () => {
     dispatch({ type: GlobalActionType.SET_FILTER_MODAL, payload: false });
+  };
+
+  const handleOpenRemoveItemModal = () => {
+    dispatch({ type: GlobalActionType.SET_REMOVE_ITEM_MODAL, payload: true });
+  };
+  const handleCloseRemoveItemModal = () => {
+    dispatch({ type: GlobalActionType.SET_REMOVE_ITEM_MODAL, payload: false });
   };
 
   const getImageUrlByBreed = (species: string, breed: string) => {
@@ -117,6 +127,9 @@ export function GlobalProvider({ children }: { children: ReactNode }) {
         isFilterModalOpen: state.isFilterModalOpen,
         handleOpenFilterModal,
         handleCloseFilterModal,
+        isRemoveItemModalOpen: state.isRemoveItemModalOpen,
+        handleOpenRemoveItemModal,
+        handleCloseRemoveItemModal,
         getImageUrlByBreed,
         getImageUrlByServiceCategory,
         formattedAge,

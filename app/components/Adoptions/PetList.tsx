@@ -3,7 +3,7 @@ import React from "react";
 import PetCard from "./PetCard";
 import { usePets } from "@/app/context/pets/PetsContext";
 import ItemNotFound from "../ItemNotFound";
-import Loading from "../loading";
+import Loading from "../Loading";
 
 interface PetListProps {
   filteredPets: IPet[];

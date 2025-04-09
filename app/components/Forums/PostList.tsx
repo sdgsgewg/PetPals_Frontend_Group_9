@@ -2,7 +2,7 @@ import { useForums } from "@/app/context/forums/ForumsContext";
 import React from "react";
 import ItemNotFound from "../ItemNotFound";
 import PostCard from "./PostCard";
-import Loading from "../loading";
+import Loading from "../Loading";
 
 const PostList = () => {
   const { forumPosts, loading } = useForums();

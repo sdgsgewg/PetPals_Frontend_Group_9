@@ -9,9 +9,9 @@ import { ISpecies } from "../../interface/pet/ISpecies";
 import { INewPet } from "@/app/interface/pet/INewPet";
 import { useGlobal } from "../GlobalContext";
 import { useRouter } from "next/navigation";
-import { INewPetErrorMessages } from "@/app/interface/pet/INewPetErrorMessages";
-import { IGender } from "@/app/interface/pet/IGender";
+import { INewPetErrorMessage } from "@/app/interface/pet/INewPetErrorMessage";
 import { IPetFilterErrorMessage } from "@/app/interface/pet/IPetFiltersErrorMessage";
+import { IService } from "@/app/interface/service/IService";
 
 interface PetsContextType {
   species: ISpecies[];
@@ -21,8 +21,7 @@ interface PetsContextType {
   newPet: INewPet;
   filters: IPetFilterParams;
   petFiltersErrorMessages: IPetFilterErrorMessage;
-  newPetErrorMessages: INewPetErrorMessages;
-  genderOptions: IGender[];
+  newPetErrorMessages: INewPetErrorMessage;
   setFilters: (name: string, value: string) => void;
   resetFilters: () => void;
   fetchPets: () => Promise<void>;
@@ -34,6 +33,7 @@ interface PetsContextType {
   editPet: (petId: number) => Promise<void>;
   removePet: (petId: number) => Promise<void>;
   fetchOwnerPets: (ownerId: number) => Promise<void>;
+  isIPet: (item: IPet | IService) => item is IPet;
   loading: boolean;
   error: string | null;
 }
@@ -483,10 +483,9 @@ export function PetsProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const genderOptions = [
-    { id: 1, name: "Male" },
-    { id: 2, name: "Female" },
-  ];
+  const isIPet = (item: IPet | IService): item is IPet => {
+    return "species" in item;
+  };
 
   return (
     <PetsContext.Provider
@@ -499,7 +498,6 @@ export function PetsProvider({ children }: { children: ReactNode }) {
         filters: state.filters,
         petFiltersErrorMessages: state.petFiltersErrorMessages,
         newPetErrorMessages: state.newPetErrorMessages,
-        genderOptions,
         setFilters,
         resetFilters,
         fetchPets,
@@ -511,6 +509,7 @@ export function PetsProvider({ children }: { children: ReactNode }) {
         editPet,
         removePet,
         fetchOwnerPets,
+        isIPet,
         loading: state.loading,
         error: state.error,
       }}

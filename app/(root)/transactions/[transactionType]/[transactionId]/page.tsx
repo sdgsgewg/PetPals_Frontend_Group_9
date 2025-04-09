@@ -6,6 +6,7 @@ import TransactionDetailCard from "@/app/components/Transactions/TransactionDeta
 import UserInfo from "@/app/components/Transactions/TransactionDetail/UserInfo";
 import { useTransactions } from "@/app/context/transactions/TransactionsContext";
 import { useUsers } from "@/app/context/users/UsersContext";
+import { IUser } from "@/app/interface/user/IUser";
 import Loading from "@/app/loading";
 import { useParams } from "next/navigation";
 import React, { useEffect } from "react";
@@ -18,9 +19,18 @@ const TransactionDetail = () => {
     transaction,
     fetchAdoptionTransactionDetail,
     fetchServiceTransactionDetail,
+    isAdoptionTransactionRequest,
+    isServiceTransactionRequest,
     loading,
     error,
   } = useTransactions();
+
+  const item =
+    transactionType === "adoption" && isAdoptionTransactionRequest(transaction)
+      ? transaction.pet
+      : isServiceTransactionRequest(transaction)
+      ? transaction.service
+      : null;
 
   useEffect(() => {
     if (!transactionType || !transactionId) return;
@@ -40,7 +50,7 @@ const TransactionDetail = () => {
     );
   }
 
-  if (error || !transaction) {
+  if (error || !transaction || !item) {
     return (
       <NormalContent>
         <PageNotFound image_url="/img/page-not-found.png" message="" />
@@ -50,35 +60,30 @@ const TransactionDetail = () => {
 
   return (
     <NormalContent>
-      {/* Owner or Provider Information */}
-      {(transaction.owner || transaction.adopter || transaction.provider) && (
-        <UserInfo
-          user={
-            loggedInUser?.role?.name?.toLowerCase() === "adopter"
-              ? transactionType === "adoption"
-                ? transaction.owner
-                : transaction.provider
-              : transaction.adopter
-          }
-          item={
-            transactionType === "adoption"
-              ? transaction.pet
-              : transaction.service
-          }
-        />
-      )}
+      {/* Adopter, Owner, or Provider Information */}
+      <UserInfo
+        user={
+          loggedInUser?.role?.name?.toLowerCase() === "adopter"
+            ? transactionType === "adoption" &&
+              isAdoptionTransactionRequest(transaction)
+              ? transaction.owner
+              : isServiceTransactionRequest(transaction)
+              ? transaction.provider
+              : ({} as IUser)
+            : transaction.adopter
+        }
+        item={item}
+      />
 
       {/* Transaction Detail Card */}
-      <div className="my-8">
-        <TransactionDetailCard
-          transactionType={transactionType?.toString()}
-          item={
-            transactionType === "adoption"
-              ? transaction.pet
-              : transaction.service
-          }
-        />
-      </div>
+      {item && (
+        <div className="my-8">
+          <TransactionDetailCard
+            transactionType={transactionType?.toString()}
+            item={item}
+          />
+        </div>
+      )}
 
       {/* Booking Date */}
       <BookingDate />

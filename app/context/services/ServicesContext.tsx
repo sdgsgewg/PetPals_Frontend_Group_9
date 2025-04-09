@@ -10,8 +10,9 @@ import { GlobalActionType } from "../GlobalActions";
 import { INewService } from "@/app/interface/service/INewService";
 import { useGlobal } from "../GlobalContext";
 import { useRouter } from "next/navigation";
-import { INewServiceErrorMessages } from "@/app/interface/service/INewServiceErrorMessages";
+import { INewServiceErrorMessage } from "@/app/interface/service/INewServiceErrorMessage";
 import { IServiceFilterErrorMessage } from "@/app/interface/service/IServiceFiltersErrorMessage";
+import { IPet } from "@/app/interface/pet/IPet";
 
 interface ServicesContextType {
   service_categories: IServiceCategory[];
@@ -21,7 +22,7 @@ interface ServicesContextType {
   newService: INewService;
   filters: IServiceFilterParams;
   serviceFiltersErrorMessages: IServiceFilterErrorMessage;
-  newServiceErrorMessages: INewServiceErrorMessages;
+  newServiceErrorMessages: INewServiceErrorMessage;
   setFilters: (name: string, value: string) => void;
   resetFilters: () => void;
   fetchServices: () => Promise<void>;
@@ -39,6 +40,7 @@ interface ServicesContextType {
   editService: (serviceId: number) => Promise<void>;
   removeService: (serviceId: number) => Promise<void>;
   fetchProviderServices: (providerId: number) => Promise<void>;
+  isIService: (item: IPet | IService) => item is IService;
   loading: boolean;
   error: string | null;
 }
@@ -523,6 +525,10 @@ export function ServicesProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const isIService = (item: IPet | IService): item is IService => {
+    return "category" in item;
+  };
+
   return (
     <ServicesContext.Provider
       value={{
@@ -546,6 +552,7 @@ export function ServicesProvider({ children }: { children: ReactNode }) {
         editService,
         removeService,
         fetchProviderServices,
+        isIService,
         loading: state.loading,
         error: state.error,
       }}
