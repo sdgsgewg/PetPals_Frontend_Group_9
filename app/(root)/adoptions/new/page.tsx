@@ -10,6 +10,7 @@ import React, { useEffect, useState } from "react";
 import TextareaField from "@/app/components/FormField/TextareaField";
 import AgeField from "@/app/components/FormField/AgeField";
 import GenderField from "@/app/components/FormField/GenderField";
+import Loading from "@/app/loading";
 
 const NewPet = () => {
   const { formattedPrice } = useGlobal();
@@ -22,6 +23,7 @@ const NewPet = () => {
     setNewPet,
     resetNewPet,
     addNewPet,
+    loading,
   } = usePets();
 
   const [displayPrice, setDisplayPrice] = useState<string>(
@@ -65,6 +67,14 @@ const NewPet = () => {
 
     addNewPet();
   };
+
+  if (loading) {
+    return (
+      <NormalContent>
+        <Loading />
+      </NormalContent>
+    );
+  }
 
   return (
     <NormalContent>

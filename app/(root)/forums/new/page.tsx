@@ -52,6 +52,7 @@ const NewForumPost = () => {
     <NormalContent>
       <div className="w-full max-w-xl mx-auto p-6 border bg-white dark:bg-gray-900 dark:border-gray-700 dark:text-white shadow-md rounded-lg">
         <h1 className="text-2xl font-bold mb-4">Buat Postingan Baru</h1>
+
         <form onSubmit={handleSubmit}>
           {/* Title */}
           <InputField

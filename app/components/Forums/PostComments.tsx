@@ -21,11 +21,11 @@ const PostComments = () => {
     });
   };
 
+  if (loading) return <Loading />;
+
   return (
     <>
-      {loading ? (
-        <Loading />
-      ) : forumComments.length > 0 ? (
+      {forumComments.length > 0 ? (
         <>
           <h2 className="text-xl font-semibold mt-6 mb-4">
             Komentar ({forumComments.length})

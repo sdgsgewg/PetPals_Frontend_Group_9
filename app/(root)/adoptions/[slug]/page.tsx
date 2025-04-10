@@ -32,15 +32,14 @@ const PetDetail = () => {
   }, [slug]);
 
   useEffect(() => {
-    if (pet) {
-      setImageUrl(getImageUrlByBreed(pet?.species?.name, pet?.breed));
-      setPrice(formattedPrice(pet.price));
-      setStatus(getStatus());
-    }
+    if (!pet) return;
+    setImageUrl(getImageUrlByBreed(pet?.species?.name, pet?.breed));
+    setPrice(formattedPrice(pet.price));
+    setStatus(getStatus());
   }, [pet]);
 
   useEffect(() => {
-    if (adoptions.some((adopt) => adopt.petId === pet?.petId)) {
+    if (pet && adoptions.some((adopt) => adopt.petId === pet?.petId)) {
       setIsAdopted(true);
     }
   }, [adoptions, pet]);
@@ -53,7 +52,7 @@ const PetDetail = () => {
       return;
     }
 
-    adoptPet(loggedInUser.userId, pet.owner.userId, pet.petId);
+    adoptPet(loggedInUser.userId, pet?.owner?.userId, pet.petId);
     setIsAdopted(true);
   };
 

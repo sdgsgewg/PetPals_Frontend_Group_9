@@ -9,6 +9,7 @@ import React, { useEffect, useState } from "react";
 import TextareaField from "@/app/components/FormField/TextareaField";
 import { useGlobal } from "@/app/context/GlobalContext";
 import AgeField from "@/app/components/FormField/AgeField";
+import Loading from "@/app/loading";
 
 const EditPet = () => {
   const params = useParams();
@@ -24,6 +25,7 @@ const EditPet = () => {
     fetchPetDetail,
     setNewPet,
     editPet,
+    loading,
   } = usePets();
 
   const [displayPrice, setDisplayPrice] = useState<string>(
@@ -31,11 +33,13 @@ const EditPet = () => {
   );
 
   useEffect(() => {
+    if (!slug) return;
     fetchSpecies();
     fetchPetDetail(slug);
   }, [slug]);
 
   useEffect(() => {
+    if (!pet) return;
     setNewPet("petId", pet.petId);
     setNewPet("name", pet.name);
     setNewPet("breed", pet.breed);
@@ -72,6 +76,14 @@ const EditPet = () => {
 
     editPet(pet.petId);
   };
+
+  if (loading) {
+    return (
+      <NormalContent>
+        <Loading />
+      </NormalContent>
+    );
+  }
 
   return (
     <NormalContent>

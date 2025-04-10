@@ -3,6 +3,7 @@
 import { createContext, ReactNode, useContext, useReducer } from "react";
 import { GlobalReducer, initialState } from "./GlobalReducer";
 import { GlobalActionType } from "./GlobalActions";
+import { availableBreeds } from "../data/imageSource";
 
 interface GlobalContextType {
   isMessageModalOpen: boolean;
@@ -60,6 +61,11 @@ export function GlobalProvider({ children }: { children: ReactNode }) {
       ?.split(" ")
       .map((word) => word.toLowerCase())
       .join("-");
+
+    if (!availableBreeds.includes(modifiedBreed)) {
+      return `/img/pets.jpg`;
+    }
+
     return `/img/breed/${modifiedSpecies}/${modifiedBreed}.jpg`;
   };
 
