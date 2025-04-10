@@ -19,7 +19,8 @@ const AgeField: React.FC<AgeFieldProps> = ({
   const [isInitialized, setIsInitialized] = useState(false);
 
   useEffect(() => {
-    if (!value) return;
+    if (value === undefined || value === null) return;
+
     const parsedYears = Math.floor(value);
     const parsedMonths = Math.round((value - parsedYears) * 12);
 
@@ -29,19 +30,30 @@ const AgeField: React.FC<AgeFieldProps> = ({
     ) {
       setYears(parsedYears.toString());
       setMonths(parsedMonths.toString());
+      setIsInitialized(false); // prevent triggering onChange immediately
+      setTimeout(() => setIsInitialized(true), 0); // delay enable trigger
     }
-
-    setIsInitialized(true);
   }, [value]);
 
   // Update parent when user types
   useEffect(() => {
-    if (!years || !months) return;
-    if (isInitialized) {
-      const ageDecimal = (parseInt(years) || 0) + (parseInt(months) || 0) / 12;
-      onChange(parseFloat(ageDecimal.toFixed(2)));
+    if (!isInitialized) return;
+
+    const yearVal = parseInt(years) || 0;
+    const monthVal = Math.min(parseInt(months) || 0, 11);
+    const ageDecimal = parseFloat((yearVal + monthVal / 12).toFixed(2));
+
+    // Cek apakah ageDecimal berbeda dari value yang ada
+    if (Math.abs(value - ageDecimal) > 0.01) {
+      onChange(ageDecimal);
     }
   }, [years, months]);
+
+  const handleYearChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let val = parseInt(e.target.value || "0", 10);
+    if (isNaN(val) || val < 0) val = 0;
+    setYears(val.toString());
+  };
 
   const handleMonthChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let val = parseInt(e.target.value || "0", 10);
@@ -65,11 +77,13 @@ const AgeField: React.FC<AgeFieldProps> = ({
           </label>
           <input
             type="number"
+            inputMode="numeric"
+            pattern="\d*"
             min={0}
             placeholder="Years"
             className="w-full px-4 py-2 border rounded-lg"
             value={years}
-            onChange={(e) => setYears(e.target.value)}
+            onChange={handleYearChange}
           />
         </div>
         <div className="w-1/2 flex flex-col gap-2">
@@ -78,6 +92,8 @@ const AgeField: React.FC<AgeFieldProps> = ({
           </label>
           <input
             type="number"
+            inputMode="numeric"
+            pattern="\d*"
             min={0}
             max={11}
             placeholder="Months"

@@ -8,6 +8,7 @@ import { useUsers } from "@/app/context/users/UsersContext";
 import React, { useEffect, useState } from "react";
 import TextareaField from "@/app/components/FormField/TextareaField";
 import { useGlobal } from "@/app/context/GlobalContext";
+import Loading from "@/app/loading";
 
 const NewService = () => {
   const { formattedPrice } = useGlobal();
@@ -20,6 +21,7 @@ const NewService = () => {
     setNewService,
     resetNewService,
     addNewService,
+    loading,
   } = useServices();
 
   const [displayPrice, setDisplayPrice] = useState<string>(
@@ -62,6 +64,14 @@ const NewService = () => {
 
     addNewService();
   };
+
+  if (loading) {
+    return (
+      <NormalContent>
+        <Loading />
+      </NormalContent>
+    );
+  }
 
   return (
     <NormalContent>

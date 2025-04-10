@@ -8,6 +8,7 @@ import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { useGlobal } from "@/app/context/GlobalContext";
 import TextareaField from "@/app/components/FormField/TextareaField";
+import Loading from "@/app/loading";
 
 const EditService = () => {
   const params = useParams();
@@ -23,6 +24,7 @@ const EditService = () => {
     fetchServiceDetail,
     setNewService,
     editService,
+    loading,
   } = useServices();
 
   const [displayPrice, setDisplayPrice] = useState<string>(
@@ -30,11 +32,13 @@ const EditService = () => {
   );
 
   useEffect(() => {
+    if (!slug) return;
     fetchServiceCategories();
     fetchServiceDetail(slug);
-  }, []);
+  }, [slug]);
 
   useEffect(() => {
+    if (!service) return;
     setNewService("serviceId", service.serviceId);
     setNewService("name", service.name);
     setNewService("categoryId", service?.category?.id);
@@ -68,6 +72,14 @@ const EditService = () => {
 
     editService(service.serviceId);
   };
+
+  if (loading) {
+    return (
+      <NormalContent>
+        <Loading />
+      </NormalContent>
+    );
+  }
 
   return (
     <NormalContent>

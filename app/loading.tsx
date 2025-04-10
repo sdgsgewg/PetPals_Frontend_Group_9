@@ -9,10 +9,7 @@ const Loading = () => {
           <ClipLoader size={48} color="#3b82f6" />
         </div>
         <p className="text-lg text-gray-800 dark:text-gray-200 font-semibold">
-          Please wait...
-        </p>
-        <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 text-center">
-          We’re preparing something awesome for you.
+          Loading...
         </p>
       </div>
     </div>
