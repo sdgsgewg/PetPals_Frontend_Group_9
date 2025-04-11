@@ -1,22 +1,25 @@
 "use client";
+import { usePets } from "@/app/context/pets/PetsContext";
 import React, { useEffect, useState } from "react";
 
 interface AgeFieldProps {
   label?: string;
   value: number;
-  onChange: (value: number) => void;
-  error?: string;
+  errorMsg?: string;
+  fromPage?: string;
 }
 
 const AgeField: React.FC<AgeFieldProps> = ({
   label = "Age",
   value,
-  onChange,
-  error,
+  errorMsg,
+  fromPage,
 }) => {
+  const { pet, setNewPet, error, setErrorMessage } = usePets();
+
   const [years, setYears] = useState<string>("0");
   const [months, setMonths] = useState<string>("0");
-  const [isInitialized, setIsInitialized] = useState(false);
+  const [isInitialized, setIsInitialized] = useState<boolean>(false);
 
   useEffect(() => {
     if (value === undefined || value === null) return;
@@ -30,9 +33,10 @@ const AgeField: React.FC<AgeFieldProps> = ({
     ) {
       setYears(parsedYears.toString());
       setMonths(parsedMonths.toString());
-      setIsInitialized(false); // prevent triggering onChange immediately
-      setTimeout(() => setIsInitialized(true), 0); // delay enable trigger
     }
+
+    setIsInitialized(false); // prevent triggering onChange immediately
+    setTimeout(() => setIsInitialized(true), 0); // delay enable trigger
   }, [value]);
 
   // Update parent when user types
@@ -43,9 +47,11 @@ const AgeField: React.FC<AgeFieldProps> = ({
     const monthVal = Math.min(parseInt(months) || 0, 11);
     const ageDecimal = parseFloat((yearVal + monthVal / 12).toFixed(2));
 
-    // Cek apakah ageDecimal berbeda dari value yang ada
-    if (Math.abs(value - ageDecimal) > 0.01) {
-      onChange(ageDecimal);
+    if (pet.age > ageDecimal && fromPage === "EditPet") {
+      setErrorMessage("New age cannot be greater than current age.");
+    } else {
+      setErrorMessage(null);
+      setNewPet("age", ageDecimal);
     }
   }, [years, months]);
 
@@ -77,8 +83,6 @@ const AgeField: React.FC<AgeFieldProps> = ({
           </label>
           <input
             type="number"
-            inputMode="numeric"
-            pattern="\d*"
             min={0}
             placeholder="Years"
             className="w-full px-4 py-2 border rounded-lg"
@@ -92,8 +96,6 @@ const AgeField: React.FC<AgeFieldProps> = ({
           </label>
           <input
             type="number"
-            inputMode="numeric"
-            pattern="\d*"
             min={0}
             max={11}
             placeholder="Months"
@@ -103,7 +105,13 @@ const AgeField: React.FC<AgeFieldProps> = ({
           />
         </div>
       </div>
-      {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
+      {/* Error message from backend */}
+      {errorMsg && <p className="text-red-500 text-sm mt-1">{errorMsg}</p>}
+
+      {/* Error message from context */}
+      {error !== null && fromPage === "EditPet" && (
+        <p className="text-red-500 text-sm mt-1">{error}</p>
+      )}
     </div>
   );
 };

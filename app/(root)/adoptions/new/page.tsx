@@ -117,8 +117,8 @@ const NewPet = () => {
           {/* Age */}
           <AgeField
             value={newPet.age}
-            onChange={(val) => setNewPet("age", val)}
-            error={newPetErrorMessages.Age}
+            errorMsg={newPetErrorMessages.Age}
+            fromPage="AddNewPet"
           />
 
           {/* Gender */}

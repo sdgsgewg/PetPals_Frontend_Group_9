@@ -26,6 +26,7 @@ const EditPet = () => {
     setNewPet,
     editPet,
     loading,
+    error,
   } = usePets();
 
   const [displayPrice, setDisplayPrice] = useState<string>(
@@ -124,8 +125,8 @@ const EditPet = () => {
           {/* Age */}
           <AgeField
             value={newPet.age}
-            onChange={(val) => setNewPet("age", val)}
-            error={newPetErrorMessages.Age}
+            errorMsg={newPetErrorMessages.Age}
+            fromPage="EditPet"
           />
 
           {/* Gender */}
@@ -159,8 +160,13 @@ const EditPet = () => {
 
           {/* Tombol Submit */}
           <button
+            disabled={error !== null}
             type="submit"
-            className="w-full mt-8 bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 dark:hover:bg-blue-500 cursor-pointer"
+            className={`w-full mt-8 ${
+              error !== null
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-blue-600 hover:bg-blue-700 dark:hover:bg-blue-500 cursor-pointer"
+            }  text-white py-2 rounded-lg`}
           >
             Update
           </button>
